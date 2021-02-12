@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr fFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -10,7 +10,7 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-        <SearchBox />
+        <SearchBox class="q-py-xs col-10"/>
       </q-toolbar>
     </q-header>
 
@@ -32,18 +32,33 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+    <q-drawer
+        side="right"
+        v-model="rightDrawerOpen"
+        show-if-above
+        bordered
+        :width="300"
+        :breakpoint="500"
+        content-class="bg-grey-3"
+      >
+      <PoiManager/>
+      </q-drawer>
+    <q-footer class="bg-grey-1">
+    </q-footer>
   </q-layout>
 </template>
 
 <script>
 import SearchBox from 'components/SearchBox.vue'
+import PoiManager from 'components/PoiManager.vue'
 
 export default {
   name: 'MainLayout',
-  components: { SearchBox },
+  components: { SearchBox, PoiManager },
   data () {
     return {
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
+      rightDrawerOpen: true
     }
   }
 }
