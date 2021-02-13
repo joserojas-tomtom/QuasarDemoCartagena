@@ -31,18 +31,17 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-drawer v-if='$q.platform.is.desktop'
+    <q-drawer
         side="right"
-        v-model='poiPanel'
+        v-model='rightDrawerOpen'
         bordered
         :width="500"
         :breakpoint="500"
         content-class="bg-grey-3"
       >
-      <PoiManager/>
       </q-drawer>
-    <q-footer  v-if='poiPanel && $q.platform.is.mobile' class="bg-grey-1">
-      <PoiManager/>
+    <q-footer  class="bg-grey-1" style='width:300px'>
+      <PoiManager v-model='poiPanel'/>
     </q-footer>
   </q-layout>
 </template>
@@ -65,8 +64,8 @@ export default {
     root.$off('showPoiPanel')
   },
   methods: {
-    hidePoPanel () {
-      this.poPanel = false
+    hidePoiPanel () {
+      this.poiPanel = false
     },
     showPoiPanel () {
       this.poiPanel = true
@@ -75,7 +74,8 @@ export default {
   data () {
     return {
       leftDrawerOpen: false,
-      poiPanel: false
+      poiPanel: true,
+      rightDrawerOpen: false
     }
   }
 }

@@ -17,7 +17,7 @@ var CARTAGENA = {
     maxZoom: 17
   }
 }
-LocalStorage.clear()
+// LocalStorage.clear()
 LocalStorage.set('city', CARTAGENA)
 // LocalStorage.set('apikey', 'Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm')
 LocalStorage.set('apikey', 'y4OUatPPGQgS71stpTvqD6n2iyteZrYD')

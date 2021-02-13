@@ -41,10 +41,17 @@ const searchBoxOptions = {
   }
 }
 
+function centerUpdate (center) {
+  autocompleteOptions.center = center
+  searchOptions.center = center
+}
+
 export default {
   props: ['apikey', 'city'],
   name: 'SearchBox',
   mounted () {
+    const root = this.$root
+    root.$on('center-update', centerUpdate)
     const ttSearchBox = new window.tt.plugins.SearchBox(window.tt.services, searchBoxOptions)
     const dom = ttSearchBox.getSearchBoxHTML()
     const mapRef = this.$refs.myRef
@@ -52,6 +59,10 @@ export default {
     return {
       dom
     }
+  },
+  beforeDestroy () {
+    const root = this.$root
+    root.$on('center-update')
   }
 }
 </script>

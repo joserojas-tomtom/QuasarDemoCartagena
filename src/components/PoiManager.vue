@@ -1,12 +1,30 @@
 <template>
-<div class="q-ma-md">
-  <q-list bordered separator>
-    <q-item v-for='(poi, index) in pois' :key='poi.id' class='q-my-xs' >
+  <div v-if='visible' style='height: 300px'>
+  <q-scroll-area ref="scrollArea" style="height: inherit; max-width: 400px;">
+    <q-item v-for='(poi, index) in pois' :key='poi.id' class='q-my-xs' id='scrollcontent'>
       <q-item-section>
+        <q-icon name="cancel" size='1.5em'
+                    color='green'
+                    @click='removePoi(index)'
+                    class='q-my-xs'/>
         <q-item-label overline> {{ poi.name }} </q-item-label>
         <q-item-label caption> {{ poi.address }} </q-item-label>
-        <q-separator color="green" />
-        <div v-if='carouselvisible' class="q-pa-xs">
+        <q-rating v-if='currentPriceRange >= 0'
+              v-model="currentPriceRange"
+              size="1.3em"
+              :max='4'
+              color='red-4'
+              icon='monetization_on'
+            />
+          <q-rating v-if='currentRatingValue >= 0'
+              v-model="currentRatingValue"
+              size="1.3em"
+              :max='5'
+              color='yellow-4'
+              icon="star"
+            />
+        <q-separator class='q-my-xs' color="green" />
+        <div class="q-pa-xs">
           <q-carousel
             animated
             v-model="slide"
@@ -14,6 +32,7 @@
             infinite
             :autoplay="autoplay"
             arrows
+            height="250px"
             transition-prev="slide-right"
             transition-next="slide-left"
             @mouseenter="autoplay = false"
@@ -26,30 +45,15 @@
               :name="index"
               :img-src="url" />
           </q-carousel>
-          <q-rating v-if='currentPriceRange > 0'
-              v-model="currentPriceRange"
-              size="1.3em"
-              :max='4'
-              color='red-4'
-              icon='monetization_on'
-            />
-          <q-rating  v-if='currentRatingValue > 0'
-              v-model="currentRatingValue"
-              size="1.3em"
-              :max='10'
-              color='green-5'
-              icon="thumb_up"
-            />
         </div>
+        <q-item-label caption v-for='(line, index) in poi.reviews'
+                      :key='index'> {{ line.date }} : "{{ line.text }} "  </q-item-label>
+        <q-separator class='q-my-xs' color="green" />
+
       </q-item-section>
-          <q-item-section side top>
-            <q-icon name="delete"
-                    color='green'
-                    @click='removePoi(index)'/>
-          </q-item-section>
     </q-item>
-  </q-list>
-</div>
+  </q-scroll-area>
+  </div>
 </template>
 
 <script>
@@ -67,7 +71,8 @@ async function fetchPhoto (apikey, id) {
   const data = await window.tt.services.poiPhotos({
     key: apikey,
     id: id,
-    width: 300
+    width: 500,
+    height: 300
   })
   return data
 }
@@ -76,26 +81,29 @@ export default {
   name: 'PoiManager',
   data () {
     return {
+      visible: false,
       slide: '0',
-      autoplay: true,
-      carouselvisible: false,
-      currentRatingValue: 0,
-      currentPriceRange: 2,
+      autoplay: 2000,
+      currentRatingValue: -1,
+      currentPriceRange: -1,
       pois: [
       ]
     }
   },
   methods: {
+    onLoad (index, done) {
+      done()
+    },
     processDetails (poi, details) {
       console.log('details')
       console.log(details)
       if (details.photos && details.photos.length > 0) {
-        this.carouselvisible = true
+        poi.photosUrl = []
         const apikey = LocalStorage.getItem('apikey')
         details.photos.forEach(function (element) {
           const photoURL = LocalStorage.getItem('photo' + element.id)
           if (photoURL) {
-            console.log('Found photo url for ' + element.id)
+            console.log('Found photo url for ' + element.id + '==' + photoURL)
             poi.photosUrl.push(photoURL)
           } else {
             fetchPhoto(apikey, element.id).then(function (url) {
@@ -107,9 +115,13 @@ export default {
         })
       }
       if (details.rating) {
-        this.currentRatingValue = details.rating.value
-      } else {
-        this.currentRatingValue = -1
+        this.currentRatingValue = details.rating.value / 2
+      }
+      if (details.priceRange) {
+        this.currentPriceRange = details.priceRange.value
+      }
+      if (details.reviews) {
+        poi.reviews = details.reviews
       }
     },
     removePoi (index) {
@@ -119,17 +131,22 @@ export default {
       root.$emit('remove-single-poi', removed)
       if (this.pois.length === 0) {
         root.$emit('hidePoiPanel')
+        this.visible = false
       }
     },
     renderSinglePoi (poi) {
+      if (this.visible) {
+        this.$refs.scrollArea.setScrollPosition(0)
+      }
       // console.log('renderSinglePOI')
       const root = this.$root
       // console.log(poi)
       this.pois = []
       const _this = this
-      poi.photosUrl = []
+      poi.photosUrl = ['/assets/no-image.png']
       // remove the carrousel
-      this.carouselvisible = false
+      this.currentRatingValue = -1
+      this.currentPriceRange = -1
       if (poi.details) {
         const details = LocalStorage.getItem('details' + poi.details.id)
         if (details && details != null) {
@@ -147,6 +164,7 @@ export default {
       }
       this.pois.push(poi)
       root.$emit('showPoiPanel')
+      this.visible = true
     }
   },
   mounted () {

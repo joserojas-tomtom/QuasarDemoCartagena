@@ -25,6 +25,7 @@ export default {
       const center = map.getCenter()
       const toSave = { lat: center.lat, lng: center.lng, zoom: map.getZoom() }
       LocalStorage.set('lastlocation', JSON.stringify(toSave))
+      root.$emit('center-update', map.getCenter())
     }
 
     // Get the saved location from the cookie
@@ -78,7 +79,7 @@ export default {
         key: apikey,
         entityId: id
       }).then (function (response) {
-        console.log(response)
+        // console.log(response)
         var firstResult = response.results[0]
         if (firstResult) {
           try {
