@@ -3,15 +3,23 @@
 </template>
 <script>
 import { LocalStorage } from 'quasar'
+var searchMarkersManager
+
 export default {
   name: 'Map',
+  methods: {
+    removePoi (poi) {
+      searchMarkersManager.remove (poi)
+    }
+  },
   mounted () {
     const mapRef = this.$refs.myRef
     const root = this.$root
     const originalCity = LocalStorage.getItem('city')
     const apikey = LocalStorage.getItem('apikey')
     const tt = window.tt
-    var searchMarkersManager
+
+    root.$on('remove-single-poi', this.removePoi)
 
     function saveCookie () {
       const center = map.getCenter()
@@ -44,26 +52,41 @@ export default {
       style: '/assets/cartagenastyle.json'
     })
 
+    function _displayPOI (poi) {
+      moveMap(poi.position)
+      if (!searchMarkersManager) {
+        searchMarkersManager = new window.SearchMarkersManager(map)
+      }
+      // var searchMarker = new window.SearchMarker(firstResult)
+      // searchMarker.addTo(map)
+      searchMarkersManager.clear()
+      searchMarkersManager.draw([poi])
+      searchMarkersManager.openPopup(poi.id)
+      root.$emit('render-single-poi', searchMarkersManager.getPOI(poi.id))
+      // console.log(firstResult)
+    }
+
     /* eslint func-call-spacing: [0, { "allowNewlines": false }] */
     function displayPOIInfo (id) {
+      const savedpoi = LocalStorage.getItem('poi' + id)
+      if (savedpoi) {
+        console.log('Found poi : ' + id)
+        _displayPOI(savedpoi)
+        return
+      }
       tt.services.placeById({
         key: apikey,
         entityId: id
       }).then (function (response) {
-        // console.log(response)
+        console.log(response)
         var firstResult = response.results[0]
         if (firstResult) {
-          moveMap(firstResult.position)
-          // Send the object to the Footer
-          root.$emit('render-single-poi', firstResult)
-          if (!searchMarkersManager) {
-            searchMarkersManager = new window.SearchMarkersManager(map)
+          try {
+            LocalStorage.set('poi' + id, firstResult)
+          } catch (e) {
+            console.log('error storing ' + e)
           }
-          // var searchMarker = new window.SearchMarker(firstResult)
-          // searchMarker.addTo(map)
-          searchMarkersManager.clear()
-          searchMarkersManager.draw([firstResult])
-          searchMarkersManager.openPopup(firstResult.id)
+          _displayPOI(firstResult)
         }
       })
     }
@@ -72,7 +95,7 @@ export default {
     map.addControl(new window.tt.NavigationControl())
     map.on('load', function () {
       saveCookie()
-      console.log(originalCity)
+      // console.log(originalCity)
       map.setMaxBounds(originalCity.bounds.bounds)
     })
     map.on('dragend', saveCookie)
@@ -80,6 +103,7 @@ export default {
       // console.log(event.lngLat)
       const feature = map.queryRenderedFeatures(event.point)[0]
       if (feature && feature.layer.id === 'POI' && feature.properties.id) {
+        // console.log(feature.properties)
         displayPOIInfo(feature.properties.id)
       }
     })

@@ -34,6 +34,10 @@ function SearchMarker (poiData, options) {
   this.marker.setPopup(new SearchMarkerPopup(this.poiData, this.options))
 }
 
+SearchMarker.prototype.getPOIData = function () {
+  return this.poiData
+}
+
 // public methods
 SearchMarker.prototype.addTo = function (map) {
   this.marker.addTo(map)

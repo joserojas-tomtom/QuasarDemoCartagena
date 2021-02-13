@@ -82,13 +82,16 @@ SearchMarkersManager.prototype.draw = function (poiList) {
 
     var number = poi.address.streetNumber ? poi.address.streetNumber : ''
     var address = poi.address.streetName + ' ' + number + ' ' + poi.address.municipalitySubdivision
+    var poiDetails = poi.dataSources && poi.dataSources.poiDetails ? poi.dataSources.poiDetails[0] : undefined
     var poiOpts = {
+      id: poi.id,
       name: poi.poi ? poi.poi.name : undefined,
       address: address,
       distance: poi.dist,
       classification: poi.poi ? poi.poi.classifications[0].code : undefined,
       position: poi.position,
-      entryPoints: poi.entryPoints
+      entryPoints: poi.entryPoints,
+      details: poiDetails
     }
 
     var marker = new window.SearchMarker(poiOpts, this._options)
@@ -105,6 +108,10 @@ SearchMarkersManager.prototype.draw = function (poiList) {
 
 SearchMarkersManager.prototype.getMarkers = function () {
   return this.markers
+}
+
+SearchMarkersManager.prototype.getPOI = function (markerId) {
+  return this.markers[markerId].getPOIData()
 }
 
 SearchMarkersManager.prototype.openPopup = function (markerId) {
@@ -130,6 +137,17 @@ SearchMarkersManager.prototype.getMarkersBounds = function () {
   }
 
   return bounds
+}
+
+SearchMarkersManager.prototype.remove = function (poi) {
+  for (var markerId in this.markers) {
+    if (markerId === poi.id) {
+      var marker = this.markers[markerId]
+      marker.remove()
+      delete this.markers[markerId]
+      return
+    }
+  }
 }
 
 SearchMarkersManager.prototype.clear = function () {

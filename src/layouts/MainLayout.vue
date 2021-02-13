@@ -16,7 +16,6 @@
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
       content-class="bg-grey-1"
     >
@@ -32,18 +31,18 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-drawer
+    <q-drawer v-if='$q.platform.is.desktop'
         side="right"
-        v-model="rightDrawerOpen"
-        show-if-above
+        v-model='poiPanel'
         bordered
-        :width="300"
+        :width="500"
         :breakpoint="500"
         content-class="bg-grey-3"
       >
       <PoiManager/>
       </q-drawer>
-    <q-footer class="bg-grey-1">
+    <q-footer  v-if='poiPanel && $q.platform.is.mobile' class="bg-grey-1">
+      <PoiManager/>
     </q-footer>
   </q-layout>
 </template>
@@ -55,10 +54,28 @@ import PoiManager from 'components/PoiManager.vue'
 export default {
   name: 'MainLayout',
   components: { SearchBox, PoiManager },
+  mounted () {
+    const root = this.$root
+    root.$on('hidePoiPanel', this.hidePoiPanel)
+    root.$on('showPoiPanel', this.showPoiPanel)
+  },
+  beforeDestroy () {
+    const root = this.$root
+    root.$off('hidePoiPanel')
+    root.$off('showPoiPanel')
+  },
+  methods: {
+    hidePoPanel () {
+      this.poPanel = false
+    },
+    showPoiPanel () {
+      this.poiPanel = true
+    }
+  },
   data () {
     return {
       leftDrawerOpen: false,
-      rightDrawerOpen: true
+      poiPanel: false
     }
   }
 }
