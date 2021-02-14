@@ -8,7 +8,9 @@
                     @click='removePoi(index)'
                     class='q-my-xs'/>
         <q-item-label overline> {{ poi.name }} </q-item-label>
-        <q-item-label caption> {{ poi.address }} </q-item-label>
+        <q-item-label class='q-my-xs' caption> {{ poi.address }} </q-item-label>
+        <q-badge class='q-py-xs' text-color='white' @click='call(poi.phone)'> {{ poi.phone }} </q-badge>
+        <q-badge class='q-py-xs' color='orange-4' text-color='black' @click='web(poi.url)'> {{ poi.url }} </q-badge>
         <q-rating v-if='currentPriceRange >= 0'
               v-model="currentPriceRange"
               size="1.3em"
@@ -103,7 +105,7 @@ export default {
         details.photos.forEach(function (element) {
           const photoURL = LocalStorage.getItem('photo' + element.id)
           if (photoURL) {
-            console.log('Found photo url for ' + element.id + '==' + photoURL)
+            // console.log('Found photo url for ' + element.id + '==' + photoURL)
             poi.photosUrl.push(photoURL)
           } else {
             fetchPhoto(apikey, element.id).then(function (url) {
@@ -124,6 +126,15 @@ export default {
         poi.reviews = details.reviews
       }
     },
+    call (number) {
+      window.open('tel:' + number)
+    },
+    web (url) {
+      if (!url.startsWith('http')) {
+        url = 'http://' + url
+      }
+      window.open(url)
+    },
     removePoi (index) {
       const root = this.$root
       const removed = this.pois[index]
@@ -138,7 +149,7 @@ export default {
       if (this.visible) {
         this.$refs.scrollArea.setScrollPosition(0)
       }
-      // console.log('renderSinglePOI')
+      console.log('renderSinglePOI')
       const root = this.$root
       // console.log(poi)
       this.pois = []
@@ -150,7 +161,7 @@ export default {
       if (poi.details) {
         const details = LocalStorage.getItem('details' + poi.details.id)
         if (details && details != null) {
-          console.log('Found details for ' + poi.details.id)
+          // console.log('Found details for ' + poi.details.id)
           this.processDetails(poi, details)
         } else {
           getPOIDetails(poi.details.id).then(function (response) {

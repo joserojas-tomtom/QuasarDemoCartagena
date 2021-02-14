@@ -55,6 +55,7 @@ export default {
 
     function _displayPOI (poi) {
       moveMap(poi.position)
+      // console.log(poi)
       if (!searchMarkersManager) {
         searchMarkersManager = new window.SearchMarkersManager(map)
       }
@@ -71,7 +72,7 @@ export default {
     function displayPOIInfo (id) {
       const savedpoi = LocalStorage.getItem('poi' + id)
       if (savedpoi) {
-        console.log('Found poi : ' + id)
+        // console.log('Found poi : ' + id)
         _displayPOI(savedpoi)
         return
       }
@@ -85,7 +86,7 @@ export default {
           try {
             LocalStorage.set('poi' + id, firstResult)
           } catch (e) {
-            console.log('error storing ' + e)
+            // console.log('error storing ' + e)
           }
           _displayPOI(firstResult)
         }

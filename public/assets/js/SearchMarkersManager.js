@@ -79,13 +79,15 @@ SearchMarkersManager.prototype.draw = function (poiList) {
 
   this._poiList.forEach(function (poi) {
     var markerId = poi.id
-
+    console.log(poi)
     var number = poi.address.streetNumber ? poi.address.streetNumber : ''
     var address = poi.address.streetName + ' ' + number + ' ' + poi.address.municipalitySubdivision
     var poiDetails = poi.dataSources && poi.dataSources.poiDetails ? poi.dataSources.poiDetails[0] : undefined
     var poiOpts = {
       id: poi.id,
       name: poi.poi ? poi.poi.name : undefined,
+      phone: poi.poi.phone ? poi.poi.phone : undefined,
+      url: poi.poi.url ? poi.poi.url : undefined,
       address: address,
       distance: poi.dist,
       classification: poi.poi ? poi.poi.classifications[0].code : undefined,
