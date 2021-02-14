@@ -135,6 +135,15 @@ export default {
       }
       window.open(url)
     },
+    removeAllPoi () {
+      const root = this.$root
+      this.pois.forEach(function (element) {
+        root.$emit('remove-single-poi', element)
+      })
+      this.pois = []
+      root.$emit('hidePoiPanel')
+      this.visible = false
+    },
     removePoi (index) {
       const root = this.$root
       const removed = this.pois[index]
@@ -173,6 +182,8 @@ export default {
           })
         }
       }
+      this.pois.push(poi)
+      this.pois.push(poi)
       this.pois.push(poi)
       root.$emit('showPoiPanel')
       this.visible = true

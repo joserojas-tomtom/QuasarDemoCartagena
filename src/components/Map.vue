@@ -20,6 +20,7 @@ export default {
     const tt = window.tt
 
     root.$on('remove-single-poi', this.removePoi)
+    root.$on('single-poi-found', displayPOIInfo)
 
     function saveCookie () {
       const center = map.getCenter()
@@ -56,9 +57,6 @@ export default {
     function _displayPOI (poi) {
       moveMap(poi.position)
       // console.log(poi)
-      if (!searchMarkersManager) {
-        searchMarkersManager = new window.SearchMarkersManager(map)
-      }
       // var searchMarker = new window.SearchMarker(firstResult)
       // searchMarker.addTo(map)
       searchMarkersManager.clear()
@@ -96,6 +94,10 @@ export default {
     // map.addControl(new tt.FullscreenControl());
     map.addControl(new window.tt.NavigationControl())
     map.on('load', function () {
+      if (!searchMarkersManager) {
+        searchMarkersManager = new window.SearchMarkersManager(map)
+      }
+
       saveCookie()
       // console.log(originalCity)
       map.setMaxBounds(originalCity.bounds.bounds)

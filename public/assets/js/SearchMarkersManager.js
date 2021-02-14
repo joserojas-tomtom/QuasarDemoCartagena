@@ -140,6 +140,13 @@ SearchMarkersManager.prototype.getMarkersBounds = function () {
 
   return bounds
 }
+SearchMarkersManager.prototype.removeAll = function () {
+  for (var markerId in this.markers) {
+    var marker = this.markers[markerId]
+    marker.remove()
+    delete this.markers[markerId]
+  }
+}
 
 SearchMarkersManager.prototype.remove = function (poi) {
   for (var markerId in this.markers) {
