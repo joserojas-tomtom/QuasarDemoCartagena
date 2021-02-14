@@ -23,7 +23,10 @@
         <q-item-label
           header
           class="text-grey-8"
-        >
+        > MUNICIPIOS Y REGIONES
+        </q-item-label>
+        <q-item-label>
+          <span class="q-pa-xl text-dark text-weight-medium"> Cartagena</span>
         </q-item-label>
       </q-list>
     </q-drawer>
@@ -35,12 +38,12 @@
         side="right"
         v-model='rightDrawerOpen'
         bordered
-        :width="500"
-        :breakpoint="500"
+        :width="400"
+        :breakpoint="400"
         content-class="bg-grey-3"
       >
       </q-drawer>
-    <q-footer  class="bg-grey-1" style='width:300px'>
+    <q-footer  class="bg-grey-1" style='width:350px'>
       <PoiManager v-model='poiPanel'/>
     </q-footer>
   </q-layout>

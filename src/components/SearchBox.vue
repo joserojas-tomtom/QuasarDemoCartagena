@@ -12,7 +12,7 @@ const apikey = LocalStorage.getItem('apikey')
 // Options for the fuzzySearch service
 const searchOptions = {
   key: apikey,
-  language: 'es-419',
+  language: originalCity.language,
   limit: 20,
   idxSet: 'POI',
   center: originalCity.location,
@@ -22,7 +22,7 @@ const searchOptions = {
 // Options for the autocomplete service
 const autocompleteOptions = {
   key: apikey,
-  language: 'es-419',
+  language: originalCity.language,
   center: originalCity.location,
   countrySet: originalCity.country
 }

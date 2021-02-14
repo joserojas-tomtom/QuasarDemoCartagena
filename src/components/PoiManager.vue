@@ -1,16 +1,42 @@
 <template>
   <div v-if='visible' style='height: 300px'>
-  <q-scroll-area ref="scrollArea" style="height: inherit; max-width: 400px;">
+  <q-scroll-area ref="scrollArea"
+      style="height: inherit; max-width: 450px;"
+      :bar-style="{  width: '0px', opacity: 0 }">
     <q-item v-for='(poi, index) in pois' :key='poi.id' class='q-my-xs' id='scrollcontent'>
-      <q-item-section>
+      <q-item-section side top>
         <q-icon name="cancel" size='1.5em'
-                    color='green'
+                    color='grey-5'
                     @click='removePoi(index)'
+                    class='q-mb-lg'/>
+        <q-icon name="share" size='1.5em'
+                    color='darkgrey'
                     class='q-my-xs'/>
+        <q-icon name="favorite" size='1.5em'
+                    color='darkgrey'
+                    class='q-my-xs'/>
+       <q-icon name="camera" size='1.5em'
+                    color='darkgrey'
+                    class='q-my-xs'/>
+      </q-item-section>
+      <q-item-section>
         <q-item-label overline> {{ poi.name }} </q-item-label>
         <q-item-label class='q-my-xs' caption> {{ poi.address }} </q-item-label>
-        <q-badge class='q-py-xs' text-color='white' @click='call(poi.phone)'> {{ poi.phone }} </q-badge>
-        <q-badge class='q-py-xs' color='orange-4' text-color='black' @click='web(poi.url)'> {{ poi.url }} </q-badge>
+        <q-separator color='yellow'/>
+        <q-item-label class='q-pb-xs' caption> {{ poi.description }} </q-item-label>
+        <q-item-label caption v-if='poi.phone' class='q-pb-xs' @click='call(poi.phone)'>
+          <q-icon name="phone" size='1.5em'
+                    color='darkgrey'
+                    class='q-mb-xs'/>
+          <span> {{ poi.phone }}</span>
+        </q-item-label>
+        <q-item-label caption v-if='poi.url' class='q-pb-xs' @click='web(poi.url)'>
+          <q-icon name="computer" size='1.5em'
+                    color='darkgrey'
+                    class='q-mb-xs'/>
+          <span> {{ poi.url }}</span>
+        </q-item-label>
+        <q-item-label>
         <q-rating v-if='currentPriceRange >= 0'
               v-model="currentPriceRange"
               size="1.3em"
@@ -22,18 +48,20 @@
               v-model="currentRatingValue"
               size="1.3em"
               :max='5'
-              color='yellow-4'
-              icon="star"
+              color="yellow"
+              icon="star_border"
+              icon-selected="star"
+              icon-half="star_half"
             />
-        <q-separator class='q-my-xs' color="green" />
+        </q-item-label>
         <div class="q-pa-xs">
           <q-carousel
             animated
             v-model="slide"
-            navigation
             infinite
             :autoplay="autoplay"
             arrows
+            width="400px"
             height="250px"
             transition-prev="slide-right"
             transition-next="slide-left"
@@ -48,9 +76,14 @@
               :img-src="url" />
           </q-carousel>
         </div>
-        <q-item-label caption v-for='(line, index) in poi.reviews'
-                      :key='index'> {{ line.date }} : "{{ line.text }} "  </q-item-label>
-        <q-separator class='q-my-xs' color="green" />
+        <div v-for='(line, index) in poi.reviews' :key='index'>
+        <q-item-label
+                      >
+                      <span class='text-dark text-weight-medium'> {{ line.date }} :</span>
+                      <span class='text-grey-8'> {{ line.text }} </span>
+        </q-item-label>
+        </div>
+        <q-separator class='q-my-xs' color="yellow" />
 
       </q-item-section>
     </q-item>
@@ -125,6 +158,12 @@ export default {
       if (details.reviews) {
         poi.reviews = details.reviews
       }
+      if (details.description) {
+        poi.description = details.description
+      }
+      if (details.socialMedia) {
+        poi.socialMedia = details.socialMedia
+      }
     },
     call (number) {
       window.open('tel:' + number)
@@ -182,8 +221,6 @@ export default {
           })
         }
       }
-      this.pois.push(poi)
-      this.pois.push(poi)
       this.pois.push(poi)
       root.$emit('showPoiPanel')
       this.visible = true

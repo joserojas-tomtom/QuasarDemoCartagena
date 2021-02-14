@@ -11,6 +11,7 @@ import { LocalStorage } from 'quasar'
 var CARTAGENA = {
   location: { lat: 10.39972, lng: -75.51444, zoom: 14 },
   country: 'CO',
+  language: 'es-419',
   bounds: {
     bounds: [[-75.56566019581811, 10.329585886937679], [-75.4488171623405, 10.456136165887884]],
     padding: { top: 10, bottom: 25, left: 15, right: 5 },
