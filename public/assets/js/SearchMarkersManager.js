@@ -81,7 +81,10 @@ SearchMarkersManager.prototype.draw = function (poiList) {
     var markerId = poi.id
     console.log(poi)
     var number = poi.address.streetNumber ? poi.address.streetNumber : ''
-    var address = poi.address.streetName + ' ' + number + ' ' + poi.address.municipalitySubdivision
+    var address = poi.address.streetName + ' ' + number + ' '
+    if (poi.address.municipalitySubdivision) {
+      address += poi.address.municipalitySubdivision
+    }
     var poiDetails = poi.dataSources && poi.dataSources.poiDetails ? poi.dataSources.poiDetails[0] : undefined
     var poiOpts = {
       id: poi.id,

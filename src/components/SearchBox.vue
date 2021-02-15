@@ -14,36 +14,41 @@ const searchOptions = {
   key: apikey,
   language: originalCity.language,
   limit: 20,
-  idxSet: 'POI',
+  idxSet: 'POI,PAD',
   center: originalCity.location,
-  countrySet: originalCity.country
-  // boundingBox: originalCity.bounds.bounds
+  countrySet: originalCity.country,
+  boundingBox: originalCity.bounds.bounds
 }
 // Options for the autocomplete service
 const autocompleteOptions = {
   key: apikey,
   language: originalCity.language,
   center: originalCity.location,
-  countrySet: originalCity.country
+  countrySet: originalCity.country,
+  radius: 10000
 }
 
 const searchBoxOptions = {
   minNumberOfCharacters: 3,
   searchOptions: searchOptions,
   autocompleteOptions: autocompleteOptions,
-  placeholder: 'Aja.. que estas buscando?',
+  placeholder: originalCity.placeHolder,
   labels: {
+    placeholder: originalCity.placeHolder,
     suggestions: {
       brand: 'Marca sugerida',
-      category: 'Categoria sugerida',
-      placeholder: 'Aja.. que estas buscando?'
+      category: 'Categoria sugerida'
     }
   }
 }
 
+const ttSearchBox = new window.tt.plugins.SearchBox(window.tt.services, searchBoxOptions)
+
 function centerUpdate (center) {
-  autocompleteOptions.center = center
-  searchOptions.center = center
+  const options = ttSearchBox.getOptions()
+  options.searchOptions.center = center
+  options.autocompleteOptions.center = center
+  ttSearchBox.updateOptions(options)
 }
 
 function isFuzzySearchResult (event) {
@@ -55,6 +60,14 @@ export default {
   name: 'SearchBox',
   methods: {
     handleResultsCleared () {
+    },
+    changeCity (city) {
+      console.log(city)
+      const options = ttSearchBox.getOptions()
+      options.placeholder = city.placeHolder
+      options.labels.placeholder = city.placeHolder
+      ttSearchBox.updateOptions(options)
+      ttSearchBox.setValue('')
     }
   },
   mounted () {
@@ -73,7 +86,7 @@ export default {
       }
     }
     root.$on('center-update', centerUpdate)
-    const ttSearchBox = new window.tt.plugins.SearchBox(window.tt.services, searchBoxOptions)
+    root.$on('change-city', this.changeCity)
     ttSearchBox.on('tomtom.searchbox.resultfocused', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultselected', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultscleared', this.handleResultsCleared)
@@ -86,7 +99,8 @@ export default {
   },
   beforeDestroy () {
     const root = this.$root
-    root.$on('center-update')
+    root.$off('center-update')
+    root.$off('change-city')
   }
 }
 </script>

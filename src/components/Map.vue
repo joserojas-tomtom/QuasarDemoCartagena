@@ -21,6 +21,16 @@ export default {
 
     root.$on('remove-single-poi', this.removePoi)
     root.$on('single-poi-found', displayPOIInfo)
+    root.$on('change-city', changeCity)
+
+    function changeCity (city) {
+      console.log('changing to ' + city.name)
+      map.setMaxBounds(city.bounds.bounds)
+      map.setCenter(city.location)
+      map.setZoom(city.location.zoom)
+      saveCookie()
+      searchMarkersManager.clear()
+    }
 
     function saveCookie () {
       const center = map.getCenter()
@@ -50,7 +60,7 @@ export default {
       center: savedLocation,
       zoom: savedLocation.zoom,
       maxZoom: 18,
-      minZoom: 12,
+      minZoom: 11,
       style: '/assets/cartagenastyle.json'
     })
 
@@ -114,7 +124,8 @@ export default {
 
     function moveMap (lnglat) {
       map.flyTo({
-        center: lnglat
+        center: lnglat,
+        offset: [0, -100]
       })
     }
 

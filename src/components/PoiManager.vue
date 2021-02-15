@@ -229,10 +229,15 @@ export default {
   mounted () {
     const root = this.$root
     root.$on('render-single-poi', this.renderSinglePoi)
+    root.$on('change-city', function () {
+      console.log('***')
+      this.visible = false
+    })
   },
   beforeDestroy () {
     const root = this.$root
     root.$off('render-single-poi')
+    root.$off('change-city')
   }
 }
 </script>
