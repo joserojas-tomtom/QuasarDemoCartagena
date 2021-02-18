@@ -18,6 +18,9 @@
        <q-icon name="camera" size='1.5em'
                     color='darkgrey'
                     class='q-my-xs'/>
+        <q-icon name="notes" size='1.5em'
+                    color='darkgrey'
+                    class='q-my-xs'/>
       </q-item-section>
       <q-item-section>
         <q-item-label overline> {{ poi.name }} </q-item-label>
@@ -54,6 +57,15 @@
               icon-half="star_half"
             />
         </q-item-label>
+        <q-input rounded standout bottom-slots v-model="currentNotes" counter maxlength="100" :dense="true">
+        <template v-slot:before>
+          <q-icon name="comment" />
+        </template>
+
+        <template v-slot:append>
+          <q-btn round dense flat icon="add" />
+        </template>
+      </q-input>
         <div class="q-pa-xs">
           <q-carousel
             animated
@@ -116,6 +128,7 @@ export default {
   name: 'PoiManager',
   data () {
     return {
+      currentNotes: '',
       visible: false,
       slide: '0',
       autoplay: 2000,

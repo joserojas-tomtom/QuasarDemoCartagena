@@ -23,13 +23,18 @@ export default {
     root.$on('single-poi-found', displayPOIInfo)
     root.$on('change-city', changeCity)
 
-    function changeCity (city) {
+    function changeCity (index) {
+      const cities = LocalStorage.getItem('citiesDB')
+      const city = cities[index]
       console.log('changing to ' + city.name)
-      map.setMaxBounds(city.bounds.bounds)
-      map.setCenter(city.location)
-      map.setZoom(city.location.zoom)
+      map.setMaxBounds(null)
+      map.jumpTo({
+        center: city.location,
+        zoom: city.location.zoom
+      })
       saveCookie()
       searchMarkersManager.clear()
+      map.setMaxBounds(city.bounds.bounds)
     }
 
     function saveCookie () {

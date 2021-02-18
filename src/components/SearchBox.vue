@@ -6,62 +6,55 @@
 <script>
 import { LocalStorage } from 'quasar'
 
-const originalCity = LocalStorage.getItem('city')
-const apikey = LocalStorage.getItem('apikey')
-
-// Options for the fuzzySearch service
-const searchOptions = {
-  key: apikey,
-  language: originalCity.language,
-  limit: 20,
-  idxSet: 'POI,PAD',
-  center: originalCity.location,
-  countrySet: originalCity.country,
-  boundingBox: originalCity.bounds.bounds
-}
-// Options for the autocomplete service
-const autocompleteOptions = {
-  key: apikey,
-  language: originalCity.language,
-  center: originalCity.location,
-  countrySet: originalCity.country,
-  radius: 10000
-}
-
-const searchBoxOptions = {
-  minNumberOfCharacters: 3,
-  searchOptions: searchOptions,
-  autocompleteOptions: autocompleteOptions,
-  placeholder: originalCity.placeHolder,
-  labels: {
-    placeholder: originalCity.placeHolder,
-    suggestions: {
-      brand: 'Marca sugerida',
-      category: 'Categoria sugerida'
-    }
-  }
-}
-
-const ttSearchBox = new window.tt.plugins.SearchBox(window.tt.services, searchBoxOptions)
-
-function centerUpdate (center) {
-  const options = ttSearchBox.getOptions()
-  options.searchOptions.center = center
-  options.autocompleteOptions.center = center
-  ttSearchBox.updateOptions(options)
-}
-
-function isFuzzySearchResult (event) {
-  return !('matches' in event.data.result)
-}
-
 export default {
   props: ['apikey', 'city'],
   name: 'SearchBox',
   methods: {
     handleResultsCleared () {
-    },
-    changeCity (city) {
+    }
+  },
+  mounted () {
+    const root = this.$root
+    const originalCity = LocalStorage.getItem('city')
+    const apikey = LocalStorage.getItem('apikey')
+
+    // Options for the fuzzySearch service
+    const searchOptions = {
+      key: apikey,
+      language: originalCity.language,
+      limit: 20,
+      idxSet: 'POI,PAD',
+      center: originalCity.location,
+      countrySet: originalCity.country,
+      boundingBox: originalCity.bounds.bounds
+    }
+    // Options for the autocomplete service
+    const autocompleteOptions = {
+      key: apikey,
+      language: originalCity.language,
+      center: originalCity.location,
+      countrySet: originalCity.country,
+      radius: 10000
+    }
+
+    const searchBoxOptions = {
+      minNumberOfCharacters: 3,
+      searchOptions: searchOptions,
+      autocompleteOptions: autocompleteOptions,
+      placeholder: originalCity.placeHolder,
+      labels: {
+        placeholder: originalCity.placeHolder,
+        suggestions: {
+          brand: 'Marca sugerida',
+          category: 'Categoria sugerida'
+        }
+      }
+    }
+
+    const ttSearchBox = new window.tt.plugins.SearchBox(window.tt.services, searchBoxOptions)
+    function changeCity (index) {
+      const cities = LocalStorage.getItem('citiesDB')
+      const city = cities[index]
       console.log(city)
       const options = ttSearchBox.getOptions()
       options.placeholder = city.placeHolder
@@ -69,9 +62,11 @@ export default {
       ttSearchBox.updateOptions(options)
       ttSearchBox.setValue('')
     }
-  },
-  mounted () {
-    const root = this.$root
+
+    function isFuzzySearchResult (event) {
+      return !('matches' in event.data.result)
+    }
+
     function handleResultSelection (event) {
       if (isFuzzySearchResult(event)) {
         // Display selected result on the map
@@ -85,8 +80,13 @@ export default {
         root.$emit('single-poi-found', result.id)
       }
     }
-    root.$on('center-update', centerUpdate)
-    root.$on('change-city', this.changeCity)
+    root.$on('center-update', function (center) {
+      const options = ttSearchBox.getOptions()
+      options.searchOptions.center = center
+      options.autocompleteOptions.center = center
+      ttSearchBox.updateOptions(options)
+    })
+    root.$on('change-city', changeCity)
     ttSearchBox.on('tomtom.searchbox.resultfocused', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultselected', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultscleared', this.handleResultsCleared)
