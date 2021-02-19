@@ -10,6 +10,7 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
+        <Location class='q-py-xs col-1'/>
         <SearchBox class="q-py-xs col-10"/>
       </q-toolbar>
     </q-header>
@@ -52,18 +53,22 @@
 <script>
 import SearchBox from 'components/SearchBox.vue'
 import PoiManager from 'components/PoiManager.vue'
+import Location from 'components/Location.vue'
 import { LocalStorage } from 'quasar'
 
 // LocalStorage.clear()
 
 export default {
   name: 'MainLayout',
-  components: { SearchBox, PoiManager },
+  components: { SearchBox, PoiManager, Location },
   mounted () {
     const root = this.$root
     root.$on('hidePoiPanel', this.hidePoiPanel)
     root.$on('showPoiPanel', this.showPoiPanel)
     root.$on('change-city', this.hidePoiPanel)
+    root.$on('location-update', function (location) {
+      console.log(location)
+    })
   },
   beforeDestroy () {
     const root = this.$root

@@ -22,6 +22,11 @@ export default {
     root.$on('remove-single-poi', this.removePoi)
     root.$on('single-poi-found', displayPOIInfo)
     root.$on('change-city', changeCity)
+    root.$on('location-update', function (location) {
+      // console.log(location)
+      const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
+      map.setCenter(coords)
+    })
 
     function changeCity (index) {
       const cities = LocalStorage.getItem('citiesDB')
