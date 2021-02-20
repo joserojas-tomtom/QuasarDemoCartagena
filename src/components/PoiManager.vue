@@ -71,8 +71,9 @@
               icon-half="star_half"
             />
         </q-item-label>
-        <div class="q-pa-xs">
+        <div>
           <q-carousel
+            v-if='hasPhotos'
             animated
             v-model="slide"
             infinite
@@ -92,6 +93,8 @@
               :name="index"
               :img-src="url" />
           </q-carousel>
+          <q-img v-else src='no-image.png' contain height="250px"/>
+
         </div>
         <div v-for='(line, index) in poi.reviews' :key='index'>
         <q-item-label
@@ -133,6 +136,7 @@ export default {
   name: 'PoiManager',
   data () {
     return {
+      hasPhotos: false,
       visible: false,
       slide: '0',
       autoplay: 2000,
@@ -159,14 +163,15 @@ export default {
     },
     fetchPersonalNotes (id) {
       const notes = LocalStorage.getItem('notes' + id)
-      console.log('notes from ' + id)
-      console.log(notes)
+      // console.log('notes from ' + id)
+      // console.log(notes)
       return notes || ''
     },
     processDetails (poi, details) {
       console.log('details')
       console.log(details)
-      if (details.photos && details.photos.length > 0) {
+      if (details && details.photos && details.photos.length > 0) {
+        this.hasPhotos = true
         poi.photosUrl = []
         const apikey = LocalStorage.getItem('apikey')
         details.photos.forEach(function (element) {
@@ -236,10 +241,13 @@ export default {
       // console.log(poi)
       this.pois = []
       const _this = this
-      poi.photosUrl = ['/assets/no-image.png']
+      // poi.photosUrl = ['https://localhost:8080/assets/no-image.png']
       // remove the carrousel
       this.currentRatingValue = -1
       this.currentPriceRange = -1
+      this.hasPhotos = false
+
+      console.log('photos? ' + this.hasPhotos)
       if (poi.details) {
         const details = LocalStorage.getItem('details' + poi.details.id)
         if (details && details != null) {

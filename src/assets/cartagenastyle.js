@@ -20655,15 +20655,15 @@ const mystyle = {
         "all",
         [
           "any",
-          ["all", ["<=", ["zoom"], 10], ["<=", ["get", "priority"], 109]],
-          ["all", ["==", ["zoom"], 11], ["<=", ["get", "priority"], 119]],
-          ["all", ["==", ["zoom"], 12], ["<=", ["get", "priority"], 129]],
-          ["all", ["==", ["zoom"], 13], ["<=", ["get", "priority"], 139]],
-          ["all", ["==", ["zoom"], 14], ["<=", ["get", "priority"], 149]],
-          ["all", ["==", ["zoom"], 15], ["<=", ["get", "priority"], 159]],
-          ["all", ["==", ["zoom"], 16], ["<=", ["get", "priority"], 169]],
-          ["all", ["==", ["zoom"], 17], ["<=", ["get", "priority"], 179]],
-          ["all", [">=", ["zoom"], 18], ["<=", ["get", "priority"], 189]]
+          ["all", ["<=", ["zoom"], 9], ["<=", ["get", "priority"], 109]],
+          ["all", ["==", ["zoom"], 10], ["<=", ["get", "priority"], 119]],
+          ["all", ["==", ["zoom"], 11], ["<=", ["get", "priority"], 129]],
+          ["all", ["==", ["zoom"], 12], ["<=", ["get", "priority"], 139]],
+          ["all", ["==", ["zoom"], 13], ["<=", ["get", "priority"], 149]],
+          ["all", ["==", ["zoom"], 14], ["<=", ["get", "priority"], 159]],
+          ["all", ["==", ["zoom"], 15], ["<=", ["get", "priority"], 169]],
+          ["all", ["==", ["zoom"], 16], ["<=", ["get", "priority"], 179]],
+          ["all", [">=", ["zoom"], 17], ["<=", ["get", "priority"], 189]]
         ],
         [
           "any",

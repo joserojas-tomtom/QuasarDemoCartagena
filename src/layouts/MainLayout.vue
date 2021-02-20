@@ -44,7 +44,7 @@
         content-class="bg-grey-3"
       >
       </q-drawer>
-    <q-footer  class="bg-grey-1" style='width:350px'>
+    <q-footer  class="bg-grey-1" style='width:400px'>
       <PoiManager v-model='poiPanel'/>
     </q-footer>
   </q-layout>
