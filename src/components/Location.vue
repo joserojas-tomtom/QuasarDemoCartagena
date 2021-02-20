@@ -22,7 +22,9 @@ export default {
       console.log(error)
     },
     sendLocation () {
-      this.$root.$emit('location-update', this.location)
+      if (this.location) {
+        this.$root.$emit('location-update', this.location)
+      }
     }
   },
   mounted () {
@@ -31,7 +33,7 @@ export default {
       const options = {
         enableHighAccuracy: true,
         timeout: 5000,
-        maximumAge: 10
+        maximumAge: 1000
       }
       navigator.geolocation.getCurrentPosition(this.showPosition, this.errorLocation, options)
       navigator.geolocation.watchPosition(this.showPosition, this.errorLocation, options)

@@ -39,6 +39,20 @@
                     class='q-mb-xs'/>
           <span> {{ poi.url }}</span>
         </q-item-label>
+        <q-input rounded
+          standout bottom-slots
+          v-model="poi.personalNotes"
+          ref='personalNotesInput'
+          @blur="updatePersonalNotes(index)"
+          clearable
+          counter maxlength="100" :dense="true">
+          <template v-slot:before>
+            <q-icon name="comment" />
+          </template>
+          <!-- <template v-slot:append>
+            <q-btn round dense flat icon="add" />
+          </template> -->
+        </q-input>
         <q-item-label>
         <q-rating v-if='currentPriceRange >= 0'
               v-model="currentPriceRange"
@@ -57,15 +71,6 @@
               icon-half="star_half"
             />
         </q-item-label>
-        <q-input rounded standout bottom-slots v-model="currentNotes" counter maxlength="100" :dense="true">
-        <template v-slot:before>
-          <q-icon name="comment" />
-        </template>
-
-        <template v-slot:append>
-          <q-btn round dense flat icon="add" />
-        </template>
-      </q-input>
         <div class="q-pa-xs">
           <q-carousel
             animated
@@ -128,7 +133,6 @@ export default {
   name: 'PoiManager',
   data () {
     return {
-      currentNotes: '',
       visible: false,
       slide: '0',
       autoplay: 2000,
@@ -141,6 +145,23 @@ export default {
   methods: {
     onLoad (index, done) {
       done()
+    },
+    updatePersonalNotes (index) {
+      const value = this.$refs.personalNotesInput[0].value
+      const poi = this.pois[index]
+      poi.personalNotes = value
+      console.log('setting ' + value + 'for ' + poi.id)
+      try {
+        LocalStorage.set('notes' + poi.id, value)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    fetchPersonalNotes (id) {
+      const notes = LocalStorage.getItem('notes' + id)
+      console.log('notes from ' + id)
+      console.log(notes)
+      return notes || ''
     },
     processDetails (poi, details) {
       console.log('details')
@@ -234,6 +255,8 @@ export default {
           })
         }
       }
+      poi.personalNotes = this.fetchPersonalNotes(poi.id)
+
       this.pois.push(poi)
       root.$emit('showPoiPanel')
       this.visible = true

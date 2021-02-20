@@ -3,6 +3,8 @@
 </template>
 <script>
 import { LocalStorage } from 'quasar'
+import getDefaultStyle from 'assets/cartagenastyle.js'
+
 var searchMarkersManager
 
 export default {
@@ -18,14 +20,16 @@ export default {
     const originalCity = LocalStorage.getItem('city')
     const apikey = LocalStorage.getItem('apikey')
     const tt = window.tt
+    const myLocationMarker = new tt.Marker()
 
     root.$on('remove-single-poi', this.removePoi)
     root.$on('single-poi-found', displayPOIInfo)
     root.$on('change-city', changeCity)
     root.$on('location-update', function (location) {
-      // console.log(location)
+      console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
       map.setCenter(coords)
+      myLocationMarker.setLngLat(coords).addTo(map)
     })
 
     function changeCity (index) {
@@ -71,7 +75,7 @@ export default {
       zoom: savedLocation.zoom,
       maxZoom: 18,
       minZoom: 11,
-      style: '/assets/cartagenastyle.json'
+      style: getDefaultStyle() // 'assets/cartagenastyle.json'
     })
 
     function _displayPOI (poi) {
