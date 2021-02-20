@@ -23,11 +23,22 @@
       <q-list>
         <q-item-label
           header
-          class="text-grey-8"
+          class="text-grey-8 text-weight-medium bg-green-2"
         > MUNICIPIOS Y REGIONES
         </q-item-label>
         <q-item-label class='q-pa-md shadow-2' clickable v-for='(city, index) in cities' :key='city' @click="changeCity(index)">
-          <span class="q-pa-lg text-dark text-weight-medium"> {{city}}</span>
+          <span class="q-pa-lg text-dark text-weight-normal"> {{city}}</span>
+        </q-item-label>
+        <q-item-label
+          header
+          class= 'text-grey-8 text-weight-medium bg-green-2'>FAVORITOS
+        </q-item-label>
+        <q-item-label class='q-pa-md shadow-2' clickable v-for='(favorite, index) in favorites' :key='favorite.id'>
+          <q-icon name="delete" size='1.5em'
+                    color='grey-5'
+                    @click='removeFavorite(index)'
+                    />
+          <span @click="showFavorite(index)" class="q-pa-lg text-dark text-weight-normal"> {{favorite.name}}</span>
         </q-item-label>
       </q-list>
     </q-drawer>
@@ -44,7 +55,7 @@
         content-class="bg-grey-3"
       >
       </q-drawer>
-    <q-footer  class="bg-grey-1" style='width:400px'>
+    <q-footer  class="bg-grey-1" style='width:360px'>
       <PoiManager v-model='poiPanel'/>
     </q-footer>
   </q-layout>
@@ -69,6 +80,8 @@ export default {
     root.$on('location-update', function (location) {
       console.log(location)
     })
+    this.favorites = LocalStorage.getItem('favorites') || []
+    console.log(this.favorites)
   },
   beforeDestroy () {
     const root = this.$root
@@ -82,6 +95,18 @@ export default {
     },
     showPoiPanel () {
       this.poiPanel = true
+      this.favorites = LocalStorage.getItem('favorites') || []
+      console.log(this.favorites)
+    },
+    removeFavorite (index) {
+      this.favorites.splice(index, 1)
+      LocalStorage.set('favorites', this.favorites)
+    },
+    showFavorite (index) {
+      console.log('Clicked favorito ' + index)
+      this.leftDrawerOpen = false
+      const root = this.$root
+      root.$emit('show-favorite', this.favorites[index].id)
     },
     changeCity (index) {
       console.log('click city ' + index)
@@ -97,7 +122,9 @@ export default {
       leftDrawerOpen: false,
       poiPanel: true,
       rightDrawerOpen: false,
-      cities: ['AMSTERDAM', 'CARTAGENA', 'VALLEDUPAR', 'FLORENCIA']
+      cities: ['AMSTERDAM', 'CARTAGENA', 'VALLEDUPAR', 'FLORENCIA'],
+      currentCity: 0,
+      favorites: []
     }
   }
 }

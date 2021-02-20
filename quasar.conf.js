@@ -118,9 +118,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'CartagenaMap',
-        short_name: 'CartagenaMap',
-        description: 'Map de Cartagena de Indias',
+        name: 'Tu Mapa',
+        short_name: 'TuMapa',
+        description: 'Mapas con Colombia',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -185,7 +185,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'cartagena-map'
+        appId: 'tu-mapa-co'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

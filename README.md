@@ -1,4 +1,4 @@
-# CartagenaMap (cartagena-map)
+# Tu Mapa (Mapas de Colombia)
 
 Map de Cartagena de Indias
 

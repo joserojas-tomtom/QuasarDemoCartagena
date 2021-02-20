@@ -1,8 +1,8 @@
 {
   "name": "cartagena-map",
   "version": "0.0.1",
-  "description": "Map de Cartagena de Indias",
-  "productName": "CartagenaMap",
+  "description": "Mapas de Colombia",
+  "productName": "Tu Mapa",
   "author": "loodico",
   "private": true,
   "scripts": {

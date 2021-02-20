@@ -94,6 +94,7 @@ SearchMarkersManager.prototype.draw = function (poiList) {
       address: address,
       distance: poi.dist,
       classification: poi.poi ? poi.poi.classifications[0].code : undefined,
+      category: poi.poi ? poi.poi.categories[0] : undefined,
       position: poi.position,
       entryPoints: poi.entryPoints,
       details: poiDetails
@@ -101,11 +102,8 @@ SearchMarkersManager.prototype.draw = function (poiList) {
 
     var marker = new window.SearchMarker(poiOpts, this._options)
     marker.onClick(function (clickedMarker) {
-      if (this._lastClickedMarker && this._lastClickedMarker !== clickedMarker) {
-        this._lastClickedMarker.clearEntryPoints()
-      }
-      this._lastClickedMarker = clickedMarker
-    }.bind(this))
+      clickedMarker.togglePopup()
+    })
     marker.addTo(this.map)
     this.markers[markerId] = marker
   }, this)

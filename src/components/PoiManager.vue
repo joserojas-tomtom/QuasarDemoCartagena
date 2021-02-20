@@ -11,20 +11,20 @@
                     class='q-mb-lg'/>
         <q-icon name="share" size='1.5em'
                     color='darkgrey'
-                    class='q-my-xs'/>
+                    class='q-mb-lg'/>
         <q-icon name="favorite" size='1.5em'
-                    color='darkgrey'
-                    class='q-my-xs'/>
-       <q-icon name="camera" size='1.5em'
-                    color='darkgrey'
-                    class='q-my-xs'/>
-        <q-icon name="notes" size='1.5em'
-                    color='darkgrey'
-                    class='q-my-xs'/>
+                    :color='poi.favoriteColor'
+                    @click='toggleFavorite(index)'
+                    class='q-mb-lg'/>
       </q-item-section>
       <q-item-section>
-        <q-item-label overline> {{ poi.name }} </q-item-label>
-        <q-item-label class='q-my-xs' caption> {{ poi.address }} </q-item-label>
+        <q-item-label overline>
+          {{ poi.name }}
+        </q-item-label>
+        <q-item-label class='q-my-xs' caption>
+            <q-badge>{{ poi.category }}</q-badge>
+            {{ poi.address }}
+        </q-item-label>
         <q-separator color='yellow'/>
         <q-item-label class='q-pb-xs' caption> {{ poi.description }} </q-item-label>
         <q-item-label caption v-if='poi.phone' class='q-pb-xs' @click='call(poi.phone)'>
@@ -188,6 +188,8 @@ export default {
           }
         })
       }
+      console.log('photos? ' + this.hasPhotos)
+
       if (details.rating) {
         this.currentRatingValue = details.rating.value / 2
       }
@@ -222,6 +224,31 @@ export default {
       root.$emit('hidePoiPanel')
       this.visible = false
     },
+    toggleFavorite (index) {
+      const poi = this.pois[index]
+      const favorites = LocalStorage.getItem('favorites') || []
+      if (poi.isFavorite) {
+        poi.isFavorite = false
+        poi.favoriteColor = 'darkGrey'
+        const newFavorites = []
+        favorites.forEach(function (element) {
+          if (element.id !== poi.id) {
+            newFavorites.push(element)
+          }
+        })
+        LocalStorage.set('favorites', newFavorites)
+      } else {
+        poi.isFavorite = true
+        poi.favoriteColor = 'red'
+        const city = LocalStorage.getItem('currentCity')
+        favorites.push({
+          id: poi.id,
+          name: poi.name,
+          cityIndex: city
+        })
+        LocalStorage.set('favorites', favorites)
+      }
+    },
     removePoi (index) {
       const root = this.$root
       const removed = this.pois[index]
@@ -247,7 +274,19 @@ export default {
       this.currentPriceRange = -1
       this.hasPhotos = false
 
-      console.log('photos? ' + this.hasPhotos)
+      // Check if favorite
+      const favorites = LocalStorage.getItem('favorites')
+      poi.favoriteColor = 'darkgrey'
+      poi.isFavorite = false
+      if (favorites) {
+        favorites.forEach(function (element) {
+          if (element.id === poi.id) {
+            poi.isFavorite = true
+            poi.favoriteColor = 'red'
+          }
+        })
+      }
+
       if (poi.details) {
         const details = LocalStorage.getItem('details' + poi.details.id)
         if (details && details != null) {

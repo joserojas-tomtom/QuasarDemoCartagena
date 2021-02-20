@@ -25,6 +25,7 @@ export default {
     root.$on('remove-single-poi', this.removePoi)
     root.$on('single-poi-found', displayPOIInfo)
     root.$on('change-city', changeCity)
+    root.$on('show-favorite', displayPOIInfo)
     root.$on('location-update', function (location) {
       console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
@@ -139,7 +140,8 @@ export default {
     function moveMap (lnglat) {
       map.flyTo({
         center: lnglat,
-        offset: [0, -100]
+        zoom: 17,
+        offset: [0, -20]
       })
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <q-icon v-if='visible' name="location_on" size='1.5em'
+  <q-icon v-if='visible' :name="iconName" size='1.5em'
                     color='blue-1' rounded
                      @click='sendLocation()'
                     class='q-ml-xs q-mr-xs'/>
@@ -9,16 +9,19 @@ export default {
   name: 'Location',
   data () {
     return {
+      iconName: 'location_off',
       visible: true,
       location: {}
     }
   },
   methods: {
     showPosition (position) {
+      this.iconName = 'location_on'
       console.log(position)
       this.location = position
     },
     errorLocation (error) {
+      this.iconName = 'location_off'
       console.log(error)
     },
     sendLocation () {
