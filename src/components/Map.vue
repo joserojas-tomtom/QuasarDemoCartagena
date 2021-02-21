@@ -134,6 +134,15 @@ export default {
       if (feature && feature.layer.id === 'POI' && feature.properties.id) {
         // console.log(feature.properties)
         displayPOIInfo(feature.properties.id)
+      } else {
+        // add temporary marker
+        const poi = {
+          id: 'personal' + (new Date().getTime()),
+          name: 'Sin nombre',
+          position: event.lngLat,
+          address: ''
+        }
+        _displayPOI(poi)
       }
     })
 

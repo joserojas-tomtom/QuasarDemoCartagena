@@ -237,6 +237,9 @@ export default {
           }
         })
         LocalStorage.set('favorites', newFavorites)
+        if (poi.id.startsWith('personal')) {
+          LocalStorage.remove('poi' + poi.id)
+        }
       } else {
         poi.isFavorite = true
         poi.favoriteColor = 'red'
@@ -246,6 +249,11 @@ export default {
           name: poi.name,
           cityIndex: city
         })
+        if (poi.id.startsWith('personal')) {
+          console.log('saving a personal ')
+          console.log(poi)
+          LocalStorage.set('poi' + poi.id, poi)
+        }
         LocalStorage.set('favorites', favorites)
       }
       this.$root.$emit('favorites-updated', poi.id)

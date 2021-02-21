@@ -34,7 +34,7 @@
           class= 'text-grey-8 text-weight-medium bg-green-2'>FAVORITOS
         </q-item-label>
         <div v-for='(favorite, index) in favorites' :key='favorite.id'>
-        <q-item-label v-if='favorite.cityIndex === currentCity' class='q-pa-md shadow-2' clickable >
+        <q-item-label v-show='favorite.cityIndex === currentCity' class='q-pa-md shadow-2' clickable >
           <!-- <q-item-section header
             @click="showFavorite(index)"
             class="q-pa-lg text-dark text-weight-normal">{{favorite.name}}
@@ -136,11 +136,21 @@ export default {
       LocalStorage.set('favorites', this.favorites)
     },
     updateFavoriteName (index) {
+      console.log('index: ' + index)
+      console.log(this.$refs)
       const value = this.$refs.favoriteName[index].value
       const poi = this.favorites[index]
       poi.name = value
       console.log('setting ' + value + 'for ' + poi.id)
       try {
+        const oldPOI = LocalStorage.getItem('poi' + poi.id)
+        if (oldPOI.poi) {
+          oldPOI.poi.name = value
+        } else {
+        }
+        console.log('Old POI')
+        console.log(oldPOI)
+        LocalStorage.set('poi' + poi.id, oldPOI)
         LocalStorage.set('favorites', this.favorites)
       } catch (e) {
         console.log(e)
