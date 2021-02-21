@@ -11,13 +11,13 @@ export default {
     return {
       iconName: 'location_off',
       visible: true,
-      location: {}
+      location: undefined
     }
   },
   methods: {
     showPosition (position) {
       this.iconName = 'location_on'
-      console.log(position)
+      // console.log(position)
       this.location = position
     },
     errorLocation (error) {
@@ -32,7 +32,7 @@ export default {
   },
   mounted () {
     if (navigator.geolocation) {
-      console.log('geolocation OK')
+      // console.log('geolocation OK')
       const options = {
         enableHighAccuracy: true,
         timeout: 5000,

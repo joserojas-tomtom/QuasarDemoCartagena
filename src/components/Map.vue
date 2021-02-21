@@ -27,7 +27,7 @@ export default {
     root.$on('change-city', changeCity)
     root.$on('show-favorite', displayPOIInfo)
     root.$on('location-update', function (location) {
-      console.log(location)
+      // console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
       map.setCenter(coords)
       myLocationMarker.setLngLat(coords).addTo(map)
@@ -36,7 +36,7 @@ export default {
     function changeCity (index) {
       const cities = LocalStorage.getItem('citiesDB')
       const city = cities[index]
-      console.log('changing to ' + city.name)
+      // console.log('changing to ' + city.name)
       map.setMaxBounds(null)
       map.jumpTo({
         center: city.location,

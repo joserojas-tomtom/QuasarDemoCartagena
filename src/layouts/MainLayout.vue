@@ -33,13 +33,39 @@
           header
           class= 'text-grey-8 text-weight-medium bg-green-2'>FAVORITOS
         </q-item-label>
-        <q-item-label class='q-pa-md shadow-2' clickable v-for='(favorite, index) in favorites' :key='favorite.id'>
-          <q-icon name="delete" size='1.5em'
-                    color='grey-5'
-                    @click='removeFavorite(index)'
+        <div v-for='(favorite, index) in favorites' :key='favorite.id'>
+        <q-item-label v-if='favorite.cityIndex === currentCity' class='q-pa-md shadow-2' clickable >
+          <!-- <q-item-section header
+            @click="showFavorite(index)"
+            class="q-pa-lg text-dark text-weight-normal">{{favorite.name}}
+            </q-item-section> -->
+            <q-input rounded
+              ref='favoriteName'
+              @blur="updateFavoriteName(index)"
+              standout bottom-slots
+              v-model="favorite.name"
+              counter maxlength="100" :dense="true">
+          </q-input>
+            <q-item-section side>
+              <q-item-label>
+                 <q-icon class='q-pa-sm' name="location_on" size='1.5em'
+                    @click="showFavorite(index)"
+                    color='grey'
                     />
-          <span @click="showFavorite(index)" class="q-pa-lg text-dark text-weight-normal"> {{favorite.name}}</span>
+                <q-icon class='q-pa-sm' name="directions_run" size='1.5em'
+                          color='grey'
+                          />
+                <q-icon class='q-pa-sm' name="directions_car" size='1.5em'
+                          color='grey'
+                          />
+                <q-icon class='q-pa-sm' name="delete" size='1.5em'
+                          color='grey'
+                          @click='removeFavorite(index)'
+                          />
+              </q-item-label>
+            </q-item-section>
         </q-item-label>
+        </div>
       </q-list>
     </q-drawer>
 
@@ -77,17 +103,21 @@ export default {
     root.$on('hidePoiPanel', this.hidePoiPanel)
     root.$on('showPoiPanel', this.showPoiPanel)
     root.$on('change-city', this.hidePoiPanel)
+    root.$on('favorites-updated', this.updateFavorites)
     root.$on('location-update', function (location) {
       console.log(location)
     })
     this.favorites = LocalStorage.getItem('favorites') || []
-    console.log(this.favorites)
+    // console.log(this.favorites)
+    this.currentCity = LocalStorage.getItem('currentCity')
   },
   beforeDestroy () {
     const root = this.$root
     root.$off('hidePoiPanel')
     root.$off('showPoiPanel')
     root.$off('change-city')
+    root.$off('favorites-updates')
+    root.$off('location-update')
   },
   methods: {
     hidePoiPanel () {
@@ -96,25 +126,40 @@ export default {
     showPoiPanel () {
       this.poiPanel = true
       this.favorites = LocalStorage.getItem('favorites') || []
-      console.log(this.favorites)
+      // console.log(this.favorites)
+    },
+    updateFavorites (id) {
+      this.favorites = LocalStorage.getItem('favorites') || []
     },
     removeFavorite (index) {
       this.favorites.splice(index, 1)
       LocalStorage.set('favorites', this.favorites)
     },
+    updateFavoriteName (index) {
+      const value = this.$refs.favoriteName[index].value
+      const poi = this.favorites[index]
+      poi.name = value
+      console.log('setting ' + value + 'for ' + poi.id)
+      try {
+        LocalStorage.set('favorites', this.favorites)
+      } catch (e) {
+        console.log(e)
+      }
+    },
     showFavorite (index) {
-      console.log('Clicked favorito ' + index)
+      // console.log('Clicked favorito ' + index)
       this.leftDrawerOpen = false
       const root = this.$root
       root.$emit('show-favorite', this.favorites[index].id)
     },
     changeCity (index) {
-      console.log('click city ' + index)
+      // console.log('click city ' + index)
       LocalStorage.set('currentCity', index)
       const root = this.$root
       root.$emit('change-city', index)
       this.leftDrawerOpen = false
       this.poiPanel = false
+      this.currentCity = index
     }
   },
   data () {

@@ -79,25 +79,32 @@ SearchMarkersManager.prototype.draw = function (poiList) {
 
   this._poiList.forEach(function (poi) {
     var markerId = poi.id
-    console.log(poi)
-    var number = poi.address.streetNumber ? poi.address.streetNumber : ''
+    // console.log(poi)
+    var number = poi.address.streetNumber || ''
     var address = poi.address.streetName + ' ' + number + ' '
     if (poi.address.municipalitySubdivision) {
       address += poi.address.municipalitySubdivision
     }
-    var poiDetails = poi.dataSources && poi.dataSources.poiDetails ? poi.dataSources.poiDetails[0] : undefined
-    var poiOpts = {
+    const poiDetails = poi.dataSources && poi.dataSources.poiDetails ? poi.dataSources.poiDetails[0] : undefined
+    const poiOpts = {
       id: poi.id,
-      name: poi.poi ? poi.poi.name : undefined,
-      phone: poi.poi.phone ? poi.poi.phone : undefined,
-      url: poi.poi.url ? poi.poi.url : undefined,
+      name: 'Sin nombre',
+      phone: undefined,
+      url: undefined,
       address: address,
       distance: poi.dist,
-      classification: poi.poi ? poi.poi.classifications[0].code : undefined,
-      category: poi.poi ? poi.poi.categories[0] : undefined,
+      classification: undefined,
+      category: undefined,
       position: poi.position,
       entryPoints: poi.entryPoints,
       details: poiDetails
+    }
+    if (poi.poi) {
+      poiOpts.name = poi.poi.name || 'Sin nombre'
+      poiOpts.phone = poi.poi.phone || ''
+      poiOpts.url = poi.poi.url || ''
+      poiOpts.classification = poi.poi.classifications[0].code || undefined
+      poiOpts.category = poi.poi.categories[0] || undefined
     }
 
     var marker = new window.SearchMarker(poiOpts, this._options)

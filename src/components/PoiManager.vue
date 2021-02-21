@@ -154,7 +154,7 @@ export default {
       const value = this.$refs.personalNotesInput[0].value
       const poi = this.pois[index]
       poi.personalNotes = value
-      console.log('setting ' + value + 'for ' + poi.id)
+      // console.log('setting ' + value + 'for ' + poi.id)
       try {
         LocalStorage.set('notes' + poi.id, value)
       } catch (e) {
@@ -168,8 +168,8 @@ export default {
       return notes || ''
     },
     processDetails (poi, details) {
-      console.log('details')
-      console.log(details)
+      // console.log('details')
+      // console.log(details)
       if (details && details.photos && details.photos.length > 0) {
         this.hasPhotos = true
         poi.photosUrl = []
@@ -188,7 +188,7 @@ export default {
           }
         })
       }
-      console.log('photos? ' + this.hasPhotos)
+      // console.log('photos? ' + this.hasPhotos)
 
       if (details.rating) {
         this.currentRatingValue = details.rating.value / 2
@@ -248,6 +248,7 @@ export default {
         })
         LocalStorage.set('favorites', favorites)
       }
+      this.$root.$emit('favorites-updated', poi.id)
     },
     removePoi (index) {
       const root = this.$root
@@ -261,9 +262,11 @@ export default {
     },
     renderSinglePoi (poi) {
       if (this.visible) {
-        this.$refs.scrollArea.setScrollPosition(0)
+        try {
+          this.$refs.scrollArea.setScrollPosition(0)
+        } catch (error) {}
       }
-      console.log('renderSinglePOI')
+      // console.log('renderSinglePOI')
       const root = this.$root
       // console.log(poi)
       this.pois = []
@@ -313,7 +316,7 @@ export default {
     const root = this.$root
     root.$on('render-single-poi', this.renderSinglePoi)
     root.$on('change-city', function () {
-      console.log('***')
+      // console.log('***')
       this.visible = false
     })
   },

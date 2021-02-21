@@ -23,7 +23,7 @@ export default {
       key: apikey,
       language: originalCity.language,
       limit: 20,
-      idxSet: 'POI,PAD',
+      idxSet: 'POI,PAD,Addr',
       center: originalCity.location,
       countrySet: originalCity.country,
       boundingBox: originalCity.bounds.bounds
@@ -55,7 +55,7 @@ export default {
     function changeCity (index) {
       const cities = LocalStorage.getItem('citiesDB')
       const city = cities[index]
-      console.log(city)
+      // console.log(city)
       const options = ttSearchBox.getOptions()
       options.placeholder = city.placeHolder
       options.labels.placeholder = city.placeHolder
@@ -71,7 +71,7 @@ export default {
       if (isFuzzySearchResult(event)) {
         // Display selected result on the map
         var result = event.data.result
-        console.log(event, result)
+        // console.log(event, result)
         try {
           LocalStorage.set('poi' + result.id, result)
         } catch (e) {
