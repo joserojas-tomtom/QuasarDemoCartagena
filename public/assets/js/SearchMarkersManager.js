@@ -88,7 +88,7 @@ SearchMarkersManager.prototype.draw = function (poiList) {
     const poiDetails = poi.dataSources && poi.dataSources.poiDetails ? poi.dataSources.poiDetails[0] : undefined
     const poiOpts = {
       id: poi.id,
-      name: 'Sin nombre',
+      name: poi.name || 'Sin nombre',
       phone: undefined,
       url: undefined,
       address: address,

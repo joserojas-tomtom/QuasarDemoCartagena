@@ -135,21 +135,30 @@ export default {
         // console.log(feature.properties)
         displayPOIInfo(feature.properties.id)
       } else {
-        // add temporary marker
-        const poi = {
-          id: 'personal' + (new Date().getTime()),
-          name: 'Sin nombre',
-          position: event.lngLat,
-          address: ''
-        }
-        _displayPOI(poi)
+        // const apikey = LocalStorage.getItem('apikey')
+        tt.services.reverseGeocode({
+          key: apikey,
+          position: event.lngLat
+        }).then(function (response) {
+          console.log(response)
+          const firstAddress = response.addresses[0]
+          // add temporary marker
+          const poi = {
+            id: 'personal' + (new Date().getTime()),
+            name: 'Sin nombre',
+            position: firstAddress.position,
+            address: firstAddress.address
+          }
+          _displayPOI(poi)
+        })
       }
     })
 
     function moveMap (lnglat) {
+      const z = map.getZoom()
       map.flyTo({
         center: lnglat,
-        zoom: 17,
+        zoom: z <= 17 ? 17 : z,
         offset: [0, -20]
       })
     }

@@ -81,7 +81,7 @@
         content-class="bg-grey-3"
       >
       </q-drawer>
-    <q-footer  class="bg-grey-1" style='width:360px'>
+    <q-footer v-show='poiPanel' class="bg-grey-1" style='width:360px'>
       <PoiManager v-model='poiPanel'/>
     </q-footer>
   </q-layout>
@@ -110,6 +110,7 @@ export default {
     this.favorites = LocalStorage.getItem('favorites') || []
     // console.log(this.favorites)
     this.currentCity = LocalStorage.getItem('currentCity')
+    this.installBackButtonHandler()
   },
   beforeDestroy () {
     const root = this.$root
@@ -120,6 +121,22 @@ export default {
     root.$off('location-update')
   },
   methods: {
+    installBackButtonHandler () {
+      document.addEventListener('backbutton', onBackKeyDown, false)
+      const _this = this
+      function onBackKeyDown (e) {
+        // e.preventDefault()
+        console.log('BAKC BUTTON  , poiPanel is ' + this.poiPanel)
+        if (!_this.poiPanel) {
+          if (confirm('Seguro de terminar la aplicacion?')) {
+            navigator.app.exitApp()
+          }
+        } else {
+          _this.poiPanel = false
+          e.stopImmediatePropagation()
+        }
+      }
+    },
     hidePoiPanel () {
       this.poiPanel = false
     },
@@ -144,12 +161,14 @@ export default {
       console.log('setting ' + value + 'for ' + poi.id)
       try {
         const oldPOI = LocalStorage.getItem('poi' + poi.id)
+        console.log('Old POI')
+        console.log(oldPOI)
+
         if (oldPOI.poi) {
           oldPOI.poi.name = value
         } else {
+          oldPOI.name = value
         }
-        console.log('Old POI')
-        console.log(oldPOI)
         LocalStorage.set('poi' + poi.id, oldPOI)
         LocalStorage.set('favorites', this.favorites)
       } catch (e) {
