@@ -26,7 +26,8 @@ export default {
       idxSet: 'POI,PAD,Addr',
       center: originalCity.location,
       countrySet: originalCity.country,
-      boundingBox: originalCity.bounds.bounds
+      boundingBox: originalCity.bounds.bounds,
+      geoBias: originalCity.location
     }
     // Options for the autocomplete service
     const autocompleteOptions = {
@@ -34,6 +35,7 @@ export default {
       language: originalCity.language,
       center: originalCity.location,
       countrySet: originalCity.country,
+      geoBias: originalCity.location,
       radius: 10000
     }
 
@@ -68,6 +70,8 @@ export default {
     }
 
     function handleResultSelection (event) {
+      console.log('Results selection')
+      console.log(event)
       if (isFuzzySearchResult(event)) {
         // Display selected result on the map
         var result = event.data.result
@@ -78,15 +82,64 @@ export default {
           console.log('error storing poi from searchbox' + e)
         }
         root.$emit('single-poi-found', result.id)
+      } else {
+        handleFuzzyCallForSegment(event)
       }
     }
+
+    function handleFuzzyCallForSegment (event) {
+      const query = ttSearchBox.getValue()
+      const segmentType = event.data.result.type
+      const apikey = LocalStorage.getItem('apikey')
+      const fuzzySearchOption = { ...ttSearchBox.getOptions().searchOptions }
+      const commonOptions = Object.assign({}, fuzzySearchOption, {
+        key: apikey,
+        query: query,
+        limit: 15,
+        typeahead: true
+      })
+
+      // let filter
+      if (segmentType === 'category') {
+        commonOptions.categorySet = event.data.result.id
+        // filter = { categorySet: event.data.result.id }
+      }
+      if (segmentType === 'brand') {
+        commonOptions.brandSet = event.data.result.value
+        // filter = { brandSet: event.data.result.value }
+      }
+      // const options = Object.assign({}, commonOptions, filter)
+      console.log(commonOptions)
+      window.tt.services.fuzzySearch(commonOptions)
+        .then(function (response) {
+          if (response.results.length === 0) {
+            ttSearchBox.setValue('')
+            return
+          }
+          console.log('poiList')
+          console.log(response.results)
+          root.$emit('multiple-poi-found', response.results)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
+
     root.$on('center-update', function (center) {
-      const options = ttSearchBox.getOptions()
+      console.log('re-centering to ')
+      console.log(center)
+      const options = { ...ttSearchBox.getOptions() }
       options.searchOptions.center = center
+      options.searchOptions.geoBias = center
       options.autocompleteOptions.center = center
+      options.autocompleteOptions.geoBias = center
       ttSearchBox.updateOptions(options)
+      console.log('New Options', options)
     })
     root.$on('change-city', changeCity)
+    root.$on('clear-searchbox', function () {
+      ttSearchBox.setValue('')
+    })
     ttSearchBox.on('tomtom.searchbox.resultfocused', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultselected', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultscleared', this.handleResultsCleared)
@@ -101,6 +154,7 @@ export default {
     const root = this.$root
     root.$off('center-update')
     root.$off('change-city')
+    root.$off('clear-searchbox')
   }
 }
 </script>

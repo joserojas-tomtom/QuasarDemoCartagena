@@ -1,3 +1,4 @@
+
 function checkDependencyAvailability () {
   if (!window.tt) {
     throw new Error('tt is not available')

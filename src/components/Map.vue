@@ -14,6 +14,15 @@ export default {
       searchMarkersManager.remove (poi)
     }
   },
+  beforeDestroy () {
+    const root = this.$root
+    root.$off('remove-single-poi')
+    root.$off('single-poi-found')
+    root.$off('multiple-poi-found')
+    root.$off('change-city')
+    root.$off('show-favorite')
+    root.$off('location-update')
+  },
   mounted () {
     const mapRef = this.$refs.myRef
     const root = this.$root
@@ -24,6 +33,7 @@ export default {
 
     root.$on('remove-single-poi', this.removePoi)
     root.$on('single-poi-found', displayPOIInfo)
+    root.$on('multiple-poi-found', displayMultiplePOI)
     root.$on('change-city', changeCity)
     root.$on('show-favorite', displayPOIInfo)
     root.$on('location-update', function (location) {
@@ -91,6 +101,52 @@ export default {
       // console.log(firstResult)
     }
 
+    function displayMultiplePOI (poiList) {
+      // save them
+      poiList.forEach(function (element) {
+        try {
+          LocalStorage.set('poi' + element.id, element)
+        } catch (e) {
+          console.log('error storing poi from searchbox' + e)
+        }
+      })
+
+      searchMarkersManager.clear()
+      searchMarkersManager.draw(poiList)
+
+      const poiDataList = poiList.map(function (element) {
+        return searchMarkersManager.getPOI(element.id)
+      })
+      // searchMarkersManager.openMultiplePopup(poiList)
+      root.$emit('render-multiple-poi', poiDataList)
+      fitToViewport(poiList)
+    }
+
+    function getBounds (data) {
+      var btmRight
+      var topLeft
+      if (data.viewport) {
+        btmRight = [data.viewport.btmRightPoint.lng, data.viewport.btmRightPoint.lat]
+        topLeft = [data.viewport.topLeftPoint.lng, data.viewport.topLeftPoint.lat]
+      }
+      return [btmRight, topLeft]
+    }
+
+    function fitToViewport (markerData) {
+      if (!markerData || (markerData instanceof Array && !markerData.length)) {
+        return
+      }
+      var bounds = new tt.LngLatBounds()
+      if (markerData instanceof Array) {
+        markerData.forEach(function (marker) {
+          bounds.extend(getBounds(marker))
+        })
+      } else {
+        bounds.extend(getBounds(markerData))
+      }
+      map.fitBounds(bounds, { padding: 100, linear: true })
+    }
+
     /* eslint func-call-spacing: [0, { "allowNewlines": false }] */
     function displayPOIInfo (id) {
       const savedpoi = LocalStorage.getItem('poi' + id)
@@ -128,29 +184,30 @@ export default {
       map.setMaxBounds(originalCity.bounds.bounds)
     })
     map.on('dragend', saveCookie)
+    map.on('dblclick', function (event) {
+      tt.services.reverseGeocode({
+        key: apikey,
+        position: event.lngLat
+      }).then(function (response) {
+        console.log(response)
+        const firstAddress = response.addresses[0]
+        // add temporary marker
+        const poi = {
+          id: 'personal' + (new Date().getTime()),
+          name: 'Sin nombre',
+          position: firstAddress.position,
+          address: firstAddress.address
+        }
+        _displayPOI(poi)
+      })
+    })
     map.on('click', function (event) {
       // console.log(event.lngLat)
+      root.$emit('clear-searchbox')
       const feature = map.queryRenderedFeatures(event.point)[0]
       if (feature && feature.layer.id === 'POI' && feature.properties.id) {
         // console.log(feature.properties)
         displayPOIInfo(feature.properties.id)
-      } else {
-        // const apikey = LocalStorage.getItem('apikey')
-        tt.services.reverseGeocode({
-          key: apikey,
-          position: event.lngLat
-        }).then(function (response) {
-          console.log(response)
-          const firstAddress = response.addresses[0]
-          // add temporary marker
-          const poi = {
-            id: 'personal' + (new Date().getTime()),
-            name: 'Sin nombre',
-            position: firstAddress.position,
-            address: firstAddress.address
-          }
-          _displayPOI(poi)
-        })
       }
     })
 
