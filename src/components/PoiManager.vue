@@ -1,12 +1,12 @@
 <template>
   <div v-if='visible' style='height: 300px'>
     <q-carousel
+      ref="mainCarousel"
       v-model='poiId'
-      swipeable
-      navigation
-      padding
       height="300px"
-      class="rounded-borders q-pb-xl bg-light-blue-1">
+      infinite
+      @input="poiChanged"
+      class="rounded-borders q-pb-xs bg-light-blue-1">
       <q-carousel-slide
         v-for='(poi, index) in pois'
         :key='poi.id'
@@ -16,7 +16,7 @@
           <q-item-section side top>
             <q-icon name="cancel" size='1.5em'
                         color='grey-5'
-                        @click='removePoi(index)'
+                        @click='removeAllPoi'
                         class='q-mb-lg'/>
             <q-icon name="share" size='1.5em'
                         color='darkgrey'
@@ -124,7 +124,24 @@
 
       </q-carousel-slide>
 
-      </q-carousel>
+    <template v-slot:control >
+      <q-carousel-control
+          v-show='pois.length>1'
+          position="bottom-right"
+          :offset="[18, 18]"
+          class="q-gutter-xs"
+        >
+          <q-btn
+            push round dense color="green" text-color="black" icon="arrow_left"
+            @click="$refs.mainCarousel.previous()"
+          />
+          <q-btn
+            push round dense color="green" text-color="black" icon="arrow_right"
+            @click="$refs.mainCarousel.next()"
+          />
+        </q-carousel-control>
+    </template>
+    </q-carousel>
 
   </div>
 </template>
@@ -165,6 +182,9 @@ export default {
   methods: {
     onLoad (index, done) {
       done()
+    },
+    poiChanged (value) {
+      this.$root.$emit('poiChanged', value)
     },
     updatePersonalNotes (index) {
       const value = this.$refs.personalNotesInput[0].value
@@ -282,6 +302,10 @@ export default {
       if (this.pois.length === 0) {
         root.$emit('hidePoiPanel')
         this.visible = false
+      } else {
+        const toDisplay = index === 0 ? index : index - 1
+        this.poiId = this.pois[toDisplay]
+        this.$refs.mainCarousel.goTo(this.poiId)
       }
     },
     renderMultiplePoi (poiList) {

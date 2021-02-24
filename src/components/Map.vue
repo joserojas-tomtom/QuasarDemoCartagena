@@ -6,12 +6,26 @@ import { LocalStorage } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
 
 var searchMarkersManager
+var map
 
 export default {
   name: 'Map',
   methods: {
     removePoi (poi) {
       searchMarkersManager.remove (poi)
+    },
+    moveMap (lnglat) {
+      const z = map.getZoom()
+      map.flyTo({
+        center: lnglat,
+        zoom: z <= 17 ? 17 : z,
+        offset: [0, -20]
+      })
+    },
+    changeCurrentPOI (id) {
+      searchMarkersManager.openPopup(id)
+      const poi = searchMarkersManager.getPOI(id)
+      this.moveMap(poi.position)
     }
   },
   beforeDestroy () {
@@ -22,6 +36,7 @@ export default {
     root.$off('change-city')
     root.$off('show-favorite')
     root.$off('location-update')
+    root.$off('poiChanged')
   },
   mounted () {
     const mapRef = this.$refs.myRef
@@ -36,6 +51,7 @@ export default {
     root.$on('multiple-poi-found', displayMultiplePOI)
     root.$on('change-city', changeCity)
     root.$on('show-favorite', displayPOIInfo)
+    root.$on('poiChanged', this.changeCurrentPOI)
     root.$on('location-update', function (location) {
       // console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
@@ -79,7 +95,7 @@ export default {
       savedLocation = originalCity.location
     }
 
-    var map = tt.map({
+    map = tt.map({
       key: apikey,
       container: 'map',
       center: savedLocation,
@@ -88,6 +104,15 @@ export default {
       minZoom: 11,
       style: getDefaultStyle() // 'assets/cartagenastyle.json'
     })
+
+    function moveMap (lnglat) {
+      const z = map.getZoom()
+      map.flyTo({
+        center: lnglat,
+        zoom: z <= 17 ? 17 : z,
+        offset: [0, -20]
+      })
+    }
 
     function _displayPOI (poi) {
       moveMap(poi.position)
@@ -120,6 +145,7 @@ export default {
       // searchMarkersManager.openMultiplePopup(poiList)
       root.$emit('render-multiple-poi', poiDataList)
       fitToViewport(poiList)
+      searchMarkersManager.openPopup(poiList[0].id)
     }
 
     function getBounds (data) {
@@ -210,15 +236,6 @@ export default {
         displayPOIInfo(feature.properties.id)
       }
     })
-
-    function moveMap (lnglat) {
-      const z = map.getZoom()
-      map.flyTo({
-        center: lnglat,
-        zoom: z <= 17 ? 17 : z,
-        offset: [0, -20]
-      })
-    }
 
     return {
       mapRef

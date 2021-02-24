@@ -140,6 +140,9 @@ export default {
     root.$on('clear-searchbox', function () {
       ttSearchBox.setValue('')
     })
+    root.$on('hidePoiPanel', function (x) {
+      ttSearchBox.setValue('')
+    })
     ttSearchBox.on('tomtom.searchbox.resultfocused', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultselected', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultscleared', this.handleResultsCleared)
@@ -155,6 +158,7 @@ export default {
     root.$off('center-update')
     root.$off('change-city')
     root.$off('clear-searchbox')
+    root.$off('hidePoiPanel')
   }
 }
 </script>
