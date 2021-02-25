@@ -1,10 +1,10 @@
 <template>
-  <div v-if='visible' style='height: 300px'>
+  <div v-if='visible'>
     <q-carousel
       ref="mainCarousel"
       v-model='poiId'
-      height="300px"
       infinite
+      height='40%'
       @input="poiChanged"
       class="rounded-borders q-pb-xs bg-light-blue-1">
       <q-carousel-slide
@@ -12,7 +12,7 @@
         :key='poi.id'
         :name='poi.id'
         class=" q-pa-none q-ma-none">
-          <q-item style='heigh:300px'>
+          <q-item>
           <q-item-section side top>
             <q-icon name="cancel" size='1.5em'
                         color='grey-5'
@@ -86,38 +86,46 @@
                   icon-half="star_half"
                 />
             </q-item-label>
-              <q-carousel
-                v-if='poi.hasPhotos'
-                animated
-                v-model="slide"
-                infinite
-                :autoplay="autoplay"
-                arrows
-                width="400px"
-                height="250px"
-                transition-prev="slide-right"
-                transition-next="slide-left"
-                @mouseenter="autoplay = false"
-                @mouseleave="autoplay = true"
-              >
+              <div v-show='displayphotos'>
+                <q-carousel
+                  v-if='poi.hasPhotos'
+                  animated
+                  v-model="slide"
+                  infinite
+                  :autoplay="autoplay"
+                  arrows
+                  width="400px"
+                  height="250px"
+                  transition-prev="slide-right"
+                  transition-next="slide-left"
+                  @mouseenter="autoplay = false"
+                  @mouseleave="autoplay = true"
+                >
                 <q-carousel-slide
-                  v-for='(url, index) in poi.photosUrl'
-                  :key='url'
-                  :value='index'
-                  :name="index"
-                  :img-src="url" />
-              </q-carousel>
-              <q-img v-else src='no-image.png' contain height="250px"/>
+                    v-for='(url, index) in poi.photosUrl'
+                    :key='url'
+                    :value='index'
+                    :name="index"
+                    :img-src="url" />
+                </q-carousel>
+                <q-img v-else src='no-image.png' contain height="250px"/>
+              </div>
+            </div>
 
-              </div>
-              <div v-for='(line, index) in poi.reviews' :key='index'>
-            <q-item-label
-                          >
-                          <span class='text-dark text-weight-medium'> {{ line.date }} :</span>
-                          <span class='text-grey-8'> {{ line.text }} </span>
-            </q-item-label>
-              </div>
-              <q-separator class='q-my-xs' color="yellow" />
+            <div v-show='poi.reviews' style='height:200px'>
+              <q-expansion-item
+                class='text-grey'
+                label="Comentarios">
+                <q-card>
+                <q-card-section v-for='(line, index) in poi.reviews' :key='index'>
+                <q-item-label>
+                    <span class='text-dark text-weight-small'> {{ line.date }} :</span>
+                    <span class='text-grey'> {{ line.text }} </span>
+                </q-item-label>
+                </q-card-section>
+                </q-card>
+              </q-expansion-item>
+           </div>
             <!-- </q-scroll-area> -->
           </q-item-section>
           </q-item>
@@ -169,6 +177,11 @@ async function fetchPhoto (apikey, id) {
 
 export default {
   name: 'PoiManager',
+  props: {
+    displayphotos: {
+      type: Boolean
+    }
+  },
   data () {
     return {
       visible: false,
@@ -205,8 +218,7 @@ export default {
     },
     processDetails (poi, details) {
       // console.log('details')
-      // console.log(details)
-      if (details && details.photos && details.photos.length > 0) {
+      if (this.displayphotos && details && details.photos && details.photos.length > 0) {
         poi.hasPhotos = true
         poi.photosUrl = []
         const apikey = LocalStorage.getItem('apikey')
@@ -310,6 +322,7 @@ export default {
     },
     renderMultiplePoi (poiList) {
       console.log('renderMultiplePOI')
+      console.log('photos ', this.displayphotos)
       const root = this.$root
 
       this.pois = []
@@ -357,6 +370,7 @@ export default {
     },
     renderSinglePoi (poi) {
       console.log('renderSinglePOI')
+      console.log('photos ', this.displayphotos)
       const root = this.$root
       console.log(poi)
       this.pois = []
@@ -406,16 +420,20 @@ export default {
     const root = this.$root
     root.$on('render-single-poi', this.renderSinglePoi)
     root.$on('render-multiple-poi', this.renderMultiplePoi)
+    root.$on('search-got-focus', this.removeAllPoi)
     root.$on('change-city', function () {
       // console.log('***')
       this.visible = false
     })
+    window.addEventListener('keyboardDidShow', this.removeAllPoi)
   },
   beforeDestroy () {
     const root = this.$root
     root.$off('render-single-poi')
     root.$off('render-multiple-poi')
     root.$off('change-city')
+    root.$off('search-got-focus')
+    window.removeEventListener('keyboardDidShow', this.removeAllPoi)
   }
 }
 </script>

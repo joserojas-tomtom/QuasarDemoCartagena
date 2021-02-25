@@ -16,6 +16,7 @@
     "cordova-android": "^9.0.0",
     "cordova-plugin-exitapp": "^1.0.0",
     "cordova-plugin-geolocation": "^4.1.0",
+    "cordova-plugin-keyboard": "^1.2.0",
     "cordova-plugin-splashscreen": "^6.0.0",
     "cordova-plugin-whitelist": "^1.3.4"
   },
@@ -26,7 +27,8 @@
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
       },
-      "cordova.custom.plugins.exitapp": {}
+      "cordova.custom.plugins.exitapp": {},
+      "cordova-plugin-keyboard": {}
     },
     "platforms": [
       "android"

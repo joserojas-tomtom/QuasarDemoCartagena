@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr fFf">
-    <q-header elevated>
+    <q-header >
       <q-toolbar>
         <q-btn
           flat
@@ -10,8 +10,8 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-        <Location class='q-py-xs col-1'/>
-        <SearchBox class="q-py-xs col-10"/>
+        <Location class='col-2'/>
+        <SearchBox class=" col-10"/>
       </q-toolbar>
     </q-header>
 
@@ -81,8 +81,8 @@
         content-class="bg-grey-3"
       >
       </q-drawer>
-    <q-footer v-show='poiPanel' class="bg-grey-1" style='width:360px'>
-      <PoiManager v-model='poiPanel'/>
+    <q-footer v-show='poiPanel' class="bg-grey-1" >
+      <PoiManager v-model='poiPanel' style='width:100%'/>
     </q-footer>
   </q-layout>
 </template>

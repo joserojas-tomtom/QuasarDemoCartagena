@@ -72,6 +72,9 @@ export default {
     function handleResultSelection (event) {
       console.log('Results selection')
       console.log(event)
+      // lower the keyboard is needed
+      hideKeyboard()
+
       if (isFuzzySearchResult(event)) {
         // Display selected result on the map
         var result = event.data.result
@@ -146,7 +149,15 @@ export default {
     ttSearchBox.on('tomtom.searchbox.resultfocused', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultselected', handleResultSelection)
     ttSearchBox.on('tomtom.searchbox.resultscleared', this.handleResultsCleared)
+
     const dom = ttSearchBox.getSearchBoxHTML()
+    // We are going to check for focus on the search box
+    // so we close the poiManager view
+    const inputElement = dom.getElementsByClassName('tt-search-box-input')[0]
+    inputElement.addEventListener('focus', function (event) {
+      root.$emit('search-got-focus')
+    })
+
     const mapRef = this.$refs.myRef
     mapRef.appendChild(dom)
     return {
@@ -160,6 +171,34 @@ export default {
     root.$off('clear-searchbox')
     root.$off('hidePoiPanel')
   }
+}
+
+function hideKeyboard () {
+  // this set timeout needed for case when hideKeyborad
+  // is called inside of 'onfocus' event handler
+  setTimeout(function () {
+    // creating temp field
+    var field = document.createElement('input')
+    field.setAttribute('type', 'text')
+    // hiding temp field from peoples eyes
+    // -webkit-user-modify is nessesary for Android 4.x
+    field.setAttribute('style', 'position:absolute; top: 0px; opacity: 0; -webkit-user-modify: read-write-plaintext-only; left:0px;')
+    document.body.appendChild(field)
+
+    // adding onfocus event handler for out temp field
+    field.onfocus = function () {
+      // this timeout of 200ms is nessasary for Android 2.3.x
+      setTimeout(function () {
+        field.setAttribute('style', 'display:none;')
+        setTimeout(function () {
+          document.body.removeChild(field)
+          document.body.focus()
+        }, 14)
+      }, 200)
+    }
+    // focusing it
+    field.focus()
+  }, 50)
 }
 </script>
 <style>
