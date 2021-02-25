@@ -27,7 +27,8 @@ export default {
       center: originalCity.location,
       countrySet: originalCity.country,
       boundingBox: originalCity.bounds.bounds,
-      geoBias: originalCity.location
+      geoBias: originalCity.location,
+      radius: 10000
     }
     // Options for the autocomplete service
     const autocompleteOptions = {
@@ -61,6 +62,18 @@ export default {
       const options = ttSearchBox.getOptions()
       options.placeholder = city.placeHolder
       options.labels.placeholder = city.placeHolder
+
+      options.autocompleteOptions.center = city.location
+      options.autocompleteOptions.geoBias = city.location
+      options.autocompleteOptions.countrySet = city.country
+      options.autocompleteOptions.language = city.language
+
+      options.searchOptions.center = city.location
+      options.searchOptions.geoBias = city.location
+      options.searchOptions.countrySet = city.country
+      options.searchOptions.language = city.language
+      options.searchOptions.boundingBox = city.bounds.bounds
+
       ttSearchBox.updateOptions(options)
       ttSearchBox.setValue('')
     }
