@@ -11,7 +11,8 @@ export default {
     return {
       iconName: 'location_off',
       visible: true,
-      location: undefined
+      location: undefined,
+      watchId: undefined
     }
   },
   methods: {
@@ -39,13 +40,13 @@ export default {
         maximumAge: 1000
       }
       navigator.geolocation.getCurrentPosition(this.showPosition, this.errorLocation, options)
-      navigator.geolocation.watchPosition(this.showPosition, this.errorLocation, options)
+      this.watchId = navigator.geolocation.watchPosition(this.showPosition, this.errorLocation, options)
     } else {
       console.log('Geolocation is not supported by this browser.')
     }
   },
   beforeDestroy () {
-    navigator.geolocation.clearWatch()
+    navigator.geolocation.clearWatch(this.watchId)
   }
 }
 </script>

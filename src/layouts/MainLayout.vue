@@ -4,14 +4,13 @@
       <q-toolbar>
         <q-btn
           flat
-          dense
           round
           icon="menu"
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-        <Location class='col-2'/>
-        <SearchBox class=" col-10"/>
+        <Location class='q-pr-sm vertical-middle' />
+        <SearchBox class='vertical-middle q-mb-sm'/>
       </q-toolbar>
     </q-header>
 
@@ -21,6 +20,17 @@
       content-class="bg-grey-1"
     >
       <q-list>
+        <q-btn v-if='!user'
+          to='/auth'
+          icon='account_circle'
+          flat
+          label='Login'/>
+        <q-btn v-else
+          icon='account_circle'
+          flat
+          @click='logoutUser()'
+          :label="`Logout (${this.user.name})`"/>
+
         <q-item-label
           header
           class="text-grey-8 text-weight-medium bg-green-2"
@@ -88,6 +98,7 @@
 </template>
 
 <script>
+import store from '../router/store'
 import SearchBox from 'components/SearchBox.vue'
 import PoiManager from 'components/PoiManager.vue'
 import Location from 'components/Location.vue'
@@ -111,6 +122,11 @@ export default {
     // console.log(this.favorites)
     this.currentCity = LocalStorage.getItem('currentCity')
     this.installBackButtonHandler()
+    const _this = this
+    store.actions.getCurrentUser(function (u) {
+      _this.user = u
+      console.log('Current user ', u)
+    })
   },
   beforeDestroy () {
     const root = this.$root
@@ -121,6 +137,14 @@ export default {
     root.$off('location-update')
   },
   methods: {
+    logoutUser () {
+      // loging out
+      const _this = this
+      store.actions.logoutUser(function () {
+        // success
+        _this.user = null
+      })
+    },
     installBackButtonHandler () {
       document.addEventListener('backbutton', onBackKeyDown, false)
       const _this = this
@@ -193,6 +217,7 @@ export default {
   },
   data () {
     return {
+      user: {},
       leftDrawerOpen: false,
       poiPanel: true,
       rightDrawerOpen: false,
