@@ -5,6 +5,7 @@
 </template>
 <script>
 import { LocalStorage } from 'quasar'
+import store from './router/store.js'
 
 var CARTAGENA = {
   name: 'Cartagena de Indias',
@@ -73,6 +74,7 @@ export default {
   mounted () {
     LocalStorage.set('city', cities[index])
     LocalStorage.set('citiesDB', cities)
+    store.actions.handleAuthChanged()
   }
 }
 </script>

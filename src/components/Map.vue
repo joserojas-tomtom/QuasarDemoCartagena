@@ -1,5 +1,7 @@
 <template>
+<div>
   <div id='map' ref="myRef"></div>
+</div>
 </template>
 <script>
 import { LocalStorage } from 'quasar'
@@ -7,6 +9,7 @@ import getDefaultStyle from 'assets/cartagenastyle.js'
 
 var searchMarkersManager
 var map
+var longClickTimerId
 
 export default {
   name: 'Map',
@@ -37,6 +40,7 @@ export default {
     root.$off('show-favorite')
     root.$off('location-update')
     root.$off('poiChanged')
+    root.$off('add-personal-poi')
   },
   mounted () {
     const mapRef = this.$refs.myRef
@@ -46,6 +50,7 @@ export default {
     const tt = window.tt
     const myLocationMarker = new tt.Marker()
 
+    root.$on('add-personal-poi', addPersonalPOI)
     root.$on('remove-single-poi', this.removePoi)
     root.$on('single-poi-found', displayPOIInfo)
     root.$on('multiple-poi-found', displayMultiplePOI)
@@ -58,6 +63,24 @@ export default {
       map.setCenter(coords)
       myLocationMarker.setLngLat(coords).addTo(map)
     })
+
+    function addPersonalPOI (lngLat) {
+      tt.services.reverseGeocode({
+        key: apikey,
+        position: lngLat
+      }).then(function (response) {
+        console.log(response)
+        const firstAddress = response.addresses[0]
+        // add temporary marker
+        const poi = {
+          id: 'personal' + (new Date().getTime()),
+          name: 'Sin nombre',
+          position: firstAddress.position,
+          address: firstAddress.address
+        }
+        _displayPOI(poi)
+      })
+    }
 
     function changeCity (index) {
       const cities = LocalStorage.getItem('citiesDB')
@@ -198,6 +221,13 @@ export default {
       })
     }
 
+    function cancelLongClickTimer () {
+      if (longClickTimerId) {
+        clearTimeout(longClickTimerId)
+      }
+      // console.log('Timer Cancelled')
+    }
+
     // map.addControl(new tt.FullscreenControl());
     map.addControl(new window.tt.NavigationControl())
     map.on('load', function () {
@@ -210,22 +240,20 @@ export default {
       map.setMaxBounds(originalCity.bounds.bounds)
     })
     map.on('dragend', saveCookie)
+
+    map.on('touchstart', function (event) {
+      // const _this = this
+      cancelLongClickTimer()
+      longClickTimerId = setTimeout(function () {
+        root.$emit('long-click-map', event.lngLat)
+      }, 2000, event.lngLat)
+    })
+
+    map.on('touchend', function (event) { cancelLongClickTimer() })
+    map.on('touchmove', function (event) { cancelLongClickTimer() })
+
     map.on('dblclick', function (event) {
-      tt.services.reverseGeocode({
-        key: apikey,
-        position: event.lngLat
-      }).then(function (response) {
-        console.log(response)
-        const firstAddress = response.addresses[0]
-        // add temporary marker
-        const poi = {
-          id: 'personal' + (new Date().getTime()),
-          name: 'Sin nombre',
-          position: firstAddress.position,
-          address: firstAddress.address
-        }
-        _displayPOI(poi)
-      })
+      console.log('dbl click')
     })
     map.on('click', function (event) {
       // console.log(event.lngLat)
@@ -239,6 +267,10 @@ export default {
 
     return {
       mapRef
+    }
+  },
+  data () {
+    return {
     }
   }
 }

@@ -15,6 +15,7 @@ const actions = {
     firebaseAuth.signOut().then(() => {
       state.user = null
       successCB()
+      this.handleAuthChanged()
       // Sign-out successful.
     }).catch((error) => {
       // An error happened.
@@ -28,9 +29,9 @@ const actions = {
     firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
       .then((userCredential) => {
         // Signed in
-        state.user = userCredential.user
         successCB(state.user)
         console.log('loging in ', state.user)
+        this.handleAuthChanged()
       })
       .catch((error) => {
         var errorCode = error.code
@@ -44,8 +45,7 @@ const actions = {
     firebaseAuth.createUserWithEmailAndPassword(payload.email, payload.password)
       .then((userCredential) => {
         // Signed in
-        state.user = userCredential.user
-        const userId = state.user.user.uid
+        const userId = firebaseAuth.currentUser.uid
         firebaseDB.ref('users/' + userId).set({
           name: payload.name,
           email: payload.email
@@ -53,6 +53,7 @@ const actions = {
         // ...
         successCB(state.user)
         console.log('registered in ', state.user)
+        this.handleAuthChanged()
       })
       .catch((error) => {
         var errorCode = error.code
@@ -62,10 +63,22 @@ const actions = {
         // ..
       })
   },
-  getCurrentUser (callback) {
-    firebaseAuth.onAuthStateChanged(function (user) {
-      callback(user)
+  handleAuthChanged () {
+    firebaseAuth.onAuthStateChanged(user => {
+      if (user) {
+        const userId = firebaseAuth.currentUser.uid
+        firebaseDB.ref('users/' + userId).once('value', snapshot => {
+          const details = snapshot.val()
+          state.user = { ...details }
+          console.log(details)
+        })
+      } else {
+        state.user = null
+      }
     })
+  },
+  getCurrentUser () {
+    return state.user
   }
 }
 

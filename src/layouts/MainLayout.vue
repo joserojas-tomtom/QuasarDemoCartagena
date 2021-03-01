@@ -94,6 +94,14 @@
     <q-footer v-show='poiPanel' class="bg-grey-1" >
       <PoiManager v-model='poiPanel' style='width:100%'/>
     </q-footer>
+    <transition appear enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
+    <q-page-sticky  v-if='personalmarker'  class='q-pa-sm'  position="right" :offset='[0,0]'>
+      <q-btn class='q-ma-xs' rounded icon="cancel" color="primary" @click='personalmarker=false'/>
+      <q-btn class='q-ma-xs' fab icon="account_circle" color="primary" @click='createPersonalMarker()'/>
+      <q-btn class='q-ma-xs' fab icon="announcement" color="primary" />
+    </q-page-sticky>
+    </transition>
+
   </q-layout>
 </template>
 
@@ -111,6 +119,7 @@ export default {
   components: { SearchBox, PoiManager, Location },
   mounted () {
     const root = this.$root
+    root.$on('long-click-map', this.showPersonalPoiMenu)
     root.$on('hidePoiPanel', this.hidePoiPanel)
     root.$on('showPoiPanel', this.showPoiPanel)
     root.$on('change-city', this.hidePoiPanel)
@@ -122,11 +131,7 @@ export default {
     // console.log(this.favorites)
     this.currentCity = LocalStorage.getItem('currentCity')
     this.installBackButtonHandler()
-    const _this = this
-    store.actions.getCurrentUser(function (u) {
-      _this.user = u
-      console.log('Current user ', u)
-    })
+    this.user = store.actions.getCurrentUser()
   },
   beforeDestroy () {
     const root = this.$root
@@ -135,8 +140,18 @@ export default {
     root.$off('change-city')
     root.$off('favorites-updates')
     root.$off('location-update')
+    root.$off('long-click-map')
   },
   methods: {
+    createPersonalMarker () {
+      const root = this.$root
+      root.$emit('add-personal-poi', this.temporaryLocation)
+      this.personalmarker = false
+    },
+    showPersonalPoiMenu (lngLat) {
+      this.personalmarker = true
+      this.temporaryLocation = lngLat
+    },
     logoutUser () {
       // loging out
       const _this = this
@@ -217,6 +232,8 @@ export default {
   },
   data () {
     return {
+      temporaryLocation: undefined,
+      personalmarker: false,
       user: {},
       leftDrawerOpen: false,
       poiPanel: true,
