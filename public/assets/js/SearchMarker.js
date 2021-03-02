@@ -34,6 +34,11 @@ function SearchMarker (poiData, options) {
   this.marker.setPopup(new SearchMarkerPopup(this.poiData, this.options))
 }
 
+SearchMarker.prototype.reloadPopup = function () {
+  this.marker.setPopup(new SearchMarkerPopup(this.poiData, this.options))
+  this.marker.togglePopup()
+}
+
 SearchMarker.prototype.getPOIData = function () {
   return this.poiData
 }
@@ -131,10 +136,14 @@ SearchMarkerPopup.prototype.createPopupContent = function () {
   popupContentElem.className = 'pop-up-content'
 
   var addressInformationElem = document.createElement('div')
-
-  if (this.poiData.name) {
-    this.createDivWithContent('pop-up-result-name', this.poiData.name, addressInformationElem)
+  console.log('Creating popup ', this.poiData)
+  let name = this.poiData.name
+  console.log('adding rating ', this.poiData.currentRatingValue)
+  if (this.poiData.currentRatingValue && this.poiData.currentRatingValue >= 0) {
+    name += '(⭐️' + this.poiData.currentRatingValue.toFixed(2) + ')'
   }
+  console.log('name=', name)
+  this.createDivWithContent('pop-up-result-name', name, addressInformationElem)
 
   // this.createDivWithContent('pop-up-result-address', this.poiData.address, addressInformationElem);
 
@@ -144,6 +153,16 @@ SearchMarkerPopup.prototype.createPopupContent = function () {
 
   if (this.poiData.type) {
     this.createDivWithContent('pop-up-result-type', this.poiData.type + ' entry', addressInformationElem)
+  }
+  if (this.poiData.currentPriceRange && this.poiData.currentPriceRange > 0) {
+    let priceRange = '🏷 ?'
+    switch (this.poiData.currentPriceRange) {
+      case 1: priceRange = '🏷 💲'; break
+      case 2: priceRange = '🏷 💲💲'; break
+      case 3: priceRange = '🏷 💲💲💲'; break
+      case 4: priceRange = '🏷 💲💲💲💲'; break
+    }
+    this.createDivWithContent('pop-up-result-type', priceRange, addressInformationElem)
   }
 
   // popupParentElem.appendChild(popupIconContainer);

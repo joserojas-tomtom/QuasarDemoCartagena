@@ -25,8 +25,10 @@ export default {
         offset: [0, -20]
       })
     },
-    changeCurrentPOI (id) {
-      searchMarkersManager.openPopup(id)
+    changeCurrentPOI (changedPOI) {
+      console.log('map received changed poi to :', changedPOI)
+      const id = changedPOI.id
+      searchMarkersManager.openPopup(id, changedPOI.reload)
       const poi = searchMarkersManager.getPOI(id)
       this.moveMap(poi.position)
     }

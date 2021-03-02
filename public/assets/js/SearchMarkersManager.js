@@ -125,7 +125,7 @@ SearchMarkersManager.prototype.getPOI = function (markerId) {
   return this.markers[markerId].getPOIData()
 }
 
-SearchMarkersManager.prototype.openPopup = function (markerId) {
+SearchMarkersManager.prototype.openPopup = function (markerId, reload) {
   // this ensures, that only one popup is opened at the time
   for (var marker in this.markers) {
     var current = this.markers[marker]
@@ -133,7 +133,12 @@ SearchMarkersManager.prototype.openPopup = function (markerId) {
       current.togglePopup()
     }
   }
-  this.markers[markerId].togglePopup()
+  if (reload) {
+    this.markers[markerId].reloadPopup()
+  } else {
+    this.markers[markerId].togglePopup()
+  }
+
 }
 
 SearchMarkersManager.prototype.jumpToMarker = function (markerId) {

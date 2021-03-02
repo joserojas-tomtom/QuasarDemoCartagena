@@ -14,20 +14,20 @@
         class=" q-pa-none q-ma-none">
           <q-item>
           <q-item-section side top>
-            <q-icon name="cancel" size='1.5em'
+            <q-icon name="cancel" size='2em'
                         color='grey-5'
                         @click='removeAllPoi'
                         class='q-mb-lg'/>
-            <q-icon name="share" size='1.5em'
+            <q-icon name="share" size='2em'
                         color='darkgrey'
                         class='q-mb-lg'/>
-            <q-icon name="favorite" size='1.5em'
+            <q-icon name="favorite" size='2em'
                         :color='poi.favoriteColor'
                         @click='toggleFavorite(index)'
                         class='q-mb-lg'/>
           </q-item-section>
           <q-item-section top>
-            <q-item-label overline>
+            <q-item-label class='text-primary text-h6'>
               {{ poi.name }}
             </q-item-label>
             <q-item-label class='q-my-xs' caption>
@@ -43,32 +43,32 @@
                <div>
                 <q-item-label class='q-pb-xs' caption> {{ poi.description }} </q-item-label>
                 <q-item-label caption v-if='poi.phone' class='q-pb-xs' @click='call(poi.phone)'>
-                <q-icon name="phone" size='1.5em'
+                <q-icon name="phone" size='2em'
                         color='darkgrey'
                         class='q-mb-xs'/>
                 <span> {{ poi.phone }}</span>
                 </q-item-label>
                 <q-item-label caption v-if='poi.url' class='q-pb-xs' @click='web(poi.url)'>
-                <q-icon name="computer" size='1.5em'
+                <q-icon name="computer" size='2em'
                         color='darkgrey'
                         class='q-mb-xs'/>
                 <span> {{ poi.url }}</span>
                 </q-item-label>
-            <q-input rounded
-              standout bottom-slots
+            <q-input
+              hint='Este texto es privado'
               v-model="poi.personalNotes"
               ref='personalNotesInput'
               @blur="updatePersonalNotes(index)"
               clearable
               counter maxlength="100" :dense="true">
-              <template v-slot:before>
+              <template v-slot:prepend>
                 <q-icon name="comment" />
               </template>
               <!-- <template v-slot:append>
                 <q-btn round dense flat icon="add" />
               </template> -->
             </q-input>
-            <q-item-label>
+            <!-- <q-item-label>
             <q-rating v-if='poi.currentPriceRange >= 0'
                   v-model="poi.currentPriceRange"
                   size="1.3em"
@@ -85,7 +85,7 @@
                   icon-selected="star"
                   icon-half="star_half"
                 />
-            </q-item-label>
+            </q-item-label> -->
               <div v-show='displayphotos'>
                 <q-carousel
                   v-if='poi.hasPhotos'
@@ -112,13 +112,18 @@
               </div>
             </div>
 
-            <div v-show='poi.reviews' style='height:200px'>
+            <!-- </q-scroll-area> -->
+          </q-item-section>
+          </q-item>
+            <div v-show='poi.reviews' style='height:100px'>
               <q-expansion-item
-                class='text-grey'
+                icon='comment'
+                switch-toggle-side
+                class='bg-light-blue-1 text-grey'
                 label="Comentarios">
                 <q-card>
                 <q-card-section v-for='(line, index) in poi.reviews' :key='index'>
-                <q-item-label>
+                <q-item-label class='bg-none'>
                     <span class='text-dark text-weight-small'> {{ line.date }} :</span>
                     <span class='text-grey'> {{ line.text }} </span>
                 </q-item-label>
@@ -126,10 +131,6 @@
                 </q-card>
               </q-expansion-item>
            </div>
-            <!-- </q-scroll-area> -->
-          </q-item-section>
-          </q-item>
-
       </q-carousel-slide>
 
     <template v-slot:control >
@@ -196,8 +197,12 @@ export default {
     onLoad (index, done) {
       done()
     },
-    poiChanged (value) {
-      this.$root.$emit('poiChanged', value)
+    poiChanged (poiEvent) {
+      if (typeof poiEvent === 'string' || poiEvent instanceof String) {
+        poiEvent = { id: poiEvent, reload: false }
+      }
+
+      this.$root.$emit('poiChanged', poiEvent)
     },
     updatePersonalNotes (index) {
       const value = this.$refs.personalNotesInput[0].value
@@ -243,6 +248,10 @@ export default {
       }
       if (details.priceRange) {
         poi.currentPriceRange = details.priceRange.value
+      }
+
+      if (details.rating || details.priceRange) {
+        this.poiChanged({ id: poi.id, reload: true })
       }
       if (details.reviews) {
         poi.reviews = details.reviews
