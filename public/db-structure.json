@@ -21,7 +21,7 @@
       "bounds": {
         "bounds": [{ "lng": 4.705895255004606, "lat": 52.27224414103529 },
           { "lng": 5.095699329292728, "lat": 52.462838395097464 }],
-        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 15 },
         "maxZoom": 17
       }      
     },
@@ -34,7 +34,7 @@
       "bounds": {
         "bounds": [{ "lng": -73.31796317951263, "lat": 10.417346117976763 },
           { "lng": -73.19591339093603, "lat": 10.514284772966533 }],
-        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 15 },
         "maxZoom": 17
   }
     },
@@ -47,8 +47,20 @@
       "bounds": {
         "bounds": [{ "lng": -75.67201351594706, "lat": 1.5625012158267566 },
           { "lng": -75.53519402052457, "lat": 1.673203149334796 }],
-        "padding": { "top": 10, "bottom": 25, "left: 15, right": 5 },
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 15 },
         "maxZoom": 17
+      }
+    },
+    "Tel-aviv" : {
+      "name": "Tel aviv",
+      "location": {"lng":34.78992055972978,"lat":32.08008737984967},
+      "country": "IL",
+      "language": "he-IL",
+      "placeHolder:" : "חפש משה...ו",
+      "bounds" : {
+        "bounds": [{"lng":34.583171508300296,"lat":31.871866321451137},{"lng":35.10348281947867,"lat":32.19503167878416}],
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 15 },
+        "maxZoom": 18
       }
     }
   },

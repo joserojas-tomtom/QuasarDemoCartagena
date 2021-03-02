@@ -62,7 +62,20 @@ var AMSTERDAM = {
   }
 }
 
-const cities = [AMSTERDAM, CARTAGENA, VALLEDUPAR, FLORENCIA]
+var TEL_AVIV = {
+  name: 'Tel Aviv',
+  location: { lng: 34.78992055972978, lat: 32.08008737984967, zoom: 14 },
+  country: 'IL',
+  language: 'he-IL',
+  placeHolder: 'חפש משהו...',
+  bounds: {
+    bounds: [{ lng: 34.583171508300296, lat: 31.871866321451137 }, { lng: 35.10348281947867, lat: 32.19503167878416 }],
+    padding: { top: 10, bottom: 25, left: 15, right: 15 },
+    maxZoom: 18
+  }
+}
+
+const cities = [AMSTERDAM, CARTAGENA, VALLEDUPAR, FLORENCIA, TEL_AVIV]
 
 var index = LocalStorage.getItem('currentCity')
 if (!index) {

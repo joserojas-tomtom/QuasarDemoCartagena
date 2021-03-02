@@ -85,7 +85,8 @@ export default {
     function changeCity (index) {
       const cities = LocalStorage.getItem('citiesDB')
       const city = cities[index]
-      // console.log('changing to ' + city.name)
+      console.log('changing to ' + city.name)
+      console.log(city)
       map.setMaxBounds(null)
       map.jumpTo({
         center: city.location,

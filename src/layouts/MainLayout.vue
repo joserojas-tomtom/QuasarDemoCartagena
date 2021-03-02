@@ -238,7 +238,7 @@ export default {
       leftDrawerOpen: false,
       poiPanel: true,
       rightDrawerOpen: false,
-      cities: ['AMSTERDAM', 'CARTAGENA', 'VALLEDUPAR', 'FLORENCIA'],
+      cities: ['AMSTERDAM', 'CARTAGENA', 'VALLEDUPAR', 'FLORENCIA', 'TEL AVIV'],
       currentCity: 0,
       favorites: []
     }
