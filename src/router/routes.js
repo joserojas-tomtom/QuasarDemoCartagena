@@ -11,7 +11,12 @@ const routes = [
     path: '/auth',
     component: () => import('pages/Authentication.vue')
   },
-
+  {
+    path: '/event/:lng/:lat',
+    name: 'event',
+    component: () => import('pages/PublicEvent.vue'),
+    props: true
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

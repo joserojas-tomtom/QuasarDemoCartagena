@@ -5,7 +5,7 @@
       <q-toolbar>
         <q-btn
           class='absolute-right q-ma-md'
-          to='/'
+          to='/' replace
           label='Go back'
           flat
           dense

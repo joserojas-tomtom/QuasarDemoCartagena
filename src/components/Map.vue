@@ -249,7 +249,7 @@ export default {
       cancelLongClickTimer()
       longClickTimerId = setTimeout(function () {
         root.$emit('long-click-map', event.lngLat)
-      }, 2000, event.lngLat)
+      }, 1000, event.lngLat)
     })
 
     map.on('touchend', function (event) { cancelLongClickTimer() })

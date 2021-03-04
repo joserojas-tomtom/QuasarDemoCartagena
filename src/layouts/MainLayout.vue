@@ -21,7 +21,7 @@
     >
       <q-list>
         <q-btn v-if='!user'
-          to='/auth'
+          to='/auth' replace
           icon='account_circle'
           flat
           label='Login'/>
@@ -98,7 +98,7 @@
     <q-page-sticky  v-if='personalmarker'  class='q-pa-sm'  position="right" :offset='[0,0]'>
       <q-btn class='q-ma-xs' rounded icon="cancel" color="primary" @click='personalmarker=false'/>
       <q-btn class='q-ma-xs' fab icon="account_circle" color="primary" @click='createPersonalMarker()'/>
-      <q-btn class='q-ma-xs' fab icon="announcement" color="primary" />
+      <q-btn class='q-ma-xs' fab icon="announcement" color="primary" :to="{ name: 'event' , params: { lng: temporaryLocation.lng, lat: temporaryLocation.lat}}" replace/>
     </q-page-sticky>
     </transition>
 
@@ -141,9 +141,14 @@ export default {
     root.$off('favorites-updates')
     root.$off('location-update')
     root.$off('long-click-map')
+    this.removeBackButtonHandler()
   },
   methods: {
+    createPublicMarker () {
+      // add a form
+    },
     createPersonalMarker () {
+      this.hidePoiPanel()
       const root = this.$root
       root.$emit('add-personal-poi', this.temporaryLocation)
       this.personalmarker = false
@@ -151,6 +156,7 @@ export default {
     showPersonalPoiMenu (lngLat) {
       this.personalmarker = true
       this.temporaryLocation = lngLat
+      this.hidePoiPanel()
     },
     logoutUser () {
       // loging out
@@ -160,21 +166,23 @@ export default {
         _this.user = null
       })
     },
-    installBackButtonHandler () {
-      document.addEventListener('backbutton', onBackKeyDown, false)
-      const _this = this
-      function onBackKeyDown (e) {
-        // e.preventDefault()
-        console.log('BAKC BUTTON  , poiPanel is ' + this.poiPanel)
-        if (!_this.poiPanel) {
-          if (confirm('Seguro de terminar la aplicacion?')) {
-            navigator.app.exitApp()
-          }
-        } else {
-          _this.poiPanel = false
-          e.stopImmediatePropagation()
+    onBackKeyDown (e) {
+      // e.preventDefault()
+      console.log('BAKC BUTTON  , poiPanel is ' + this.poiPanel)
+      if (!this.poiPanel) {
+        if (confirm('Seguro de terminar la aplicacion?')) {
+          navigator.app.exitApp()
         }
+      } else {
+        this.poiPanel = false
+        e.stopImmediatePropagation()
       }
+    },
+    removeBackButtonHandler () {
+      document.removeEventListener('backbutton', this.onBackKeyDown, false)
+    },
+    installBackButtonHandler () {
+      document.addEventListener('backbutton', this.onBackKeyDown, false)
     },
     hidePoiPanel () {
       this.poiPanel = false
