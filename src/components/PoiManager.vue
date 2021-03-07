@@ -304,7 +304,7 @@ export default {
         favorites.push({
           id: poi.id,
           name: poi.name,
-          cityIndex: city
+          city: city.id
         })
         if (poi.id.startsWith('personal')) {
           console.log('saving a personal ')

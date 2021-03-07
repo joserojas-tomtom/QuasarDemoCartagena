@@ -1,11 +1,15 @@
 <template>
 <div>
-  <div id='map' ref="myRef"></div>
+  <div id='map' ref="myRef">
+  </div>
+      <Events city='currentCity'/>
+
 </div>
 </template>
 <script>
 import { LocalStorage } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
+import Events from 'components/Events.vue'
 
 var searchMarkersManager
 var map
@@ -13,6 +17,7 @@ var longClickTimerId
 
 export default {
   name: 'Map',
+  components: { Events },
   methods: {
     removePoi (poi) {
       searchMarkersManager.remove (poi)
@@ -48,6 +53,8 @@ export default {
     const mapRef = this.$refs.myRef
     const root = this.$root
     const originalCity = LocalStorage.getItem('currentCity')
+    this.currentCity = originalCity
+
     const apikey = LocalStorage.getItem('apikey')
     const tt = window.tt
     const myLocationMarker = new tt.Marker()
@@ -95,6 +102,7 @@ export default {
       saveCookie()
       searchMarkersManager.clear()
       map.setMaxBounds(city.bounds.bounds)
+      this.currentCity = city
     }
 
     function saveCookie () {
@@ -272,6 +280,7 @@ export default {
   },
   data () {
     return {
+      currentCity: undefined
     }
   }
 }

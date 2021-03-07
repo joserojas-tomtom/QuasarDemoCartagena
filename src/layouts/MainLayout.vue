@@ -44,7 +44,7 @@
           class= 'text-grey-8 text-weight-medium bg-green-2'>FAVORITOS
         </q-item-label>
         <div v-for='(favorite, index) in favorites' :key='favorite.id'>
-        <q-item-label v-show='favorite.cityIndex === currentCity' class='q-pa-md shadow-2' clickable >
+        <q-item-label v-show='favorite.city === currentCity.id' class='q-pa-md shadow-2' clickable >
           <!-- <q-item-section header
             @click="showFavorite(index)"
             class="q-pa-lg text-dark text-weight-normal">{{favorite.name}}
@@ -128,7 +128,7 @@ export default {
       console.log(location)
     })
     this.favorites = LocalStorage.getItem('favorites') || []
-    // console.log(this.favorites)
+    console.log(this.favorites)
     this.currentCity = LocalStorage.getItem('currentCity')
     this.cities = LocalStorage.getItem('citiesDB')
     this.installBackButtonHandler()
