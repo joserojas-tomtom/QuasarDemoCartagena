@@ -3,7 +3,7 @@
 import { firebaseAuth, firebaseDB } from 'src/boot/firebase'
 
 const state = {
-  user: {}
+  user: null
 }
 
 const mutations = {
@@ -29,9 +29,9 @@ const actions = {
     firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
       .then((userCredential) => {
         // Signed in
-        successCB(state.user)
         console.log('loging in ', state.user)
         this.handleAuthChanged()
+        successCB(state.user)
       })
       .catch((error) => {
         var errorCode = error.code
@@ -70,7 +70,7 @@ const actions = {
         firebaseDB.ref('users/' + userId).once('value', snapshot => {
           const details = snapshot.val()
           state.user = { ...details }
-          console.log(details)
+          // console.log(details)
         })
       } else {
         state.user = null
@@ -79,6 +79,16 @@ const actions = {
   },
   getCurrentUser () {
     return state.user
+  },
+  createEvent (event) {
+    event.userId = firebaseAuth.currentUser.uid
+    event.timestamp = Date.now()
+    console.log('Creating Event', event)
+    firebaseDB.ref('events/' + event.city + '/' + event.category.value + '/' + event.timestamp).set(event).catch((error) => {
+      var errorCode = error.code
+      var errorMessage = error.message
+      console.log(errorCode, errorMessage)
+    })
   }
 }
 

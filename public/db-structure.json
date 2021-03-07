@@ -1,6 +1,7 @@
 {
   "cities" : {
-    "Cartagena" : {
+    "cartagena" : {
+      "id": "cartagena",
       "name": "Cartagena de Indias",
       "location": { "lat": 10.39972, "lng": -75.51444, "zoom": 14 },
       "country": "CO",
@@ -12,8 +13,9 @@
         "maxZoom": 17
       }
     },
-    "Amsterdam" : {
+    "amsterdam" : {
       "name": "Groot Amsterdam",
+      "id": "amsterdam",
       "location": { "lng": 4.897198517895987, "lat": 52.37203860827887, "zoom": 14 },
       "country": "NL",
       "language": "NL-nl",
@@ -25,8 +27,9 @@
         "maxZoom": 17
       }      
     },
-    "Valledupar": {
+    "valledupar": {
       "name": "Valledupar",
+      "id": "valledupar",
       "location": { "lng": -73.26109732659464, "lat": 10.465201008865336, "zoom": 14 },
       "country": "CO",
       "language": "es-419",
@@ -38,8 +41,9 @@
         "maxZoom": 17
   }
     },
-    "Florencia" : {
+    "florencia" : {
       "name": "Florencia, Caqueta",
+      "id": "florencia",
       "location": { "lng": -75.60762012493467, "lat": 1.617655490715336, "zoom": 14 },
       "country": "CO",
       "language": "es-419",
@@ -51,9 +55,10 @@
         "maxZoom": 17
       }
     },
-    "Tel-aviv" : {
+    "telaviv" : {
       "name": "Tel aviv",
-      "location": {"lng":34.78992055972978,"lat":32.08008737984967},
+      "id": "telaviv",
+      "location": {"lng":34.78992055972978,"lat":32.08008737984967, "zoom":14},
       "country": "IL",
       "language": "he-IL",
       "placeHolder:" : "חפש משה...ו",

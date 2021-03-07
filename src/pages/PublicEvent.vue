@@ -24,7 +24,7 @@
     <q-card-section>
         <div class="text-overline text-orange-9">Direccion aproximada</div>
         <div class="text-h6 q-mt-sm q-mb-xs">{{ event.address}}</div>
-        <q-select class='q-mb-sm' v-model='event.category' outlined :options="options" label="Categoria" />
+        <q-select class='q-mb-sm' v-model='event.category' outlined :options="categories" label="Categoria" />
         <q-input lines='2' class='q-mb-sm' v-model='event.description' outlined label="Descripcion" dense />
         <q-input class='q-mb-sm' outlined v-model="event.price" label="Price" dense />
         <img :src="event.imageSrc" width='100%' class='q-mb-sm'>
@@ -34,7 +34,7 @@
         <q-btn  icon='camera' color='dark' @click='takePicture'/>
         <q-btn  color="dark" label="Borrar" @click='clearFields'/>
         <q-btn  color="dark" label="Cancelar" to='/' replace />
-        <q-btn  color="primary" label="Crear" />
+        <q-btn  color="primary" label="Crear" @click='sendEvent'/>
 
       </q-card-actions>
   </q-card>
@@ -45,6 +45,7 @@
 </template>
 <script>
 import { LocalStorage } from 'quasar'
+import store from '../router/store'
 
 export default {
   props: ['lng', 'lat'],
@@ -58,21 +59,37 @@ export default {
         price: 0,
         imageSrc: null
       },
-      options: [
-        'Nota publica',
-        'Venta o promocion',
-        'Algo perdido o encontrado',
-        'Oferta de trabajo'
+      categories: [
+        {
+          value: 'nota_publica',
+          label: 'Nota publica'
+        },
+        {
+          value: 'venta_promocion',
+          label: 'Venta o promocion'
+        },
+        {
+          label: 'Algo perdido o encontrado',
+          value: 'lost-found'
+        },
+        {
+          label: 'Oferta de servicio',
+          value: 'work-offering'
+        }
       ]
     }
   },
   methods: {
+    sendEvent () {
+      console.log(this.event)
+      store.actions.createEvent(this.event)
+    },
     onBackKeyDown (e) {
       // e.preventDefault()
       console.log('BAKC BUTTON')
       e.stopImmediatePropagation()
       if (confirm('Seguro de cancelar el evento?')) {
-        this.$q.goto('/')
+        this.$router.replace('/')
       }
     },
     removeBackButtonHandler () {
@@ -109,16 +126,18 @@ export default {
   },
   mounted () {
     const apikey = LocalStorage.getItem('apikey')
-    this.location = new window.tt.LngLat(this.lng, this.lat)
-    console.log('Location', this.location, apikey)
+    this.event.location = new window.tt.LngLat(this.lng, this.lat)
+    // console.log('Location', this.event.location, apikey)
     const _this = this
     window.tt.services.reverseGeocode({
       key: apikey,
-      position: this.location
+      position: this.event.location
     }).then(function (response) {
-      console.log(response)
+      // console.log(response)
       _this.event.address = response.addresses[0].address.freeformAddress
     })
+    const city = LocalStorage.getItem('currentCity')
+    this.event.city = city.id
     this.installBackButtonHandler()
   },
   beforeDestroy () {

@@ -31,7 +31,9 @@ export default {
     closeMessage () {
       this.message = undefined
     },
-    success () {},
+    success () {
+      // this.$router.replace('/')
+    },
     error (code) {
       if (code) {
         this.message = {
@@ -43,7 +45,6 @@ export default {
     submitForm () {
       if (this.tab === 'login') {
         store.actions.loginUser(this.formData, this.success, this.error)
-        console.log('login in')
       } else {
         store.actions.registerUser(this.formData, this.success, this.error)
       }

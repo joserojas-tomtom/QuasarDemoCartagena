@@ -15,7 +15,7 @@ export default {
   },
   mounted () {
     const root = this.$root
-    const originalCity = LocalStorage.getItem('city')
+    const originalCity = LocalStorage.getItem('currentCity')
     const apikey = LocalStorage.getItem('apikey')
 
     // Options for the fuzzySearch service
@@ -55,9 +55,7 @@ export default {
     }
 
     const ttSearchBox = new window.tt.plugins.SearchBox(window.tt.services, searchBoxOptions)
-    function changeCity (index) {
-      const cities = LocalStorage.getItem('citiesDB')
-      const city = cities[index]
+    function changeCity (city) {
       // console.log(city)
       const options = ttSearchBox.getOptions()
       options.placeholder = city.placeHolder

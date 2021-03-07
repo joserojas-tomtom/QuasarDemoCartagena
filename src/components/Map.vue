@@ -47,7 +47,7 @@ export default {
   mounted () {
     const mapRef = this.$refs.myRef
     const root = this.$root
-    const originalCity = LocalStorage.getItem('city')
+    const originalCity = LocalStorage.getItem('currentCity')
     const apikey = LocalStorage.getItem('apikey')
     const tt = window.tt
     const myLocationMarker = new tt.Marker()
@@ -84,9 +84,7 @@ export default {
       })
     }
 
-    function changeCity (index) {
-      const cities = LocalStorage.getItem('citiesDB')
-      const city = cities[index]
+    function changeCity (city) {
       console.log('changing to ' + city.name)
       console.log(city)
       map.setMaxBounds(null)

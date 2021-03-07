@@ -20,7 +20,7 @@
       content-class="bg-grey-1"
     >
       <q-list>
-        <q-btn v-if='!user'
+        <q-btn v-if='user==null'
           to='/auth' replace
           icon='account_circle'
           flat
@@ -36,8 +36,8 @@
           class="text-grey-8 text-weight-medium bg-green-2"
         > MUNICIPIOS Y REGIONES
         </q-item-label>
-        <q-item-label class='q-pa-md shadow-2' clickable v-for='(city, index) in cities' :key='city' @click="changeCity(index)">
-          <span class="q-pa-lg text-dark text-weight-normal"> {{city}}</span>
+        <q-item-label class='q-pa-md shadow-2' clickable v-for='(city) in Object.keys(cities)' :key='city' @click="changeCity(cities[city])">
+          <span class="q-pa-lg text-dark text-weight-normal"> {{cities[city].name}}</span>
         </q-item-label>
         <q-item-label
           header
@@ -98,7 +98,7 @@
     <q-page-sticky  v-if='personalmarker'  class='q-pa-sm'  position="right" :offset='[0,0]'>
       <q-btn class='q-ma-xs' rounded icon="cancel" color="primary" @click='personalmarker=false'/>
       <q-btn class='q-ma-xs' fab icon="account_circle" color="primary" @click='createPersonalMarker()'/>
-      <q-btn class='q-ma-xs' fab icon="announcement" color="primary" :to="{ name: 'event' , params: { lng: temporaryLocation.lng, lat: temporaryLocation.lat}}" replace/>
+      <q-btn class='q-ma-xs' fab icon="announcement" color="primary" @click="createPublicMarker" />
     </q-page-sticky>
     </transition>
 
@@ -110,7 +110,7 @@ import store from '../router/store'
 import SearchBox from 'components/SearchBox.vue'
 import PoiManager from 'components/PoiManager.vue'
 import Location from 'components/Location.vue'
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 
 // LocalStorage.clear()
 
@@ -130,8 +130,10 @@ export default {
     this.favorites = LocalStorage.getItem('favorites') || []
     // console.log(this.favorites)
     this.currentCity = LocalStorage.getItem('currentCity')
+    this.cities = LocalStorage.getItem('citiesDB')
     this.installBackButtonHandler()
     this.user = store.actions.getCurrentUser()
+    console.log('got user ', this.user)
   },
   beforeDestroy () {
     const root = this.$root
@@ -146,6 +148,15 @@ export default {
   methods: {
     createPublicMarker () {
       // add a form
+      const options = {
+        name: 'event',
+        params: { lng: this.temporaryLocation.lng, lat: this.temporaryLocation.lat }
+      }
+      if (this.user) {
+        this.$router.replace(options)
+      } else {
+        Notify.create('Se necesita registro')
+      }
     },
     createPersonalMarker () {
       this.hidePoiPanel()
@@ -228,25 +239,25 @@ export default {
       const root = this.$root
       root.$emit('show-favorite', this.favorites[index].id)
     },
-    changeCity (index) {
-      // console.log('click city ' + index)
-      LocalStorage.set('currentCity', index)
+    changeCity (city) {
+      console.log('in main layout : click city ', city)
+      LocalStorage.set('currentCity', city)
       const root = this.$root
-      root.$emit('change-city', index)
+      root.$emit('change-city', city)
       this.leftDrawerOpen = false
       this.poiPanel = false
-      this.currentCity = index
+      this.currentCity = city
     }
   },
   data () {
     return {
       temporaryLocation: undefined,
       personalmarker: false,
-      user: {},
+      user: null,
       leftDrawerOpen: false,
       poiPanel: true,
       rightDrawerOpen: false,
-      cities: ['AMSTERDAM', 'CARTAGENA', 'VALLEDUPAR', 'FLORENCIA', 'TEL AVIV'],
+      cities: undefined,
       currentCity: 0,
       favorites: []
     }
