@@ -29,7 +29,7 @@
           icon='account_circle'
           flat
           @click='logoutUser()'
-          :label="`Logout (${this.user.name})`"/>
+          :label="`Logout ${user.name}}`"/>
 
         <q-item-label
           header
@@ -257,7 +257,7 @@ export default {
       leftDrawerOpen: false,
       poiPanel: true,
       rightDrawerOpen: false,
-      cities: undefined,
+      cities: [],
       currentCity: 0,
       favorites: []
     }

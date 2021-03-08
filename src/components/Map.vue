@@ -2,7 +2,7 @@
 <div>
   <div id='map' ref="myRef">
   </div>
-      <Events city='currentCity'/>
+      <Events ref="eventsMenu" city='currentCity'/>
 
 </div>
 </template>
@@ -50,6 +50,7 @@ export default {
     root.$off('add-personal-poi')
   },
   mounted () {
+    const _this = this
     const mapRef = this.$refs.myRef
     const root = this.$root
     const originalCity = LocalStorage.getItem('currentCity')
@@ -159,6 +160,7 @@ export default {
     }
 
     function displayMultiplePOI (poiList) {
+      _this.$refs.eventsMenu.close()
       // save them
       poiList.forEach(function (element) {
         try {
@@ -269,7 +271,8 @@ export default {
       root.$emit('clear-searchbox')
       const feature = map.queryRenderedFeatures(event.point)[0]
       if (feature && feature.layer.id === 'POI' && feature.properties.id) {
-        // console.log(feature.properties)
+        // console.log('clicking map ', feature.properties)
+        _this.$refs.eventsMenu.close()
         displayPOIInfo(feature.properties.id)
       }
     })
