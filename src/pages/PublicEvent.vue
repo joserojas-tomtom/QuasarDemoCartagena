@@ -59,24 +59,7 @@ export default {
         price: 0,
         imageSrc: null
       },
-      categories: [
-        {
-          value: 'nota_publica',
-          label: 'Nota publica'
-        },
-        {
-          value: 'venta_promocion',
-          label: 'Venta o promocion'
-        },
-        {
-          label: 'Algo perdido o encontrado',
-          value: 'lost-found'
-        },
-        {
-          label: 'Oferta de servicio',
-          value: 'work-offering'
-        }
-      ]
+      categories: undefined
     }
   },
   methods: {
@@ -125,6 +108,7 @@ export default {
     }
   },
   mounted () {
+    this.categories = LocalStorage.getItem('event-categories')
     const apikey = LocalStorage.getItem('apikey')
     this.event.location = new window.tt.LngLat(this.lng, this.lat)
     // console.log('Location', this.event.location, apikey)

@@ -2,7 +2,11 @@
 <div>
   <div id='map' ref="myRef">
   </div>
-      <Events ref="eventsMenu" city='currentCity'/>
+      <Events v-if='currentCity'
+        ref="eventsMenu"
+        @addMarkers='addMarkers'
+        @removeMarkers='removeMarkers'
+        :city='currentCity.id'/>
 
 </div>
 </template>
@@ -19,6 +23,18 @@ export default {
   name: 'Map',
   components: { Events },
   methods: {
+    addMarkers (array) {
+      console.log('adding markers ', array)
+      array.forEach(function (marker) {
+        marker.addTo(map)
+      })
+    },
+    removeMarkers (array) {
+      console.log('removing markers ', array)
+      array.forEach(function (marker) {
+        marker.remove()
+      })
+    },
     removePoi (poi) {
       searchMarkersManager.remove (poi)
     },

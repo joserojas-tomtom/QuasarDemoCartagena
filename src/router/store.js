@@ -77,6 +77,21 @@ const actions = {
       }
     })
   },
+  fetchCityEvents (city, callback) {
+    firebaseDB.ref('events/' + city).once('value', snapshot => {
+      const cityEvents = snapshot.val()
+      callback(cityEvents)
+    }, (error) => { console.log(error) })
+  },
+  registerEventListener (city, listener) {
+    firebaseDB.ref('events/' + city).on('value', snapshot => {
+      const data = snapshot.val()
+      listener(data)
+    })
+  },
+  removeEventListener (city) {
+    firebaseDB.ref('events/' + city).off()
+  },
   getCurrentUser () {
     return state.user
   },
