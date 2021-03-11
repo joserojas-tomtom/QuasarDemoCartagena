@@ -13,7 +13,7 @@ export default {
     fetch('db-structure.json').then(response => {
       return response.json()
     }).then(data => {
-      console.log(data.cities, 'the json obj')
+      // console.log(data.cities, 'the json obj')
       const citiesDB = data.cities
       LocalStorage.set('citiesDB', citiesDB)
       const currentCity = LocalStorage.getItem('currentCity')

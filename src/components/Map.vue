@@ -47,7 +47,7 @@ export default {
       })
     },
     changeCurrentPOI (changedPOI) {
-      console.log('map received changed poi to :', changedPOI)
+      // console.log('map received changed poi to :', changedPOI)
       const id = changedPOI.id
       searchMarkersManager.openPopup(id, changedPOI.reload)
       const poi = searchMarkersManager.getPOI(id)
@@ -95,7 +95,7 @@ export default {
         key: apikey,
         position: lngLat
       }).then(function (response) {
-        console.log(response)
+        // console.log(response)
         const firstAddress = response.addresses[0]
         // add temporary marker
         const poi = {
@@ -109,8 +109,8 @@ export default {
     }
 
     function changeCity (city) {
-      console.log('changing to ' + city.name)
-      console.log(city)
+      // console.log('changing to ' + city.name)
+      // console.log(city)
       map.setMaxBounds(null)
       map.jumpTo({
         center: city.location,
@@ -286,10 +286,11 @@ export default {
       // console.log(event.lngLat)
       root.$emit('clear-searchbox')
       const feature = map.queryRenderedFeatures(event.point)[0]
+      console.log('clicking map ', feature)
       if (feature && feature.layer.id === 'POI' && feature.properties.id) {
-        // console.log('clicking map ', feature.properties)
         _this.$refs.eventsMenu.close()
         displayPOIInfo(feature.properties.id)
+        // event.stopImmediatePropagation()
       }
     })
 

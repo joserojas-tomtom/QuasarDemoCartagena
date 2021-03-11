@@ -14,8 +14,8 @@ const actions = {
   logoutUser (successCB, errorCB) {
     firebaseAuth.signOut().then(() => {
       state.user = null
-      successCB()
-      this.handleAuthChanged()
+      // successCB()
+      this.handleAuthChanged(successCB)
       // Sign-out successful.
     }).catch((error) => {
       // An error happened.
@@ -30,8 +30,9 @@ const actions = {
       .then((userCredential) => {
         // Signed in
         console.log('loging in ', state.user)
-        this.handleAuthChanged()
-        successCB(state.user)
+        this.handleAuthChanged(function () {
+          successCB(state.user)
+        })
       })
       .catch((error) => {
         var errorCode = error.code
@@ -51,9 +52,11 @@ const actions = {
           email: payload.email
         })
         // ...
-        successCB(state.user)
+
         console.log('registered in ', state.user)
-        this.handleAuthChanged()
+        this.handleAuthChanged(function () {
+          successCB(state.user)
+        })
       })
       .catch((error) => {
         var errorCode = error.code
@@ -63,13 +66,16 @@ const actions = {
         // ..
       })
   },
-  handleAuthChanged () {
+  handleAuthChanged (callback) {
     firebaseAuth.onAuthStateChanged(user => {
       if (user) {
         const userId = firebaseAuth.currentUser.uid
         firebaseDB.ref('users/' + userId).once('value', snapshot => {
           const details = snapshot.val()
           state.user = { ...details }
+          if (callback) {
+            callback()
+          }
           // console.log(details)
         })
       } else {

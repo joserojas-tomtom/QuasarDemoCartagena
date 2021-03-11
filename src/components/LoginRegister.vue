@@ -32,7 +32,7 @@ export default {
       this.message = undefined
     },
     success () {
-      // this.$router.replace('/')
+      this.$router.replace('/')
     },
     error (code) {
       if (code) {

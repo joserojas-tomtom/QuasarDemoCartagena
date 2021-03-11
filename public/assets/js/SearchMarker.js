@@ -136,13 +136,13 @@ SearchMarkerPopup.prototype.createPopupContent = function () {
   popupContentElem.className = 'pop-up-content'
 
   var addressInformationElem = document.createElement('div')
-  console.log('Creating popup ', this.poiData)
+  // console.log('Creating popup ', this.poiData)
   let name = this.poiData.name
-  console.log('adding rating ', this.poiData.currentRatingValue)
+  // console.log('adding rating ', this.poiData.currentRatingValue)
   if (this.poiData.currentRatingValue && this.poiData.currentRatingValue >= 0) {
     name += '(⭐️' + this.poiData.currentRatingValue.toFixed(2) + ')'
   }
-  console.log('name=', name)
+  // console.log('name=', name)
   this.createDivWithContent('pop-up-result-name', name, addressInformationElem)
 
   // this.createDivWithContent('pop-up-result-address', this.poiData.address, addressInformationElem);

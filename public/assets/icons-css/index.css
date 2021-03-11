@@ -326,7 +326,7 @@ body {
         align-items: baseline;
         font-family: Verdana, sans-serif;
         font-size: 12px;
-        color: #5346ca;
+        color:white;
     }
 
 .tt-pop-up-container .pop-up-content .pop-up-result-name {
@@ -336,7 +336,7 @@ body {
         }
 
 .tt-pop-up-container .pop-up-content .pop-up-result-distance, .tt-pop-up-container .pop-up-content .pop-up-result-position, .tt-pop-up-container .pop-up-content .pop-up-result-type {
-            color: #5346ca;
+            color: white;
         }
 
 .tt-pop-up-container .pop-up-content .pop-up-result-distance {

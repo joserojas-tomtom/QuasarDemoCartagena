@@ -17,6 +17,12 @@ const routes = [
     component: () => import('pages/PublicEvent.vue'),
     props: true
   },
+  {
+    path: '/display/:event',
+    name: 'displayEvent',
+    component: () => import('pages/DisplayEvent.vue'),
+    props: true
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

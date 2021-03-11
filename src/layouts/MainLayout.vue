@@ -28,8 +28,8 @@
         <q-btn v-else
           icon='account_circle'
           flat
-          @click='logoutUser()'
-          :label="`Logout ${user.name}}`"/>
+          @click='logoutUser'
+          :label="`Logout (${user.name})`"/>
 
         <q-item-label
           header
@@ -128,12 +128,12 @@ export default {
       console.log(location)
     })
     this.favorites = LocalStorage.getItem('favorites') || []
-    console.log(this.favorites)
+    // console.log(this.favorites)
     this.currentCity = LocalStorage.getItem('currentCity')
     this.cities = LocalStorage.getItem('citiesDB')
     this.installBackButtonHandler()
     this.user = store.actions.getCurrentUser()
-    console.log('got user ', this.user)
+    // console.log('got user ', this.user)
   },
   beforeDestroy () {
     const root = this.$root
@@ -175,11 +175,13 @@ export default {
       store.actions.logoutUser(function () {
         // success
         _this.user = null
+        _this.leftDrawerOpen = false
+        console.log('logout sucessful')
       })
     },
     onBackKeyDown (e) {
       // e.preventDefault()
-      console.log('BAKC BUTTON  , poiPanel is ' + this.poiPanel)
+      // console.log('BAKC BUTTON  , poiPanel is ' + this.poiPanel)
       if (!this.poiPanel) {
         if (confirm('Seguro de terminar la aplicacion?')) {
           navigator.app.exitApp()
@@ -211,16 +213,16 @@ export default {
       LocalStorage.set('favorites', this.favorites)
     },
     updateFavoriteName (index) {
-      console.log('index: ' + index)
-      console.log(this.$refs)
+      // console.log('index: ' + index)
+      // console.log(this.$refs)
       const value = this.$refs.favoriteName[index].value
       const poi = this.favorites[index]
       poi.name = value
-      console.log('setting ' + value + 'for ' + poi.id)
+      // console.log('setting ' + value + 'for ' + poi.id)
       try {
         const oldPOI = LocalStorage.getItem('poi' + poi.id)
-        console.log('Old POI')
-        console.log(oldPOI)
+        // console.log('Old POI')
+        // console.log(oldPOI)
 
         if (oldPOI.poi) {
           oldPOI.poi.name = value

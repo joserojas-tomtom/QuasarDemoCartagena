@@ -9,20 +9,20 @@ import Map from 'components/Map.vue'
 import { LocalStorage } from 'quasar'
 const eventCategories = [
   {
-    value: 'nota_publica',
+    value: 'announcement',
     label: 'Nota publica'
   },
   {
-    value: 'venta_promocion',
+    value: 'sell',
     label: 'Venta o promocion'
   },
   {
     label: 'Algo perdido o encontrado',
-    value: 'lost_found'
+    value: 'lostfound'
   },
   {
     label: 'Oferta de servicio',
-    value: 'work_offering'
+    value: 'service'
   }
 ]
 // LocalStorage.set('apikey', 'Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm')
