@@ -19,7 +19,9 @@
                         @click='removeAllPoi'
                         class='q-mb-lg'/>
             <q-icon name="share" size='2em'
+                    v-if ='isThereSharing'
                         color='darkgrey'
+                        @click='share(poi)'
                         class='q-mb-lg'/>
             <q-icon name="favorite" size='2em'
                         :color='poi.favoriteColor'
@@ -185,6 +187,7 @@ export default {
   },
   data () {
     return {
+      isThereSharing: true,
       visible: false,
       slide: '0',
       poiId: '',
@@ -194,6 +197,24 @@ export default {
     }
   },
   methods: {
+    share (poi) {
+      console.log('Sharing ', poi)
+
+      var options = {
+        text: poi.category.label + '@' + poi.address, // not supported on some apps (Facebook, Instagram)
+        title: '[From TusMapas]' + poi.name, // fi. for email
+        url: 'geo:' + poi.position.lat + ',' + poi.position.lng
+        // chooserTitle: 'Pick an app', // Android only, you can override the default share sheet title
+        // appPackageName: 'com.apple.social.facebook', // Android only, you can provide id of the App you want to share with
+        // iPadCoordinates: '0,0,0,0' // IOS only iPadCoordinates for where the popover should be point.  Format with x,y,width,height
+      }
+
+      navigator.share(options).then(function () {
+        console.log('Good sharing').catch(error => {
+          console.log('Error ', error)
+        })
+      })
+    },
     onLoad (index, done) {
       done()
     },

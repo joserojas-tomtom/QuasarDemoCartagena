@@ -3,30 +3,30 @@
 <q-layout view="lHh Lpr fFf">
   <q-header >
       <q-toolbar>
-        <q-item-label class='text-white text-h6'>
-             {{ event.description }}
-        </q-item-label>
         <q-btn
-          class='absolute-right q-ma-xs'
+          class='q-ma-xs'
           to='/' replace
-          label='Go back'
           flat
           dense
           round
-          icon="map"
+          icon="keyboard_backspace"
           aria-label="map"
         />
+        <q-item-label class='q-ml-md text-white text-h6'>
+             {{ event.description }}
+        </q-item-label>
+        <q-btn class='absolute-right' icon='share' @click='share(event)'/>
       </q-toolbar>
     </q-header>
 <q-page-container>
   <q-page class=' flex-center q-pa-md'>
   <q-card>
     <q-card-section>
+      <q-badge color='blue' class='q-mb-sm'>{{event.category.label}}</q-badge>
         <div class="text-overline text-orange-9">Direccion aproximada</div>
-        <div class="text-h6 q-mt-sm q-mb-xs">{{ event.address}}</div>
-        <q-item-label class='q-mb-sm' v-model='event.category' outlined :label="event.category.label" />
-        <q-item-label class='q-mb-sm' outlined  :label="event.phone" dense />
-        <q-item-label class='q-mb-sm' outlined  :label="event.price" dense />
+        <div class="text-h6 q-mt-sm q-mb-xs">{{event.address}}</div>
+        <q-item-label class='q-mb-sm'>{{event.phone}}</q-item-label>
+        <q-item-label class='q-mb-sm'>{{event.price}}</q-item-label>
         <img :src="event.imageSrc" width='100%' class='q-mb-sm'>
     </q-card-section>
   </q-card>
@@ -46,6 +46,24 @@ export default {
     }
   },
   methods: {
+    share (event) {
+      console.log('Sharing ', event)
+
+      var options = {
+        text: event.category.label + '@' + event.address, // not supported on some apps (Facebook, Instagram)
+        title: '[TusMapas]' + event.name, // fi. for email
+        url: 'geo:' + event.position.lat + ',' + event.position.lng
+        // chooserTitle: 'Pick an app', // Android only, you can override the default share sheet title
+        // appPackageName: 'com.apple.social.facebook', // Android only, you can provide id of the App you want to share with
+        // iPadCoordinates: '0,0,0,0' // IOS only iPadCoordinates for where the popover should be point.  Format with x,y,width,height
+      }
+
+      navigator.share(options).then(function () {
+        console.log('Good sharing').catch(error => {
+          console.log('Error ', error)
+        })
+      })
+    },
     onBackKeyDown (e) {
       // e.preventDefault()
       // console.log('BAKC BUTTON')

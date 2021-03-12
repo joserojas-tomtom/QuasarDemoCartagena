@@ -32,10 +32,15 @@
       "cordova-plugin-keyboard": {},
       "cordova-plugin-camera": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-web-share": {}
     },
     "platforms": [
       "android"
     ]
+  },
+  "dependencies": {
+    "cordova-plugin-web-share": "1.2.0",
+    "cordova-support-android-plugin": "1.0.2"
   }
 }
