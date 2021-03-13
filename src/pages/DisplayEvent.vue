@@ -15,7 +15,10 @@
         <q-item-label class='q-ml-md text-white text-h6'>
              {{ event.description }}
         </q-item-label>
-        <q-btn class='absolute-right' icon='share' @click='share(event)'/>
+        <div class='absolute-right q-mt-sm'>
+        <q-btn v-if='event.userId===currentUserId' flat icon='delete' @click='deleteEvent(event)'/>
+        <q-btn flat icon='share' @click='share(event)'/>
+        </div>
       </q-toolbar>
     </q-header>
 <q-page-container>
@@ -37,22 +40,30 @@
 </template>
 <script>
 import { LocalStorage } from 'quasar'
+import store from '../router/store'
 
 export default {
   props: ['event'],
   data () {
     return {
+      currentUserId: undefined,
       categories: undefined
     }
   },
   methods: {
+    deleteEvent (event) {
+      console.log('deleting', event)
+      if (confirm('Seguro de eliminar el evento?')) {
+        store.actions.deleteEvent(event)
+      }
+    },
     share (event) {
       console.log('Sharing ', event)
 
       var options = {
         text: event.category.label + '@' + event.address, // not supported on some apps (Facebook, Instagram)
         title: '[TusMapas]' + event.name, // fi. for email
-        url: 'geo:' + event.position.lat + ',' + event.position.lng
+        url: 'geo:0,0?q=' + event.location.lat + ',' + event.location.lng
         // chooserTitle: 'Pick an app', // Android only, you can override the default share sheet title
         // appPackageName: 'com.apple.social.facebook', // Android only, you can provide id of the App you want to share with
         // iPadCoordinates: '0,0,0,0' // IOS only iPadCoordinates for where the popover should be point.  Format with x,y,width,height
@@ -79,6 +90,8 @@ export default {
   },
   mounted () {
     this.categories = LocalStorage.getItem('event-categories')
+    this.currentUserId = store.actions.getUserId()
+    console.log('current user', this.currentUserId)
     this.installBackButtonHandler()
   },
   beforeDestroy () {

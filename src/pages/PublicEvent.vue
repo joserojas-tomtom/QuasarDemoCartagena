@@ -35,7 +35,8 @@
         <q-btn  icon='camera' color='dark' @click='takePicture'/>
         <q-btn  color="dark" label="Borrar" @click='clearFields'/>
         <q-btn  color="dark" label="Cancelar" to='/' replace />
-        <q-btn  color="primary" label="Crear" @click='sendEvent'/>
+        <q-btn  :disable='event.description.length === 0 || event.category == null'
+        color="primary" label="Crear" @click='sendEvent'/>
 
       </q-card-actions>
   </q-card>
@@ -45,7 +46,7 @@
 </q-layout>
 </template>
 <script>
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 import store from '../router/store'
 
 export default {
@@ -55,19 +56,28 @@ export default {
       event: {
         location: undefined,
         address: undefined,
-        description: undefined,
-        phone: undefined,
-        category: '',
+        description: '',
+        phone: '',
+        category: null,
         price: 0,
         imageSrc: null
       },
-      categories: undefined
+      categories: undefined,
+      sendDisable: true
     }
   },
   methods: {
+    handleCreateEvent (error) {
+      if (error) {
+        Notify.create(error.message)
+      } else {
+        console.log('no error creating event')
+        this.$router.replace('/')
+      }
+    },
     sendEvent () {
       console.log(this.event)
-      store.actions.createEvent(this.event)
+      store.actions.createEvent(this.event, this.handleCreateEvent)
     },
     onBackKeyDown (e) {
       // e.preventDefault()

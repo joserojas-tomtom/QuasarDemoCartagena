@@ -101,15 +101,26 @@ const actions = {
   getCurrentUser () {
     return state.user
   },
-  createEvent (event) {
+  getUserId () {
+    return firebaseAuth.currentUser.uid
+  },
+  deleteEvent (event) {
+    firebaseDB.ref('events/' + event.city + '/' + event.category.value + '/' + event.timestamp).remove()
+  },
+  createEvent (event, callback) {
     event.userId = firebaseAuth.currentUser.uid
     event.timestamp = Date.now()
     console.log('Creating Event', event)
-    firebaseDB.ref('events/' + event.city + '/' + event.category.value + '/' + event.timestamp).set(event).catch((error) => {
-      var errorCode = error.code
-      var errorMessage = error.message
-      console.log(errorCode, errorMessage)
-    })
+    firebaseDB.ref('events/' + event.city + '/' + event.category.value + '/' + event.timestamp)
+      .set(event, (error) => {
+        if (error) {
+          const errorCode = error.code
+          const errorMessage = error.message
+          console.log(errorCode, errorMessage)
+        }
+        callback(error)
+      }
+      )
   }
 }
 
