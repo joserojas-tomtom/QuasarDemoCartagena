@@ -39,7 +39,7 @@
 </q-layout>
 </template>
 <script>
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 import store from '../router/store'
 
 export default {
@@ -52,9 +52,16 @@ export default {
   },
   methods: {
     deleteEvent (event) {
+      const _this = this
       console.log('deleting', event)
       if (confirm('Seguro de eliminar el evento?')) {
-        store.actions.deleteEvent(event)
+        store.actions.deleteEvent(event, function (error) {
+          if (error) {
+            Notify.create(error.message)
+          } else {
+            _this.$router.replace('/')
+          }
+        })
       }
     },
     share (event) {

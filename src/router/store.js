@@ -104,8 +104,11 @@ const actions = {
   getUserId () {
     return firebaseAuth.currentUser.uid
   },
-  deleteEvent (event) {
-    firebaseDB.ref('events/' + event.city + '/' + event.category.value + '/' + event.timestamp).remove()
+  deleteEvent (event, callback) {
+    firebaseDB.ref('events/' + event.city + '/' + event.category.value + '/' + event.timestamp).remove(function (error) {
+      console.log('Response from firebase deleting ', error)
+      callback(error)
+    })
   },
   createEvent (event, callback) {
     event.userId = firebaseAuth.currentUser.uid
