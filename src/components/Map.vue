@@ -18,6 +18,7 @@ import Events from 'components/Events.vue'
 var searchMarkersManager
 var map
 var longClickTimerId
+var mapAnimation
 
 export default {
   name: 'Map',
@@ -37,6 +38,7 @@ export default {
     },
     removePoi (poi) {
       searchMarkersManager.remove (poi)
+      cancelAnimationFrame(mapAnimation)
     },
     moveMap (lnglat) {
       const z = map.getZoom()
@@ -52,6 +54,8 @@ export default {
       searchMarkersManager.openPopup(id, changedPOI.reload)
       const poi = searchMarkersManager.getPOI(id)
       this.moveMap(poi.position)
+      cancelAnimationFrame(mapAnimation)
+      mapAnimation = requestAnimationFrame(this.rotateCamera)
     }
   },
   beforeDestroy () {
@@ -74,6 +78,7 @@ export default {
 
     const apikey = LocalStorage.getItem('apikey')
     const tt = window.tt
+
     const myLocationMarker = new tt.Marker()
 
     root.$on('add-personal-poi', addPersonalPOI)
@@ -89,6 +94,12 @@ export default {
       map.setCenter(coords)
       myLocationMarker.setLngLat(coords).addTo(map)
     })
+
+    function rotateCamera (timestamp) {
+      const rotationDegree = timestamp / 100 % 360
+      map.rotateTo(rotationDegree, { duration: 0 })
+      mapAnimation = requestAnimationFrame(rotateCamera)
+    }
 
     function addPersonalPOI (lngLat) {
       tt.services.reverseGeocode({
@@ -158,6 +169,7 @@ export default {
       const z = map.getZoom()
       map.flyTo({
         center: lnglat,
+        pitch: 60,
         zoom: z <= 17 ? 17 : z,
         offset: [0, -20]
       })
@@ -165,6 +177,8 @@ export default {
 
     function _displayPOI (poi) {
       moveMap(poi.position)
+      cancelAnimationFrame(mapAnimation)
+      mapAnimation = requestAnimationFrame(rotateCamera)
       // console.log(poi)
       // var searchMarker = new window.SearchMarker(firstResult)
       // searchMarker.addTo(map)

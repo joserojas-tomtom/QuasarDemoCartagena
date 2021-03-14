@@ -32,7 +32,8 @@ export default {
       this.message = undefined
     },
     success () {
-      this.$router.replace('/')
+      // go back
+      this.$router.back()
     },
     error (code) {
       if (code) {

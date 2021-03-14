@@ -153,9 +153,9 @@ export default {
         params: { lng: this.temporaryLocation.lng, lat: this.temporaryLocation.lat }
       }
       if (this.user) {
-        this.$router.replace(options)
+        this.$router.push(options)
       } else {
-        Notify.create('Se necesita registro')
+        Notify.create("Tienes que registrarte 'mano!")
       }
     },
     createPersonalMarker () {

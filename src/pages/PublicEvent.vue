@@ -72,7 +72,8 @@ export default {
         Notify.create(error.message)
       } else {
         console.log('no error creating event')
-        this.$router.replace('/')
+        // go back
+        this.$router.back()
       }
     },
     sendEvent () {
@@ -84,7 +85,8 @@ export default {
       console.log('BAKC BUTTON')
       e.stopImmediatePropagation()
       if (confirm('Seguro de cancelar el evento?')) {
-        this.$router.replace('/')
+        // go back
+        this.$router.back()
       }
     },
     removeBackButtonHandler () {

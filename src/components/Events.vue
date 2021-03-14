@@ -99,7 +99,8 @@ export default {
           name: 'displayEvent',
           params: { event: event }
         }
-        _this.$router.replace(options)
+        // go to
+        _this.$router.push(options)
       })
 
       marker.setPopup(new window.tt.Popup({

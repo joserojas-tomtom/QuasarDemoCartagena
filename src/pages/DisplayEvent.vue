@@ -59,7 +59,8 @@ export default {
           if (error) {
             Notify.create(error.message)
           } else {
-            _this.$router.replace('/')
+            // go back
+            _this.$router.back()
           }
         })
       }
@@ -85,7 +86,8 @@ export default {
     onBackKeyDown (e) {
       // e.preventDefault()
       // console.log('BAKC BUTTON')
-      this.$router.replace('/')
+      // go back
+      this.$router.back()
       e.stopImmediatePropagation()
     },
     removeBackButtonHandler () {
