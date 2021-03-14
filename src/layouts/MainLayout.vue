@@ -24,13 +24,28 @@
           to='/auth' replace
           icon='account_circle'
           flat
-          label='Login'/>
+          class='q-my-md'
+          label='Registrate'/>
         <q-btn v-else
           icon='account_circle'
           flat
+          class='q-my-md'
           @click='logoutUser'
           :label="`Logout (${user.name})`"/>
 
+        <q-item-label
+          header
+          class="text-grey-8 text-weight-medium bg-green-2">
+        TEMAS
+        </q-item-label>
+        <div class="q-pa-md">
+          <div class="q-gutter-x-md">
+            <q-btn :color="mapcolortheme[n-1]"
+              v-for="n in 4"
+              @onclick='changeMapTheme(n)'
+              :key="n" />
+          </div>
+        </div>
         <q-item-label
           header
           class="text-grey-8 text-weight-medium bg-green-2"
@@ -253,6 +268,7 @@ export default {
   },
   data () {
     return {
+      mapcolortheme: ['green', 'blue', 'orange', 'purple'],
       temporaryLocation: undefined,
       personalmarker: false,
       user: null,

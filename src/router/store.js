@@ -102,7 +102,10 @@ const actions = {
     return state.user
   },
   getUserId () {
-    return firebaseAuth.currentUser.uid
+    if (firebaseAuth.currentUser) {
+      return firebaseAuth.currentUser.uid
+    }
+    return null
   },
   deleteEvent (event, callback) {
     firebaseDB.ref('events/' + event.city + '/' + event.category.value + '/' + event.timestamp).remove(function (error) {

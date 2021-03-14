@@ -24,6 +24,11 @@ export default {
   name: 'Map',
   components: { Events },
   methods: {
+    rotateCamera (timestamp) {
+      const rotationDegree = timestamp / 100 % 360
+      map.rotateTo(rotationDegree, { duration: 0 })
+      mapAnimation = requestAnimationFrame(this.rotateCamera)
+    },
     addMarkers (array) {
       console.log('adding markers ', array)
       array.forEach(function (marker) {
@@ -54,8 +59,6 @@ export default {
       searchMarkersManager.openPopup(id, changedPOI.reload)
       const poi = searchMarkersManager.getPOI(id)
       this.moveMap(poi.position)
-      cancelAnimationFrame(mapAnimation)
-      mapAnimation = requestAnimationFrame(this.rotateCamera)
     }
   },
   beforeDestroy () {
@@ -94,12 +97,6 @@ export default {
       map.setCenter(coords)
       myLocationMarker.setLngLat(coords).addTo(map)
     })
-
-    function rotateCamera (timestamp) {
-      const rotationDegree = timestamp / 100 % 360
-      map.rotateTo(rotationDegree, { duration: 0 })
-      mapAnimation = requestAnimationFrame(rotateCamera)
-    }
 
     function addPersonalPOI (lngLat) {
       tt.services.reverseGeocode({
@@ -171,14 +168,15 @@ export default {
         center: lnglat,
         pitch: 60,
         zoom: z <= 17 ? 17 : z,
+        around: lnglat,
         offset: [0, -20]
       })
+      cancelAnimationFrame(mapAnimation)
+      mapAnimation = requestAnimationFrame(_this.rotateCamera)
     }
 
     function _displayPOI (poi) {
       moveMap(poi.position)
-      cancelAnimationFrame(mapAnimation)
-      mapAnimation = requestAnimationFrame(rotateCamera)
       // console.log(poi)
       // var searchMarker = new window.SearchMarker(firstResult)
       // searchMarker.addTo(map)
@@ -298,6 +296,7 @@ export default {
     })
     map.on('click', function (event) {
       // console.log(event.lngLat)
+      cancelAnimationFrame(mapAnimation)
       root.$emit('clear-searchbox')
       const feature = map.queryRenderedFeatures(event.point)[0]
       console.log('clicking map ', feature)
