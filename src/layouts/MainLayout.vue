@@ -41,8 +41,8 @@
         <div class="q-pa-md">
           <div class="q-gutter-x-md">
             <q-btn :color="mapcolortheme[n-1]"
-              v-for="n in 4"
-              @onclick='changeMapTheme(n)'
+              v-for="n in 5"
+              @click='changeMapTheme(n)'
               :key="n" />
           </div>
         </div>
@@ -161,6 +161,11 @@ export default {
     this.removeBackButtonHandler()
   },
   methods: {
+    changeMapTheme (index) {
+      LocalStorage.set('styleIndex', (index - 1))
+      this.leftDrawerOpen = false
+      this.$root.$emit('change-style')
+    },
     createPublicMarker () {
       // add a form
       const options = {
@@ -268,7 +273,7 @@ export default {
   },
   data () {
     return {
-      mapcolortheme: ['green', 'blue', 'orange', 'purple'],
+      mapcolortheme: ['green', 'red', 'pink', 'cyan', 'yellow'],
       temporaryLocation: undefined,
       personalmarker: false,
       user: null,

@@ -1,9 +1,18 @@
 /* eslint-disable quote-props */
 /* eslint-disable quotes */
-export default function getDefaultStyle () {
-  return mystyle
+export default function getDefaultStyle (index) {
+  const styles = [
+    'assets/cartagenastyle.json',
+    'assets/terracotastyle.json',
+    'assets/pinkstyle.json',
+    'assets/lightgreen.json',
+    'assets/pastelstyle.json'
+  ]
+  return styles[index]
+  // return mystyle
 }
 
+// eslint-disable-next-line no-unused-vars
 const mystyle = {
   "version": 8,
   "name": "cartagenastyle",

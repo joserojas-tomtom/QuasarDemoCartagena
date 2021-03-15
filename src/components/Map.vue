@@ -59,6 +59,10 @@ export default {
       searchMarkersManager.openPopup(id, changedPOI.reload)
       const poi = searchMarkersManager.getPOI(id)
       this.moveMap(poi.position)
+    },
+    changeStyle () {
+      const styleIndex = LocalStorage.getItem('styleIndex')
+      map.setStyle(getDefaultStyle(styleIndex))
     }
   },
   beforeDestroy () {
@@ -71,6 +75,7 @@ export default {
     root.$off('location-update')
     root.$off('poiChanged')
     root.$off('add-personal-poi')
+    root.$off('change-style')
   },
   mounted () {
     const _this = this
@@ -91,6 +96,7 @@ export default {
     root.$on('change-city', changeCity)
     root.$on('show-favorite', displayPOIInfo)
     root.$on('poiChanged', this.changeCurrentPOI)
+    root.$on('change-style', this.changeStyle)
     root.$on('location-update', function (location) {
       // console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
@@ -152,6 +158,11 @@ export default {
       savedLocation = originalCity.location
     }
 
+    let styleIndex = LocalStorage.getItem('styleIndex')
+    if (styleIndex == null) {
+      styleIndex = 0
+    }
+
     map = tt.map({
       key: apikey,
       container: 'map',
@@ -159,7 +170,7 @@ export default {
       zoom: savedLocation.zoom,
       maxZoom: 18,
       minZoom: 11,
-      style: getDefaultStyle() // 'assets/cartagenastyle.json'
+      style: getDefaultStyle(styleIndex) // 'assets/cartagenastyle.json'
     })
 
     function moveMap (lnglat) {
