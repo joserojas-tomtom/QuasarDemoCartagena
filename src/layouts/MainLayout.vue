@@ -36,11 +36,11 @@
         <q-item-label
           header
           class="text-grey-8 text-weight-medium bg-green-2">
-        TEMAS
+        TEMA DE COLORES
         </q-item-label>
         <div class="q-pa-md">
           <div class="q-gutter-x-md">
-            <q-btn :color="mapcolortheme[n-1]"
+            <q-btn :color="`mapcolor-${n}`"
               v-for="n in 5"
               @click='changeMapTheme(n)'
               :key="n" />
@@ -273,7 +273,17 @@ export default {
   },
   data () {
     return {
-      mapcolortheme: ['green', 'red', 'pink', 'cyan', 'yellow'],
+    //   'assets/cartagenastyle.json',
+    // 'assets/terracotastyle.json',
+    // 'assets/pinkstyle.json',
+    // 'assets/lightgreen.json',
+    // 'assets/pastelstyle.json'
+      mapcolortheme: [
+        'mapcolor-1',
+        'mapcolor-2',
+        'mapcolor-3',
+        'mapcolor-4',
+        'mapcolor-5'],
       temporaryLocation: undefined,
       personalmarker: false,
       user: null,
@@ -288,3 +298,21 @@ export default {
 }
 
 </script>
+<style scoped>
+
+.bg-mapcolor-1 {
+  background: #faf3dd;
+}
+.bg-mapcolor-2 {
+  background: #D27370;
+}
+.bg-mapcolor-3 {
+  background: #FFD5FF;
+}
+.bg-mapcolor-4 {
+  background: #7EA172;
+}
+.bg-mapcolor-5 {
+  background: #C2D3CD;
+}
+</style>
