@@ -49,8 +49,8 @@ export default {
       const z = map.getZoom()
       map.flyTo({
         center: lnglat,
-        zoom: z <= 17 ? 17 : z,
-        offset: [0, -20]
+        zoom: z <= 17 ? 17 : z
+        // offset: [0, -20]
       })
     },
     changeCurrentPOI (changedPOI) {
@@ -59,6 +59,7 @@ export default {
       searchMarkersManager.openPopup(id, changedPOI.reload)
       const poi = searchMarkersManager.getPOI(id)
       this.moveMap(poi.position)
+      map.resize()
     },
     changeStyle () {
       const styleIndex = LocalStorage.getItem('styleIndex')
@@ -179,8 +180,8 @@ export default {
         center: lnglat,
         pitch: 60,
         zoom: z <= 17 ? 17 : z,
-        around: lnglat,
-        offset: [0, -20]
+        around: lnglat
+        // offset: [0, -20]
       })
       cancelAnimationFrame(mapAnimation)
       mapAnimation = requestAnimationFrame(_this.rotateCamera)
@@ -248,6 +249,7 @@ export default {
 
     /* eslint func-call-spacing: [0, { "allowNewlines": false }] */
     function displayPOIInfo (id) {
+      map.resize()
       const savedpoi = LocalStorage.getItem('poi' + id)
       if (savedpoi) {
         // console.log('Found poi : ' + id)
@@ -281,9 +283,7 @@ export default {
     // map.addControl(new tt.FullscreenControl());
     map.addControl(new window.tt.NavigationControl())
     map.on('load', function () {
-      if (!searchMarkersManager) {
-        searchMarkersManager = new window.SearchMarkersManager(map)
-      }
+      searchMarkersManager = new window.SearchMarkersManager(map)
 
       saveCookie()
       // console.log(originalCity)

@@ -8,10 +8,10 @@
       "maxzoom": 22,
       "minzoom": 0,
       "tiles": [
-        "https://a.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://b.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://c.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://d.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm"
+        "https://a.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://b.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://c.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://d.api.tomtom.com/map/1/tile/poi/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG"
       ]
     },
     "vectorTiles": {
@@ -19,10 +19,10 @@
       "maxzoom": 22,
       "minzoom": 0,
       "tiles": [
-        "https://a.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://b.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://c.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://d.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm"
+        "https://a.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://b.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://c.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://d.api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG"
       ]
     },
     "vectorTilesFlow": {
@@ -30,10 +30,10 @@
       "maxzoom": 22,
       "minzoom": 0,
       "tiles": [
-        "https://a.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://b.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://c.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://d.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm"
+        "https://a.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://b.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://c.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://d.api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG"
       ]
     },
     "vectorTilesIncidents": {
@@ -41,15 +41,15 @@
       "maxzoom": 22,
       "minzoom": 0,
       "tiles": [
-        "https://a.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://b.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://c.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-        "https://d.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm"
+        "https://a.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://b.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://c.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+        "https://d.api.tomtom.com/traffic/map/4/tile/incidents/{z}/{x}/{y}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG"
       ]
     }
   },
-  "sprite": "https://api.tomtom.com/style/1/sprite/20.4.5-10/sprite?map=basic_main&traffic_incidents=incidents_day&traffic_flow=flow_relative0&poi=poi_main&key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
-  "glyphs": "https://api.tomtom.com/style/1/glyph/20.4.5-10/{fontstack}/{range}.pbf?key=Vn26cA8knt2E8sl0WBEWvAgWGRUf59mm",
+  "sprite": "https://api.tomtom.com/style/1/sprite/20.4.5-10/sprite?map=basic_main&traffic_incidents=incidents_day&traffic_flow=flow_relative0&poi=poi_main&key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
+  "glyphs": "https://api.tomtom.com/style/1/glyph/20.4.5-10/{fontstack}/{range}.pbf?key=jsRs4JdL9YyeSryAvq0AFDTi2cZWjoeG",
   "layers": [
     {
       "id": "background",
