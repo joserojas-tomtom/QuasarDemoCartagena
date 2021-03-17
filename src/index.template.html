@@ -30,20 +30,6 @@
 </head>
 
 <body>
-  <script>
-    import { LocalStorage } from 'quasar'
-    fetch('db-structure.json').then(response => {
-        return response.json()
-      }).then(data => {
-        // console.log(data.cities, 'the json obj')
-        const citiesDB = data.cities
-        LocalStorage.set('citiesDB', citiesDB)
-        const currentCity = LocalStorage.getItem('currentCity')
-        if (!currentCity) {
-          LocalStorage.set('currentCity', citiesDB.cartagena)
-        }
-      })
-  </script>
   <!-- DO NOT touch the following DIV -->
   <div id="q-app"></div>
 
