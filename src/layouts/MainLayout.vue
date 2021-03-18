@@ -106,8 +106,7 @@
         content-class="bg-grey-3"
       >
       </q-drawer>
-    <q-footer v-show='poiPanel' class="bg-grey-1" >
-      <PoiManager v-model='poiPanel' style='width:100%'/>
+    <q-footer >
     </q-footer>
     <transition appear enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
     <q-page-sticky  v-if='personalmarker'  class='q-pa-sm'  position="right" :offset='[0,0]'>
@@ -123,7 +122,6 @@
 <script>
 import store from '../router/store'
 import SearchBox from 'components/SearchBox.vue'
-import PoiManager from 'components/PoiManager.vue'
 import Location from 'components/Location.vue'
 import { LocalStorage, Notify } from 'quasar'
 
@@ -131,13 +129,10 @@ import { LocalStorage, Notify } from 'quasar'
 
 export default {
   name: 'MainLayout',
-  components: { SearchBox, PoiManager, Location },
+  components: { SearchBox, Location },
   mounted () {
     const root = this.$root
     root.$on('long-click-map', this.showPersonalPoiMenu)
-    root.$on('hidePoiPanel', this.hidePoiPanel)
-    root.$on('showPoiPanel', this.showPoiPanel)
-    root.$on('change-city', this.hidePoiPanel)
     root.$on('favorites-updated', this.updateFavorites)
     root.$on('location-update', function (location) {
       console.log(location)
@@ -152,9 +147,6 @@ export default {
   },
   beforeDestroy () {
     const root = this.$root
-    root.$off('hidePoiPanel')
-    root.$off('showPoiPanel')
-    root.$off('change-city')
     root.$off('favorites-updates')
     root.$off('location-update')
     root.$off('long-click-map')
@@ -179,7 +171,6 @@ export default {
       }
     },
     createPersonalMarker () {
-      this.hidePoiPanel()
       const root = this.$root
       root.$emit('add-personal-poi', this.temporaryLocation)
       this.personalmarker = false
@@ -187,7 +178,6 @@ export default {
     showPersonalPoiMenu (lngLat) {
       this.personalmarker = true
       this.temporaryLocation = lngLat
-      this.hidePoiPanel()
     },
     logoutUser () {
       // loging out
@@ -216,14 +206,6 @@ export default {
     },
     installBackButtonHandler () {
       document.addEventListener('backbutton', this.onBackKeyDown, false)
-    },
-    hidePoiPanel () {
-      this.poiPanel = false
-    },
-    showPoiPanel () {
-      this.poiPanel = true
-      this.favorites = LocalStorage.getItem('favorites') || []
-      // console.log(this.favorites)
     },
     updateFavorites (id) {
       this.favorites = LocalStorage.getItem('favorites') || []
@@ -288,7 +270,6 @@ export default {
       personalmarker: false,
       user: null,
       leftDrawerOpen: false,
-      poiPanel: true,
       rightDrawerOpen: false,
       cities: [],
       currentCity: 0,

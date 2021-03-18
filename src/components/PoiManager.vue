@@ -1,5 +1,5 @@
 <template>
-  <div v-if='visible'>
+  <div class='fit' v-if='visible'>
     <q-carousel
       ref="mainCarousel"
       v-model='poiId'

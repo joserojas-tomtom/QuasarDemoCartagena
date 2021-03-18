@@ -1,6 +1,8 @@
 <template>
 <div>
-  <div id='map' ref="myRef">
+  <div class='column items-stretch'>
+  <div class='row-grow' id='map' ref="myRef"></div>
+  <PoiManager class='row-auto' v-model='poiPanel' style='width:100%'/>
   </div>
       <Events v-if='currentCity'
         ref="eventsMenu"
@@ -14,6 +16,7 @@
 import { LocalStorage } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
 import Events from 'components/Events.vue'
+import PoiManager from 'components/PoiManager.vue'
 
 let searchMarkersManager
 let map
@@ -22,7 +25,7 @@ let mapAnimation
 
 export default {
   name: 'Map',
-  components: { Events },
+  components: { Events, PoiManager },
   methods: {
     rotateCamera (timestamp) {
       const rotationDegree = timestamp / 100 % 360
@@ -77,6 +80,8 @@ export default {
     root.$off('poiChanged')
     root.$off('add-personal-poi')
     root.$off('change-style')
+    root.$off('hidePoiPanel')
+    root.$off('showPoiPanel')
   },
   mounted () {
     const _this = this
@@ -98,6 +103,12 @@ export default {
     root.$on('show-favorite', displayPOIInfo)
     root.$on('poiChanged', this.changeCurrentPOI)
     root.$on('change-style', this.changeStyle)
+    root.$on('hidePoiPanel', function () {
+      this.poiPanel = false
+    })
+    root.$on('showPoiPanel', function () {
+      this.poiPanel = true
+    })
     root.$on('location-update', function (location) {
       // console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
@@ -184,7 +195,9 @@ export default {
         // offset: [0, -20]
       })
       cancelAnimationFrame(mapAnimation)
-      mapAnimation = requestAnimationFrame(_this.rotateCamera)
+      setTimeout(() => {
+        mapAnimation = requestAnimationFrame(_this.rotateCamera)
+      }, 1000)
     }
 
     function _displayPOI (poi) {
@@ -314,6 +327,7 @@ export default {
       if (feature && feature.layer.id === 'POI' && feature.properties.id) {
         _this.$refs.eventsMenu.close()
         displayPOIInfo(feature.properties.id)
+        this.poiPanel = true
         // event.stopImmediatePropagation()
       }
     })
@@ -324,14 +338,15 @@ export default {
   },
   data () {
     return {
-      currentCity: undefined
+      currentCity: undefined,
+      poiPanel: false
     }
   }
 }
 </script>
 <style>
 #map {
-  height: 100vh;
-  width: 100vw;
+  height: 70vh;
+  width:100vw;
 }
 </style>
