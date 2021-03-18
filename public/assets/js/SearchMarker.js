@@ -26,7 +26,7 @@ function SearchMarker (poiData, options) {
     element: this.createMarker(),
     anchor: 'center'
   })
-  var lon = this.poiData.position.lng || this.poiData.position.lon
+  const lon = this.poiData.position.lng || this.poiData.position.lon
   this.marker.setLngLat([
     lon,
     this.poiData.position.lat
@@ -79,14 +79,14 @@ SearchMarker.prototype.onClick = function (callback) {
 }
 
 SearchMarker.prototype.createMarker = function () {
-  var elem = document.createElement('div')
+  const elem = document.createElement('div')
   elem.className = 'tt-icon-marker-green tt-search-marker'
   if (this.options.markerClassName) {
     elem.className += ' ' + this.options.markerClassName
   }
 
-  var innerElem = document.createElement('div')
-  var icon = new SearchIconCreator('white', this.poiData).getIcon()
+  const innerElem = document.createElement('div')
+  const icon = new SearchIconCreator('white', this.poiData).getIcon()
   innerElem.className = 'marker-inner ' + icon
 
   elem.appendChild(innerElem)
@@ -117,7 +117,7 @@ SearchMarkerPopup.prototype.createPopup = function () {
 }
 
 SearchMarkerPopup.prototype.createPopupContent = function () {
-  var popupParentElem = document.createElement('div')
+  const popupParentElem = document.createElement('div')
   popupParentElem.className = 'tt-pop-up-container'
 
   if (this.options.popupClassName) {
@@ -131,11 +131,11 @@ SearchMarkerPopup.prototype.createPopupContent = function () {
 
   // popupIconContainer.appendChild(iconElem);
 
-  var popupContentElem = document.createElement('div')
+  const popupContentElem = document.createElement('div')
 
   popupContentElem.className = 'pop-up-content'
 
-  var addressInformationElem = document.createElement('div')
+  const addressInformationElem = document.createElement('div')
   // console.log('Creating popup ', this.poiData)
   let name = this.poiData.name
   // console.log('adding rating ', this.poiData.currentRatingValue)
@@ -178,7 +178,7 @@ SearchMarkerPopup.prototype.createPopupContent = function () {
 }
 
 SearchMarkerPopup.prototype.convertDistance = function (distanceMeters) {
-  var distance = Math.round(distanceMeters)
+  const distance = Math.round(distanceMeters)
 
   if (distance >= 1000) {
     return Math.round(distance / 100) / 10 + ' km'
@@ -187,7 +187,7 @@ SearchMarkerPopup.prototype.convertDistance = function (distanceMeters) {
 }
 
 SearchMarkerPopup.prototype.createDivWithContent = function (className, content, parent) {
-  var elem = document.createElement('div')
+  const elem = document.createElement('div')
   elem.className = className
   elem.appendChild(document.createTextNode(content))
   parent.appendChild(elem)
@@ -198,14 +198,14 @@ function SearchIconCreator (color, poiData) {
 }
 
 SearchIconCreator.prototype.getIcon = function () {
-  var classification = this.poiData.classification
-  var iconClass = this.availableIcons.fallback
+  const classification = this.poiData.classification
+  let iconClass = this.availableIcons.fallback
 
   if (this.poiData.classification) {
-    var icon
+    let icon
 
     if (Array.isArray(classification)) {
-      var iconName = classification.indexOf('hospital/polyclinic') > -1
+      const iconName = classification.indexOf('hospital/polyclinic') > -1
         ? 'HOSPITAL_POLYCLINIC' : classification.length > 1
           ? classification[1].toUpperCase() : classification[0].toUpperCase()
 
@@ -218,7 +218,7 @@ SearchIconCreator.prototype.getIcon = function () {
     }
   }
 
-  var modifier = this.getIconClassModifier(iconClass)
+  const modifier = this.getIconClassModifier(iconClass)
   if (modifier && this.isColorModifier(modifier)) {
     return 'tt-icon-' + this.getIconClassWithoutModifier(iconClass) + '-' + this.color
   }
@@ -227,7 +227,7 @@ SearchIconCreator.prototype.getIcon = function () {
 }
 
 SearchIconCreator.prototype.getIconClassModifier = function (iconClass) {
-  var classParts = iconClass.split('-')
+  const classParts = iconClass.split('-')
   return classParts.length > -1 ? classParts.slice(-1)[0] : undefined
 }
 

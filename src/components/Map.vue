@@ -15,10 +15,10 @@ import { LocalStorage } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
 import Events from 'components/Events.vue'
 
-var searchMarkersManager
-var map
-var longClickTimerId
-var mapAnimation
+let searchMarkersManager
+let map
+let longClickTimerId
+let mapAnimation
 
 export default {
   name: 'Map',
@@ -145,7 +145,7 @@ export default {
     }
 
     // Get the saved location from the cookie
-    var savedLocation = LocalStorage.getItem('lastlocation')
+    let savedLocation = LocalStorage.getItem('lastlocation')
     if (savedLocation) {
       // console.log('='+savedLocation)
       savedLocation = JSON.parse(savedLocation)
@@ -190,7 +190,7 @@ export default {
     function _displayPOI (poi) {
       moveMap(poi.position)
       // console.log(poi)
-      // var searchMarker = new window.SearchMarker(firstResult)
+      // const searchMarker = new window.SearchMarker(firstResult)
       // searchMarker.addTo(map)
       searchMarkersManager.clear()
       searchMarkersManager.draw([poi])
@@ -223,8 +223,8 @@ export default {
     }
 
     function getBounds (data) {
-      var btmRight
-      var topLeft
+      let btmRight
+      let topLeft
       if (data.viewport) {
         btmRight = [data.viewport.btmRightPoint.lng, data.viewport.btmRightPoint.lat]
         topLeft = [data.viewport.topLeftPoint.lng, data.viewport.topLeftPoint.lat]
@@ -236,7 +236,7 @@ export default {
       if (!markerData || (markerData instanceof Array && !markerData.length)) {
         return
       }
-      var bounds = new tt.LngLatBounds()
+      const bounds = new tt.LngLatBounds()
       if (markerData instanceof Array) {
         markerData.forEach(function (marker) {
           bounds.extend(getBounds(marker))
@@ -261,7 +261,7 @@ export default {
         entityId: id
       }).then (function (response) {
         // console.log(response)
-        var firstResult = response.results[0]
+        const firstResult = response.results[0]
         if (firstResult) {
           try {
             LocalStorage.set('poi' + id, firstResult)

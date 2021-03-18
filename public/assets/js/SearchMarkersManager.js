@@ -79,10 +79,10 @@ SearchMarkersManager.prototype.draw = function (poiList) {
   this.clear()
 
   this._poiList.forEach(function (poi) {
-    var markerId = poi.id
+    const markerId = poi.id
     // console.log(poi)
-    var number = poi.address.streetNumber || ''
-    var address = poi.address.streetName + ' ' + number + ' '
+    const number = poi.address.streetNumber || ''
+    let address = poi.address.streetName + ' ' + number + ' '
     if (poi.address.municipalitySubdivision) {
       address += poi.address.municipalitySubdivision
     }
@@ -108,7 +108,7 @@ SearchMarkersManager.prototype.draw = function (poiList) {
       poiOpts.category = poi.poi.categories[0] || undefined
     }
 
-    var marker = new window.SearchMarker(poiOpts, this._options)
+    const marker = new window.SearchMarker(poiOpts, this._options)
     marker.onClick(function (clickedMarker) {
       clickedMarker.togglePopup()
     })
@@ -127,8 +127,8 @@ SearchMarkersManager.prototype.getPOI = function (markerId) {
 
 SearchMarkersManager.prototype.openPopup = function (markerId, reload) {
   // this ensures, that only one popup is opened at the time
-  for (var marker in this.markers) {
-    var current = this.markers[marker]
+  for (const marker in this.markers) {
+    const current = this.markers[marker]
     if (current.getPopup().isOpen()) {
       current.togglePopup()
     }
@@ -146,26 +146,26 @@ SearchMarkersManager.prototype.jumpToMarker = function (markerId) {
 }
 
 SearchMarkersManager.prototype.getMarkersBounds = function () {
-  var bounds = new window.tt.LngLatBounds()
+  const bounds = new window.tt.LngLatBounds()
 
-  for (var marker in this.markers) {
+  for (const marker in this.markers) {
     bounds.extend(this.markers[marker].getLngLat())
   }
 
   return bounds
 }
 SearchMarkersManager.prototype.removeAll = function () {
-  for (var markerId in this.markers) {
-    var marker = this.markers[markerId]
+  for (const markerId in this.markers) {
+    const marker = this.markers[markerId]
     marker.remove()
     delete this.markers[markerId]
   }
 }
 
 SearchMarkersManager.prototype.remove = function (poi) {
-  for (var markerId in this.markers) {
+  for (const markerId in this.markers) {
     if (markerId === poi.id) {
-      var marker = this.markers[markerId]
+      const marker = this.markers[markerId]
       marker.remove()
       delete this.markers[markerId]
       return
@@ -174,8 +174,8 @@ SearchMarkersManager.prototype.remove = function (poi) {
 }
 
 SearchMarkersManager.prototype.clear = function () {
-  for (var markerId in this.markers) {
-    var marker = this.markers[markerId]
+  for (const markerId in this.markers) {
+    const marker = this.markers[markerId]
     marker.remove()
   }
 

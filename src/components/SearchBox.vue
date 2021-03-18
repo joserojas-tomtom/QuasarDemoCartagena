@@ -88,7 +88,7 @@ export default {
 
       if (isFuzzySearchResult(event)) {
         // Display selected result on the map
-        var result = event.data.result
+        const result = event.data.result
         // console.log(event, result)
         try {
           LocalStorage.set('poi' + result.id, result)
@@ -189,7 +189,7 @@ function hideKeyboard () {
   // is called inside of 'onfocus' event handler
   setTimeout(function () {
     // creating temp field
-    var field = document.createElement('input')
+    const field = document.createElement('input')
     field.setAttribute('type', 'text')
     // hiding temp field from peoples eyes
     // -webkit-user-modify is nessesary for Android 4.x

@@ -68,7 +68,7 @@ export default {
     share (event) {
       console.log('Sharing ', event)
 
-      var options = {
+      const options = {
         text: event.category.label + '@' + event.address, // not supported on some apps (Facebook, Instagram)
         title: '[TusMapas]' + event.name, // fi. for email
         url: 'geo:0,0?q=' + event.location.lat + ',' + event.location.lng

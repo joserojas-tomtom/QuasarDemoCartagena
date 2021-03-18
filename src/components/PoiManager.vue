@@ -200,7 +200,7 @@ export default {
     share (poi) {
       console.log('Sharing ', poi)
 
-      var options = {
+      const options = {
         text: poi.name + '@' + poi.address, // not supported on some apps (Facebook, Instagram)
         title: '[From TusMapas]' + poi.name, // fi. for email
         url: 'geo:0,0?q=' + poi.position.lat + ',' + poi.position.lng

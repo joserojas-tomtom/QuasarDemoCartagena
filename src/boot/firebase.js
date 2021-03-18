@@ -13,7 +13,7 @@ import 'firebase/database'
 //     https://firebase.google.com/docs/web/setup#available-libraries -->
 
 // Your web app's Firebase configuration
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: 'AIzaSyBv5tGlvZa2P_orz1UbgfL3n-CzSZtvgfc',
   authDomain: 'kidstimer-73245.firebaseapp.com',
   databaseURL: 'https://kidstimer-73245.firebaseio.com',
