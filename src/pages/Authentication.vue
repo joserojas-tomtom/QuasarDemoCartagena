@@ -17,46 +17,43 @@
     </q-header>
 <q-page-container>
   <q-page class=' flex-center q-pa-md'>
-  <q-card>
-    <q-tabs
-      v-model="tab"
-      dense
-      class="text-grey"
-      active-color="primary"
-      indicator-color="primary"
-      align="justify"
-      narrow-indicator
-    >
-      <q-tab name="login" label="Login" />
-      <q-tab name="register" label="Register" />
-    </q-tabs>
-    <q-separator />
-    <q-tab-panels v-model="tab" animated>
-      <q-tab-panel name="login">
-        <login-register tab = 'login'/>
-      </q-tab-panel>
-
-      <q-tab-panel name="register">
-       <login-register tab='register'/>
-      </q-tab-panel>
-    </q-tab-panels>
-  </q-card>
-</q-page>
+    <q-card v-if='alreadySignedIn'>
+      <q-item-label class='text-h5'>Ya estas registrado!</q-item-label>
+    </q-card>
+    <q-card v-else>
+      <login-register class='q-pa-md'/>
+      <q-separator />
+    </q-card>
+  </q-page>
 </q-page-container>
 
 </q-layout>
 </template>
 <script>
+import { Notify } from 'quasar'
+import store from '../router/store'
 
 export default {
 
   data () {
     return {
-      tab: 'login'
+      alreadySignedIn: false
     }
   },
   components: {
     'login-register': require('components/LoginRegister.vue').default
+  },
+  mounted () {
+    const _this = this
+    store.actions.checkForEmailLink(window.location.href,
+      function (user) {
+        _this.alreadySignedIn = true
+        Notify.create('Signed as ' + user.name)
+        _this.$router.back()
+      },
+      function (error) {
+        Notify.create(error.message)
+      })
   }
 }
 </script>

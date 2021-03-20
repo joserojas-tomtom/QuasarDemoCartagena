@@ -21,7 +21,7 @@
     >
       <q-list>
         <q-btn v-if='user==null'
-          to='/auth' replace
+          to='/auth'
           icon='account_circle'
           flat
           class='q-my-md'

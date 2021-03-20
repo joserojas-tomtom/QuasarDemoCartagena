@@ -2,13 +2,11 @@
   <div>
   <q-form @submit='submitForm'>
     <q-input
-    v-if="tab=='register'"
     class='q-mb-md' outlined v-model="formData.name" label="Name" />
     <q-input class='q-mb-md' outlined v-model="formData.email" label="Email" type='email'/>
-    <q-input class='q-mb-md' outlined v-model="formData.password" label="Password" type='password'/>
     <div class='row'>
       <q-space/>
-    <q-btn color='primary' :label='tab' type='submit'/>
+    <q-btn color='primary' label='Registro' type='submit'/>
     </div>
   </q-form>
   <div v-if='message' class="q-py-md q-gutter-sm">
@@ -23,16 +21,17 @@
 </template>
 
 <script>
+import { Notify } from 'quasar'
 import store from '../router/store'
 
 export default {
-  props: ['tab'],
   methods: {
     closeMessage () {
       this.message = undefined
     },
     success () {
       // go back
+      Notify.create('Te hemos enviado un correo electronico. Confirma el registro con el enlace enviado')
       this.$router.back()
     },
     error (code) {
@@ -44,11 +43,9 @@ export default {
       }
     },
     submitForm () {
-      if (this.tab === 'login') {
-        store.actions.loginUser(this.formData, this.success, this.error)
-      } else {
-        store.actions.registerUser(this.formData, this.success, this.error)
-      }
+      store.actions.loginWithEmail(this.formData.email,
+        this.formData.name,
+        this.success, this.error)
     }
   },
   data () {
@@ -56,8 +53,7 @@ export default {
       message: undefined,
       formData: {
         email: '',
-        name: '',
-        password: ''
+        name: ''
       }
     }
   }
