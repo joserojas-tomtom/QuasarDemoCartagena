@@ -1,10 +1,12 @@
 <template>
-  <q-icon v-if='visible' :name="iconName" size='1.5em'
-                    color='blue-1' rounded
-                     @click='sendLocation()'
-                    class='q-ml-xs q-mr-xs'/>
+  <q-btn v-if='visible' :icon="iconName" size='1.3em'
+                    color='primary' flat
+                    text-color='white'
+                    class='q-my-md'
+                     @click='sendLocation()'/>
 </template>
 <script>
+import { Notify } from 'quasar'
 export default {
   name: 'Location',
   data () {
@@ -42,7 +44,7 @@ export default {
       navigator.geolocation.getCurrentPosition(this.showPosition, this.errorLocation, options)
       this.watchId = navigator.geolocation.watchPosition(this.showPosition, this.errorLocation, options)
     } else {
-      console.log('Geolocation is not supported by this browser.')
+      Notify.create('Geolocation is not supported by this browser.')
     }
   },
   beforeDestroy () {

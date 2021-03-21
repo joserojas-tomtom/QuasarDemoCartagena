@@ -311,7 +311,15 @@ export default {
         root.$emit('long-click-map', event.lngLat)
       }, 1000, event.lngLat)
     })
-
+    map.on('mousedown', function (event) {
+      // const _this = this
+      cancelLongClickTimer()
+      longClickTimerId = setTimeout(function () {
+        root.$emit('long-click-map', event.lngLat)
+      }, 1000, event.lngLat)
+    })
+    map.on('mouseup', function (event) { cancelLongClickTimer() })
+    map.on('mousemove', function (event) { cancelLongClickTimer() })
     map.on('touchend', function (event) { cancelLongClickTimer() })
     map.on('touchmove', function (event) { cancelLongClickTimer() })
 

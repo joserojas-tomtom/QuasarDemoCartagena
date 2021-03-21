@@ -2,15 +2,18 @@
   <q-layout view="lHh Lpr fFf">
     <q-header >
       <q-toolbar>
+        <div class='row'>
         <q-btn
+          class='col-1 q-mr-sm'
           flat
           round
           icon="menu"
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-        <Location class='q-pr-sm vertical-middle' />
-        <SearchBox class='vertical-middle q-mb-sm'/>
+        <Location class='col-1 q-mr-sm' />
+        <SearchBox class='col-9 q-mb-sm'/>
+        </div>
       </q-toolbar>
     </q-header>
 
