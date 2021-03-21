@@ -111,11 +111,15 @@
       </q-drawer>
     <q-footer >
     </q-footer>
-    <transition appear enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
-    <q-page-sticky  v-if='personalmarker'  class='q-pa-sm'  position="right" :offset='[0,0]'>
+    <transition appear enter-active-class="animated backInUp" leave-active-class="animated backOutDown">
+    <q-page-sticky  v-if='personalmarker'  class='q-pa-sm'  position="top" :offset='[0,100]'>
+      <div class='column'>
       <q-btn class='q-ma-xs' rounded icon="cancel" color="primary" @click='personalmarker=false'/>
-      <q-btn class='q-ma-xs' fab icon="account_circle" color="primary" @click='createPersonalMarker()'/>
-      <q-btn class='q-ma-xs' fab icon="announcement" color="primary" @click="createPublicMarker" />
+      <div class='row'>
+      <q-btn class='q-ma-xs' no-caps label='Privado' stack fab icon="account_circle" color="primary" @click='createPersonalMarker()'/>
+      <q-btn class='q-ma-xs' no-caps label='Publico' stack fab icon="announcement" color="primary" @click="createPublicMarker" />
+      </div>
+      </div>
     </q-page-sticky>
     </transition>
 
@@ -134,9 +138,14 @@ export default {
   name: 'MainLayout',
   components: { SearchBox, Location },
   mounted () {
+    const _this = this
     const root = this.$root
     root.$on('long-click-map', this.showPersonalPoiMenu)
     root.$on('favorites-updated', this.updateFavorites)
+    root.$on('center-update', function (lnglat) {
+      console.log('removing the pop')
+      _this.personalmarker = false
+    })
     root.$on('location-update', function (location) {
       console.log(location)
     })
@@ -153,6 +162,7 @@ export default {
     root.$off('favorites-updates')
     root.$off('location-update')
     root.$off('long-click-map')
+    root.$off('center-update')
     this.removeBackButtonHandler()
   },
   methods: {

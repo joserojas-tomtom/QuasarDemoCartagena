@@ -113,8 +113,9 @@ module.exports = function (/* ctx */) {
     // animations: 'all', // --- includes all animations
     // https://quasar.dev/options/animations
     animations: [
-      'bounceInRight',
-      'bounceOutRight'
+      'backInUp',
+      'backOutDown',
+      'wobble'
     ],
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
