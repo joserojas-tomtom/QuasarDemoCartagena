@@ -18,16 +18,19 @@ export default {
     const originalCity = LocalStorage.getItem('currentCity')
     const apikey = LocalStorage.getItem('apikey')
 
+    function convertLocation (lngLat) {
+      return [lngLat.lon, lngLat.lat]
+    }
+
     // Options for the fuzzySearch service
     const searchOptions = {
       key: apikey,
       language: originalCity.language,
       limit: 20,
-      idxSet: 'POI,PAD,Addr',
-      center: originalCity.location,
+      center: convertLocation(originalCity.location),
       countrySet: originalCity.country,
       boundingBox: originalCity.bounds.bounds,
-      geoBias: originalCity.location,
+      // geoBias: originalCity.location,
       radius: 10000
     }
     // Options for the autocomplete service
@@ -36,7 +39,7 @@ export default {
       language: originalCity.language,
       center: originalCity.location,
       countrySet: originalCity.country,
-      geoBias: originalCity.location,
+      // geoBias: originalCity.location,
       radius: 10000
     }
 
@@ -62,12 +65,12 @@ export default {
       options.labels.placeholder = city.placeHolder
 
       options.autocompleteOptions.center = city.location
-      options.autocompleteOptions.geoBias = city.location
+      // options.autocompleteOptions.geoBias = city.location
       options.autocompleteOptions.countrySet = city.country
       options.autocompleteOptions.language = city.language
 
       options.searchOptions.center = city.location
-      options.searchOptions.geoBias = city.location
+      // options.searchOptions.geoBias = city.location
       options.searchOptions.countrySet = city.country
       options.searchOptions.language = city.language
       options.searchOptions.boundingBox = city.bounds.bounds
@@ -144,9 +147,9 @@ export default {
       console.log(center)
       const options = { ...ttSearchBox.getOptions() }
       options.searchOptions.center = center
-      options.searchOptions.geoBias = center
+      // options.searchOptions.geoBias = center
       options.autocompleteOptions.center = center
-      options.autocompleteOptions.geoBias = center
+      // options.autocompleteOptions.geoBias = center
       ttSearchBox.updateOptions(options)
       console.log('New Options', options)
     })

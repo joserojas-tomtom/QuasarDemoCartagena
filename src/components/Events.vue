@@ -220,7 +220,7 @@ export default {
 .mapboxgl-popup-content {
   background: green;
   padding: 0px 5px 5px 5px;
-  box-shadow: 3px 3px 2px #02411e;
+  box-shadow: 3px 3px 2px black;
   font-size: 12px;
   font-weight: bold;
 }

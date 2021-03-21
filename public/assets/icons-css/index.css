@@ -161,7 +161,7 @@ body {
 
 .tt-popup .mapboxgl-popup-close-button:focus,
     .tt-popup .tt-button:focus {
-        border: 1px solid #94b106;
+        border: 1px solid #075e54;
         outline: none;
     }
 
@@ -332,7 +332,6 @@ body {
 .tt-pop-up-container .pop-up-content .pop-up-result-name {
             font-size: 12px;
             font-weight: bold;
-            
         }
 
 .tt-pop-up-container .pop-up-content .pop-up-result-distance, .tt-pop-up-container .pop-up-content .pop-up-result-position, .tt-pop-up-container .pop-up-content .pop-up-result-type {
