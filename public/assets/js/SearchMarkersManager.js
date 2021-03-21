@@ -89,7 +89,7 @@ SearchMarkersManager.prototype.draw = function (poiList) {
     const poiDetails = poi.dataSources && poi.dataSources.poiDetails ? poi.dataSources.poiDetails[0] : undefined
     const poiOpts = {
       id: poi.id,
-      name: poi.name || 'Sin nombre',
+      name: poi.name || address,
       phone: undefined,
       url: undefined,
       address: address,
@@ -101,7 +101,7 @@ SearchMarkersManager.prototype.draw = function (poiList) {
       details: poiDetails
     }
     if (poi.poi) {
-      poiOpts.name = poi.poi.name || 'Sin nombre'
+      poiOpts.name = poi.poi.name || poi.name
       poiOpts.phone = poi.poi.phone || ''
       poiOpts.url = poi.poi.url || ''
       poiOpts.classification = poi.poi.classifications[0].code || undefined

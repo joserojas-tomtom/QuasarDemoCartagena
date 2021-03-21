@@ -121,12 +121,12 @@ export default {
         key: apikey,
         position: lngLat
       }).then(function (response) {
-        // console.log(response)
+        console.log(response)
         const firstAddress = response.addresses[0]
         // add temporary marker
         const poi = {
           id: 'personal' + (new Date().getTime()),
-          name: 'Sin nombre',
+          name: firstAddress.address.freeformAddress,
           position: firstAddress.position,
           address: firstAddress.address
         }
