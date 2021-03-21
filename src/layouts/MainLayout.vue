@@ -114,10 +114,10 @@
     <transition appear enter-active-class="animated backInUp" leave-active-class="animated backOutDown">
     <q-page-sticky  v-if='personalmarker'  class='q-pa-sm'  position="top" :offset='[0,100]'>
       <div class='column'>
-      <q-btn class='q-ma-xs' rounded icon="cancel" color="primary" @click='personalmarker=false'/>
+      <q-btn class='q-ma-xs'  icon="cancel" color="primary" @click='personalmarker=false'/>
       <div class='row'>
-      <q-btn class='q-ma-xs' no-caps label='Privado' stack fab icon="account_circle" color="primary" @click='createPersonalMarker()'/>
-      <q-btn class='q-ma-xs' no-caps label='Publico' stack fab icon="announcement" color="primary" @click="createPublicMarker" />
+      <q-btn class='q-ma-xs' no-caps label='Privado' stack  icon="account_circle" color="primary" @click='createPersonalMarker()'/>
+      <q-btn class='q-ma-xs' no-caps label='Publico' stack  icon="announcement" color="primary" @click="createPublicMarker" />
       </div>
       </div>
     </q-page-sticky>
