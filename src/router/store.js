@@ -13,6 +13,15 @@ const mutations = {
 
 const actions = {
   checkForEmailLink (ref, successCB, errorCB) {
+    if (this.cordova) {
+      this.cordova.plugins.firebase.dynamiclinks.getDynamicLink().then(function (data) {
+        if (data) {
+          console.log('Read dynamic link data on app start:', data)
+        } else {
+          console.log("App wasn't started from a dynamic link")
+        }
+      })
+    }
     // Confirm the link is a sign-in with email link.
     console.log('checking if email signin')
     if (firebaseAuth.isSignInWithEmailLink(ref)) {
@@ -21,17 +30,19 @@ const actions = {
       // the sign-in operation.
       // Get the email if available. This should be available if the user completes
       // the flow on the same device where they started it.
+      console.log('There is email signin!', ref)
       const email = LocalStorage.getItem('emailForSignIn')
       if (!email) {
+        console.log('NO EMAIL SAVED')
         return
         // User opened the link on a different device. To prevent session fixation
         // attacks, ask the user to provide the associated email again. For example:
         // email = window.prompt('Please provide your email for confirmation')
       }
       // The client SDK will parse the code from the link for you.
-      firebaseAuth.signInWithEmailLink(email, window.location.href)
+      firebaseAuth.signInWithEmailLink(email, ref)
         .then((result) => {
-          console.log('SIgn in SUccesful')
+          console.log('SIgn in SUccesful with email link')
           // Clear email from storage.
           LocalStorage.remove('emailForSignIn')
           state.user = {
@@ -52,13 +63,17 @@ const actions = {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
         })
+    } else {
+      console.log('NO EMAIL SIGNING')
     }
   },
   logoutUser (successCB, errorCB) {
     firebaseAuth.signOut().then(() => {
       state.user = null
       // successCB()
-      this.handleAuthChanged(successCB)
+      if (successCB) {
+        successCB()
+      }
       // Sign-out successful.
     }).catch((error) => {
       // An error happened.
@@ -72,7 +87,8 @@ const actions = {
     const actionCodeSettings = {
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be in the authorized domains list in the Firebase Console.
-      url: 'https://localhost:8781/#/auth',
+      url: 'https://localhost:8781',
+      // url: 'https://tumapa.page.link/63fF',
       // This must be true.
       handleCodeInApp: true,
       android: {

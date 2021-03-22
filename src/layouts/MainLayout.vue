@@ -140,6 +140,9 @@ export default {
   mounted () {
     const _this = this
     const root = this.$root
+    root.$on('signin', function () {
+      _this.user = store.actions.getCurrentUser()
+    })
     root.$on('long-click-map', this.showPersonalPoiMenu)
     root.$on('favorites-updated', this.updateFavorites)
     root.$on('center-update', function (lnglat) {
@@ -163,6 +166,7 @@ export default {
     root.$off('location-update')
     root.$off('long-click-map')
     root.$off('center-update')
+    root.$off('signin')
     this.removeBackButtonHandler()
   },
   methods: {

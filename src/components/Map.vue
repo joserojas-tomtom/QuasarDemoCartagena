@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class='column items-stretch'>
-  <div class='row-grow' id='map' ref="myRef"></div>
+  <div class='row'  id='map' ref="myRef"></div>
   <PoiManager class='row-auto' v-model='poiPanel' style='width:100%'/>
   </div>
       <Events v-if='currentCity'
@@ -22,6 +22,7 @@ let searchMarkersManager
 let map
 let longClickTimerId
 let mapAnimation
+let currentAngle = 0
 
 export default {
   name: 'Map',
@@ -29,7 +30,7 @@ export default {
   methods: {
     rotateCamera (timestamp) {
       const rotationDegree = timestamp / 100 % 360
-      map.rotateTo(rotationDegree, { duration: 0 })
+      map.rotateTo(rotationDegree + currentAngle, { duration: 0 })
       mapAnimation = requestAnimationFrame(this.rotateCamera)
     },
     addMarkers (array) {
@@ -196,8 +197,9 @@ export default {
       })
       cancelAnimationFrame(mapAnimation)
       setTimeout(() => {
+        currentAngle = map.getBearing() + 90
         mapAnimation = requestAnimationFrame(_this.rotateCamera)
-      }, 1000)
+      }, 1500)
     }
 
     function _displayPOI (poi) {
@@ -294,7 +296,7 @@ export default {
     }
 
     // map.addControl(new tt.FullscreenControl());
-    map.addControl(new window.tt.NavigationControl())
+    // map.addControl(new window.tt.NavigationControl())
     map.on('load', function () {
       searchMarkersManager = new window.SearchMarkersManager(map)
 
@@ -303,11 +305,16 @@ export default {
       map.setMaxBounds(originalCity.bounds.bounds)
     })
     map.on('dragend', saveCookie)
+    map.on('dragStart', function () {
+      cancelAnimationFrame(mapAnimation)
+      cancelLongClickTimer()
+    })
 
     map.on('touchstart', function (event) {
       // const _this = this
       cancelLongClickTimer()
       longClickTimerId = setTimeout(function () {
+        this.poiPanel = false
         root.$emit('long-click-map', event.lngLat)
       }, 1000, event.lngLat)
     })
@@ -315,6 +322,7 @@ export default {
       // const _this = this
       cancelLongClickTimer()
       longClickTimerId = setTimeout(function () {
+        this.poiPanel = false
         root.$emit('long-click-map', event.lngLat)
       }, 1000, event.lngLat)
     })

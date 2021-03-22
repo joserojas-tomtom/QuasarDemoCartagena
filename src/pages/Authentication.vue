@@ -30,8 +30,8 @@
 </q-layout>
 </template>
 <script>
-import { Notify } from 'quasar'
-import store from '../router/store'
+// import { Notify } from 'quasar'
+// import store from '../router/store'
 
 export default {
 
@@ -44,16 +44,7 @@ export default {
     'login-register': require('components/LoginRegister.vue').default
   },
   mounted () {
-    const _this = this
-    store.actions.checkForEmailLink(window.location.href,
-      function (user) {
-        _this.alreadySignedIn = true
-        Notify.create('Signed as ' + user.name)
-        _this.$router.back()
-      },
-      function (error) {
-        Notify.create(error.message)
-      })
+
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 <div>
-  <q-page-sticky position="bottom-right" :offset="[9, 9]">
-  <q-fab ref='fab' padding='sm' color="primary" icon="layers" direction="up">
+  <q-page-sticky position="top-right" :offset="[9, 9]">
+  <q-fab ref='fab' padding='sm' color="primary" icon="layers" direction="down">
     <q-fab-action external-label
                   label-position='left'
                   label='Servicios'

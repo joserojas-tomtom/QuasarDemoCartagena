@@ -7,9 +7,9 @@
              Crear un nuevo evento
         </q-item-label>
         <q-btn
-          class='absolute-right q-ma-xs'
+          class='absolute-right q-mr-md'
           to='/' replace
-          label='Go back'
+          label='Mapa'
           flat
           dense
           round
@@ -26,11 +26,11 @@
         <div class="text-h6 q-mt-sm q-mb-xs">{{ event.address}}</div>
         <q-select class='q-mb-sm' v-model='event.category' outlined :options="categories" label="Categoria" />
         <q-input lines='2' class='q-mb-sm' v-model='event.description' outlined label="Descripcion" dense />
-        <q-input class='q-mb-sm' outlined v-model="event.phone" label="Phone" dense phone />
-        <q-input class='q-mb-sm' outlined v-model="event.price" label="Price" dense />
+        <q-input class='q-mb-sm' outlined v-model="event.phone" label="Telefono" dense phone />
+        <q-input class='q-mb-sm' outlined v-model="event.price" label="Precio/Valor" dense />
         <img :src="event.imageSrc" width='100%' class='q-mb-sm'>
     </q-card-section>
-    <q-card-actions>
+    <q-card-actions class='q-mr-sm'>
         <q-space />
         <q-btn  icon='camera' color='dark' @click='takePicture'/>
         <q-btn  color="dark" label="Borrar" @click='clearFields'/>
