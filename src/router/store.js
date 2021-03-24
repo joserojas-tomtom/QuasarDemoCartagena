@@ -1,6 +1,6 @@
 // import { firebaseAuth, firebaseDB } from 'boot/firebase'
 
-import { firebaseAuth, firebaseDB } from 'src/boot/firebase'
+import { firebaseAuth, firebaseDB, getGoogleProvider } from 'src/boot/firebase'
 import { LocalStorage } from 'quasar'
 
 const state = {
@@ -12,6 +12,32 @@ const mutations = {
 }
 
 const actions = {
+  signinGoogle (callbackSuccess) {
+    const provider = getGoogleProvider()
+    console.log(provider)
+    firebaseAuth
+      .signInWithRedirect(provider)
+
+      .then(() => {
+        return firebaseAuth().getRedirectResult()
+      }).then((result) => {
+      /** @type {firebaseAuth.OAuthCredential} */
+      // var credential = result.credential
+
+        // This gives you a Google Access Token.
+        // You can use it to access the Google API.
+        // var token = credential.accessToken
+        // The signed-in user info.
+        state.user = result.user
+        callbackSuccess('Signed in!')
+        console.log(state.user)
+      // ...
+      }).catch((error) => {
+      // Handle Errors here.
+        console.log(error.message)
+        callbackSuccess(error.message)
+      })
+  },
   checkForEmailLink (ref, successCB, errorCB) {
     if (this.cordova) {
       this.cordova.plugins.firebase.dynamiclinks.getDynamicLink().then(function (data) {

@@ -4,15 +4,15 @@
       <q-toolbar>
         <div class='row'>
         <q-btn
-          class='col-1 q-mr-sm'
+          class='col-1 q-mr-md'
           flat
           round
           icon="menu"
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
-        <Location class='col-1 q-mr-sm' />
-        <SearchBox class='col-9 q-mb-sm'/>
+        <Location class='col-1 q-mr-md' />
+        <SearchBox class='col-8 q-mb-sm'/>
         </div>
       </q-toolbar>
     </q-header>

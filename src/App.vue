@@ -11,10 +11,33 @@ export default {
   name: 'App',
   mounted () {
     const _this = this
+    // function fetchLocalResource (url) {
+    //   const req = new XMLHttpRequest()
+    //   req.onload = function () {
+    //     const text = req.responseText
+    //     // Do something with text...
+    //   }
+    //   req.open('GET', url)
+    //   req.send()
+    // }
+    function fetchLocal (url) {
+      return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest()
+        xhr.onload = function () {
+          resolve(new Response(xhr.responseText, { status: xhr.status }))
+        }
+        xhr.onerror = function () {
+          reject(new TypeError('Local request failed'))
+        }
+        xhr.open('GET', url)
+        xhr.send(null)
+      })
+    }
     const getDefaultCity = async () => {
       try {
-        const response = await fetch('db-structure.json')
+        const response = await fetchLocal('db-structure.json')
         const data = await response.json()
+        console.log('FROM reading locally', data)
         const citiesDB = data.cities
         LocalStorage.set('citiesDB', citiesDB)
         const currentCity = LocalStorage.getItem('currentCity')

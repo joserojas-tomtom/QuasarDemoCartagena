@@ -1,15 +1,39 @@
 /* eslint-disable quote-props */
 /* eslint-disable quotes */
-export default function getDefaultStyle (index) {
+export default function getDefaultStyle (index, success) {
   const styles = [
-    'assets/cartagenastyle.json',
-    'assets/terracotastyle.json',
-    'assets/pinkstyle.json',
-    'assets/lightgreen.json',
-    'assets/pastelstyle.json'
+    'cartagenastyle.json',
+    'terracotastyle.json',
+    'pinkstyle.json',
+    'lightgreen.json',
+    'pastelstyle.json'
   ]
-  return styles[index]
+  const getStyle = async () => {
+    try {
+      const response = await fetchLocal(styles[index])
+      const data = await response.json()
+      console.log('Styleloaded', data)
+      success(data)
+    } catch (error) {
+      console.log('Getting the style', error)
+    }
+  }
+  getStyle()
   // return mystyle
+}
+
+function fetchLocal (url) {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest()
+    xhr.onload = function () {
+      resolve(new Response(xhr.responseText, { status: xhr.status }))
+    }
+    xhr.onerror = function () {
+      reject(new TypeError('Local request failed'))
+    }
+    xhr.open('GET', url)
+    xhr.send(null)
+  })
 }
 
 // eslint-disable-next-line no-unused-vars

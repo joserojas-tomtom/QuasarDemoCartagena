@@ -67,7 +67,9 @@ export default {
     },
     changeStyle () {
       const styleIndex = LocalStorage.getItem('styleIndex')
-      map.setStyle(getDefaultStyle(styleIndex))
+      getDefaultStyle(styleIndex, function (style) {
+        map.setStyle(style)
+      })
     }
   },
   beforeDestroy () {
@@ -182,8 +184,8 @@ export default {
       center: savedLocation,
       zoom: savedLocation.zoom,
       maxZoom: 18,
-      minZoom: 11,
-      style: getDefaultStyle(styleIndex) // 'assets/cartagenastyle.json'
+      minZoom: 11
+      // style: style // 'assets/cartagenastyle.json'
     })
 
     function moveMap (lnglat) {
@@ -298,6 +300,9 @@ export default {
     // map.addControl(new tt.FullscreenControl());
     // map.addControl(new window.tt.NavigationControl())
     map.on('load', function () {
+      getDefaultStyle(styleIndex, function (style) {
+        map.setStyle(style)
+      })
       searchMarkersManager = new window.SearchMarkersManager(map)
 
       saveCookie()

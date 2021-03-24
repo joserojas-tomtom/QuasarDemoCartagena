@@ -6,7 +6,7 @@
         <q-btn
           class='absolute-right q-ma-md'
           to='/' replace
-          label='Go back'
+          label='Mapa'
           flat
           dense
           round
@@ -22,7 +22,6 @@
     </q-card>
     <q-card v-else>
       <login-register class='q-pa-md'/>
-      <q-separator />
     </q-card>
   </q-page>
 </q-page-container>
@@ -30,8 +29,8 @@
 </q-layout>
 </template>
 <script>
-// import { Notify } from 'quasar'
-// import store from '../router/store'
+import { Notify } from 'quasar'
+import store from '../router/store'
 
 export default {
 
@@ -45,6 +44,15 @@ export default {
   },
   mounted () {
 
+  },
+  methods: {
+    signinGoogle () {
+      const _this = this
+      store.actions.signinGoogle(function (msg) {
+        Notify.create(msg)
+        _this.$router.replace('/')
+      })
+    }
   }
 }
 </script>

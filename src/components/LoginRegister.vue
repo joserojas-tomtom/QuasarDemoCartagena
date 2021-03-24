@@ -2,11 +2,16 @@
   <div>
   <q-form @submit='submitForm'>
     <q-input
-    class='q-mb-md' outlined v-model="formData.name" label="Name" />
-    <q-input class='q-mb-md' outlined v-model="formData.email" label="Email" type='email'/>
+    class='q-mb-md' outlined v-model="formData.name" label="Nombre" />
+    <q-input class='q-mb-md' outlined v-model="formData.email" label="Correo electronico" type='email'/>
     <div class='row'>
       <q-space/>
-    <q-btn color='primary' label='Registro' type='submit'/>
+    <q-btn class='q-mr-sm' color='primary' label='Registro' type='submit'/>
+    <q-btn
+      @click="signinGoogle"
+      label='Registrate con Google'
+      icon="img:google_signin.png"
+    />
     </div>
   </q-form>
   <div v-if='message' class="q-py-md q-gutter-sm">
@@ -26,6 +31,13 @@ import store from '../router/store'
 
 export default {
   methods: {
+    signinGoogle () {
+      const _this = this
+      store.actions.signinGoogle(function (msg) {
+        Notify.create(msg)
+        _this.$router.replace('/')
+      })
+    },
     closeMessage () {
       this.message = undefined
     },

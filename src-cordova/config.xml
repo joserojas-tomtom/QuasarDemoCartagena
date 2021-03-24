@@ -16,7 +16,7 @@
     <preference name="AndroidLaunchMode" value="singleTask" />
     <universal-links>
         <host name="tumapa.page.link" scheme="https" />
-        <host name="tumapa-app.firebaseapp.com" scheme="https">
+        <host name="tumapa-68cf7.firebaseapp.com" scheme="https">
             <path url="/__/auth/callback" />
         </host>
     </universal-links>
@@ -81,4 +81,5 @@
     <allow-navigation href="about:*" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="AndroidXEnabled" value="true" />
+    <allow-navigation href="*" />
 </widget>
