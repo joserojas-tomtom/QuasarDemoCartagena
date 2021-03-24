@@ -26,8 +26,12 @@
         <div class="text-h6 q-mt-sm q-mb-xs">{{ event.address}}</div>
         <q-select class='q-mb-sm' v-model='event.category' outlined :options="categories" label="Categoria" />
         <q-input lines='2' class='q-mb-sm' v-model='event.description' outlined label="Descripcion" dense />
-        <q-input class='q-mb-sm' outlined v-model="event.phone" label="Telefono" dense phone />
-        <q-input class='q-mb-sm' outlined v-model="event.price" label="Precio/Valor" dense />
+        <q-input class='q-mb-sm' outlined v-model="event.phone" label="Telefono" dense mask='(+57) ###-#######' />
+        <q-input class='q-mb-sm' outlined v-model="event.price"
+        mask="$ #,###"
+        fill-mask="0"
+        reverse-fill-mask
+        label="Precio/Valor" dense />
         <img :src="event.imageSrc" width='100%' class='q-mb-sm'>
     </q-card-section>
     <q-card-actions class='q-mr-sm'>
