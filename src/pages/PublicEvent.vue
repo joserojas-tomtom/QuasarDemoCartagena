@@ -32,6 +32,7 @@
         fill-mask="0"
         reverse-fill-mask
         label="Precio/Valor" dense />
+        <q-select class='q-mb-sm' v-model='event.timeToLive' outlined :options="timeLimits" label="Por cuanto tiempo?" />
         <img :src="event.imageSrc" width='100%' class='q-mb-sm'>
     </q-card-section>
     <q-card-actions class='q-mr-sm'>
@@ -64,9 +65,11 @@ export default {
         phone: '',
         category: null,
         price: 0,
-        imageSrc: null
+        imageSrc: null,
+        timeToLive: undefined
       },
       categories: undefined,
+      timeLimits: undefined,
       sendDisable: true
     }
   },
@@ -127,6 +130,12 @@ export default {
   },
   mounted () {
     this.categories = LocalStorage.getItem('event-categories')
+    this.timeLimits = [
+      { label: '15 minutos', value: 15 * 60 },
+      { label: '30 minutos', value: 30 * 60 },
+      { label: '1 hora', value: 60 * 60 },
+      { label: '2 horas', value: 120 * 60 }
+    ]
     const apikey = LocalStorage.getItem('apikey')
     this.event.location = new window.tt.LngLat(this.lng, this.lat)
     // console.log('Location', this.event.location, apikey)
