@@ -84,6 +84,9 @@ export default {
       }
     },
     sendEvent () {
+      if (!this.event.timeToLive) {
+        this.event.timeToLive = 3600
+      }
       console.log(this.event)
       store.actions.createEvent(this.event, this.handleCreateEvent)
     },

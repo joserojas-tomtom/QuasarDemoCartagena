@@ -65,7 +65,7 @@ export default {
     return {
       icons: {
         service: 'home_repair_service',
-        announcement: 'announcement',
+        announcement: 'campaign',
         lostfound: 'saved_search',
         sell: 'shopping_bag'
       },
@@ -82,19 +82,31 @@ export default {
         service: buttonSelected,
         announcement: buttonSelected,
         sell: buttonSelected
-      }
+      },
+      timerVar: undefined
     }
   },
   mounted () {
     // console.log('Events. city=', this.city)
     this.categories = LocalStorage.getItem('event-categories')
-    // store.actions.fetchCityEvents(this.city, this.handleAllEVents)
     store.actions.registerEventListener(this.city, this.changeListener)
+    this.startCheckTimer()
   },
   beforeDestroy () {
     store.actions.removeEventListener(this.city)
+    this.stopCheckTimer()
   },
   methods: {
+    startCheckTimer () {
+      const _this = this
+      this.timerVar = setInterval(function () {
+        const eventsCopy = { ...this.currentEvents }
+        _this.checkEventsData(eventsCopy)
+      }, 5 * 3600) // 5 minutes
+    },
+    stopCheckTimer () {
+      clearTimeout(this.timerVar)
+    },
     handleMarkerClick (obj) {
       console.log('Clicking marker', obj)
     },
@@ -153,17 +165,32 @@ export default {
         }
       })
     },
+    checkEventsData (data) {
+      const _this = this
+      this.currentEvents = {}
+      // Let remove the old events from the list
+      const timeNowSecs = Math.floor(Date.now() / 1000)
+      this.categories.forEach(function (cat) {
+        const elements = data[cat.value]
+        _this.currentEvents[cat.value] = {}
+        if (elements) {
+          const ids = Object.keys(elements)
+          ids.forEach(function (event) {
+            console.log('Checking ', elements[event])
+            const eventCreationSecs = elements[event].timestamp / 1000
+            const timeToLive = elements[event].timeToLive.value
+            if ((eventCreationSecs + timeToLive) >= timeNowSecs) {
+              _this.currentEvents[cat.value][event] = elements[event]
+            }
+          })
+        }
+      })
+      this.buildMarkers(this.currentEvents)
+    },
     changeListener (data) {
       // console.log('Change Listener', data)
       if (data) {
-        this.currentEvents = data
-        this.buildMarkers(data)
-      }
-    },
-    handleAllEVents (data) {
-      // console.log('Handle all event from city ', data)
-      if (data) {
-        this.currentEvents = data
+        this.checkEventsData(data)
       }
     },
     close: function () {
