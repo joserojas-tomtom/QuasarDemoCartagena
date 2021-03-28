@@ -18,14 +18,22 @@
                         color='grey-5'
                         @click='removeAllPoi'
                         class='q-mb-lg'/>
-            <q-icon name="share" size='2em'
-                    v-if ='isThereSharing'
-                        color='darkgrey'
-                        @click='share(poi)'
-                        class='q-mb-lg'/>
             <q-icon name="favorite" size='2em'
                         :color='poi.favoriteColor'
                         @click='toggleFavorite(index)'
+                        class='q-mb-lg'/>
+            <q-icon name="directions_car" size='2em'
+                        color='darkgrey'
+                        @click='routeCar(poi)'
+                        class='q-mb-lg'/>
+            <q-icon name="directions_run" size='2em'
+                        color='darkgrey'
+                        @click='routePedestrian(poi)'
+                        class='q-mb-lg'/>
+           <q-icon name="share" size='2em'
+                    v-if ='isThereSharing'
+                        color='darkgrey'
+                        @click='share(poi)'
                         class='q-mb-lg'/>
           </q-item-section>
           <q-item-section top>
@@ -197,6 +205,12 @@ export default {
     }
   },
   methods: {
+    routeCar (poi) {
+      this.$root.$emit('createRoute', poi.position, 'car')
+    },
+    routePedestrian (poi) {
+      this.$root.$emit('createRoute', poi.position, 'pedestrian')
+    },
     share (poi) {
       console.log('Sharing ', poi)
 

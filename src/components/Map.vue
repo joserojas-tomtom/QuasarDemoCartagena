@@ -9,6 +9,13 @@
         @addMarkers='addMarkers'
         @removeMarkers='removeMarkers'
         :city='currentCity.id'/>
+      <Routes v-show='displayRoute'
+        ref='routeRef'
+        :origin='routeOrigin'
+        :destination='routeDestination'
+        :type='routeType'
+        @routeCancelled='routeCancelled'
+        @routeCreated='routeCreated'/>
 
 </div>
 </template>
@@ -17,6 +24,7 @@ import { LocalStorage } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
 import Events from 'components/Events.vue'
 import PoiManager from 'components/PoiManager.vue'
+import Routes from 'components/Routes.vue'
 
 let searchMarkersManager
 let map
@@ -26,8 +34,23 @@ let currentAngle = 0
 
 export default {
   name: 'Map',
-  components: { Events, PoiManager },
+  components: { Events, PoiManager, Routes },
   methods: {
+    createRoute (destination, type) {
+      console.log('create route received', destination)
+      this.routeDestination = destination
+      this.routeType = type
+
+      this.$refs.routeRef.createRoute()
+    },
+    routeCreated () {
+      this.displayRoute = true
+      console.log('routeCreated')
+    },
+    routeCancelled () {
+      console.log('routeCancelled')
+      this.displayRoute = false
+    },
     rotateCamera (timestamp) {
       const rotationDegree = timestamp / 100 % 360
       map.rotateTo(rotationDegree + currentAngle, { duration: 0 })
@@ -85,6 +108,7 @@ export default {
     root.$off('change-style')
     root.$off('hidePoiPanel')
     root.$off('showPoiPanel')
+    root.$off('createRoute')
   },
   mounted () {
     const _this = this
@@ -106,6 +130,7 @@ export default {
     root.$on('show-favorite', displayPOIInfo)
     root.$on('poiChanged', this.changeCurrentPOI)
     root.$on('change-style', this.changeStyle)
+    root.$on('createRoute', this.createRoute)
     root.$on('hidePoiPanel', function () {
       this.poiPanel = false
     })
@@ -360,7 +385,11 @@ export default {
   data () {
     return {
       currentCity: undefined,
-      poiPanel: false
+      poiPanel: false,
+      routeOrigin: undefined,
+      routeDestination: undefined,
+      routeType: undefined,
+      displayRoute: false
     }
   }
 }
