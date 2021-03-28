@@ -20,8 +20,12 @@ export default {
   methods: {
     showPosition (position) {
       this.iconName = 'location_on'
-      // console.log(position)
       this.location = position
+    },
+    showPositionFirstTime (position) {
+      this.iconName = 'location_on'
+      this.location = position
+      this.$root.$emit('location-update', this.location)
     },
     errorLocation (error) {
       this.iconName = 'location_off'
@@ -41,7 +45,7 @@ export default {
         timeout: 5000,
         maximumAge: 1000
       }
-      navigator.geolocation.getCurrentPosition(this.showPosition, this.errorLocation, options)
+      navigator.geolocation.getCurrentPosition(this.showPositionFirstTime, this.errorLocation, options)
       this.watchId = navigator.geolocation.watchPosition(this.showPosition, this.errorLocation, options)
     } else {
       Notify.create('Geolocation is not supported by this browser.')

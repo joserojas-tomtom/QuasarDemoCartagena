@@ -25,7 +25,7 @@ let apikey
 
 export default {
   name: 'Routes',
-  props: ['destination', 'type'],
+  props: [],
   data () {
     return {
       origin: undefined
@@ -39,22 +39,72 @@ export default {
     this.$root.$off('location-update')
   },
   methods: {
-    createRoute () {
+    createRoute (destination, type, language) {
       const _this = this
       console.log('ROUTE REQUESTED')
       console.log(this.origin)
-      console.log(this.destination)
+      console.log(destination)
       if (!this.origin) {
         Notify.create('Haz click en el icono GPS para obtener tu posicion')
       } else {
         window.tt.services.calculateRoute({
           key: apikey,
-          locations: [this.origin, this.destination],
-          travelMode: this.routeType
+          locations: [this.origin, destination],
+          travelMode: type,
+          instructionsType: 'text',
+          language: language
         }).then(function (response) {
           console.log(' ROUTE ')
           console.log(response)
-          _this.$emit('routeCreated')
+          const json = response.toGeoJson()
+          const routeGroup = {}
+          routeGroup.outlinelayer = {
+            id: 'routeOutline',
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: json
+            },
+            paint: {
+              'line-color': 'black',
+              'line-width': 12
+            }
+          }
+          routeGroup.linelayer = {
+            id: 'routeline',
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: json
+            },
+            paint: {
+              'line-color': 'yellow',
+              'line-width': 8
+            }
+          }
+          if (type === 'pedestrian') {
+            // 'line-dasharray': [2, 1],
+            routeGroup.linelayer.paint['line-dasharray'] = [2, 1]
+          }
+          const instructions = response.routes[0].guidance.instructions
+          const mappedInstructions = instructions.map(element => {
+            return {
+              location: { lng: element.point.longitude, lat: element.point.latitude },
+              message: element.message
+            }
+          })
+          const popups = []
+          mappedInstructions.forEach(function (inst) {
+            const pop = new window.tt.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              className: 'route-popup'
+            })
+            pop.setLngLat(inst.location).setText(inst.message)
+            popups.push(pop)
+          })
+          routeGroup.popups = popups
+          _this.$emit('routeCreated', routeGroup)
         })
       }
     },
@@ -131,6 +181,10 @@ export default {
             margin: -40px 0 0 0px;
             position: absolute;
 }
+.route-popup .mapboxgl-popup-content {
+  background: white;
+}
+
 .mapboxgl-popup-content {
   background: green;
   padding: 0px 5px 5px 5px;

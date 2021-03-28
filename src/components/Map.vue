@@ -11,16 +11,13 @@
         :city='currentCity.id'/>
       <Routes v-show='displayRoute'
         ref='routeRef'
-        :origin='routeOrigin'
-        :destination='routeDestination'
-        :type='routeType'
         @routeCancelled='routeCancelled'
         @routeCreated='routeCreated'/>
 
 </div>
 </template>
 <script>
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
 import Events from 'components/Events.vue'
 import PoiManager from 'components/PoiManager.vue'
@@ -36,19 +33,54 @@ export default {
   name: 'Map',
   components: { Events, PoiManager, Routes },
   methods: {
+    displayInstructions (display) {
+      if (this.routeLayer) {
+        if (display) {
+          console.log('displaying popups')
+          this.routeLayer.popups.forEach(element => {
+            if (!element.isOpen()) {
+              element.addTo(map)
+            }
+          })
+        } else {
+          console.log('removing popups')
+          this.routeLayer.popups.forEach(element => {
+            element.remove()
+          })
+        }
+      }
+    },
     createRoute (destination, type) {
       console.log('create route received', destination)
       this.routeDestination = destination
       this.routeType = type
-
-      this.$refs.routeRef.createRoute()
+      this.$refs.routeRef.createRoute(destination, type, this.currentCity.language)
     },
-    routeCreated () {
-      this.displayRoute = true
+    routeCreated (layer) {
       console.log('routeCreated')
+      this.routeCancelled()
+      this.routeLayer = layer
+      map.addLayer(layer.outlinelayer)
+      map.addLayer(layer.linelayer)
+      layer.popups.forEach(element => {
+        element.addTo(map)
+      })
+      this.displayRoute = true
     },
     routeCancelled () {
-      console.log('routeCancelled')
+      if (this.routeLayer) {
+        if (map.getLayer(this.routeLayer.outlinelayer.id)) {
+          map.removeLayer(this.routeLayer.outlinelayer.id)
+          map.removeSource(this.routeLayer.outlinelayer.id)
+        }
+        if (map.getLayer(this.routeLayer.linelayer.id)) {
+          map.removeLayer(this.routeLayer.linelayer.id)
+          map.removeSource(this.routeLayer.linelayer.id)
+        }
+        this.routeLayer.popups.forEach(element => {
+          element.remove()
+        })
+      }
       this.displayRoute = false
     },
     rotateCamera (timestamp) {
@@ -89,6 +121,9 @@ export default {
       map.resize()
     },
     changeStyle () {
+      if (this.routeLayer) {
+        this.routeCreated(this.routeLayer)
+      }
       const styleIndex = LocalStorage.getItem('styleIndex')
       getDefaultStyle(styleIndex, function (style) {
         map.setStyle(style)
@@ -109,6 +144,7 @@ export default {
     root.$off('hidePoiPanel')
     root.$off('showPoiPanel')
     root.$off('createRoute')
+    this.routeCancelled()
   },
   mounted () {
     const _this = this
@@ -140,8 +176,9 @@ export default {
     root.$on('location-update', function (location) {
       // console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
-      map.setCenter(coords)
+      // map.setCenter(coords)
       myLocationMarker.setLngLat(coords).addTo(map)
+      Notify.create('Tu posicion ha sido actualizada')
     })
 
     function addPersonalPOI (lngLat) {
@@ -165,6 +202,7 @@ export default {
     function changeCity (city) {
       // console.log('changing to ' + city.name)
       // console.log(city)
+      this.routeCancelled()
       map.setMaxBounds(null)
       map.jumpTo({
         center: city.location,
@@ -334,6 +372,10 @@ export default {
       // console.log(originalCity)
       map.setMaxBounds(originalCity.bounds.bounds)
     })
+    map.on('zoomend', function () {
+      const zoom = map.getZoom()
+      _this.displayInstructions(zoom > 17)
+    })
     map.on('dragend', saveCookie)
     map.on('dragStart', function () {
       cancelAnimationFrame(mapAnimation)
@@ -343,6 +385,7 @@ export default {
     map.on('touchstart', function (event) {
       // const _this = this
       cancelLongClickTimer()
+      if (_this.displayRoute) return // avoid long click when a route is displaying
       longClickTimerId = setTimeout(function () {
         this.poiPanel = false
         root.$emit('long-click-map', event.lngLat)
@@ -351,6 +394,7 @@ export default {
     map.on('mousedown', function (event) {
       // const _this = this
       cancelLongClickTimer()
+      if (_this.displayRoute) return // avoid long click when a route is displaying
       longClickTimerId = setTimeout(function () {
         this.poiPanel = false
         root.$emit('long-click-map', event.lngLat)
@@ -386,10 +430,8 @@ export default {
     return {
       currentCity: undefined,
       poiPanel: false,
-      routeOrigin: undefined,
-      routeDestination: undefined,
-      routeType: undefined,
-      displayRoute: false
+      displayRoute: false,
+      routeLayer: undefined
     }
   }
 }
