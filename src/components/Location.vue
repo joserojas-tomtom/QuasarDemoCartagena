@@ -11,7 +11,7 @@ export default {
   name: 'Location',
   data () {
     return {
-      iconName: 'location_off',
+      iconName: 'gps_off',
       visible: true,
       location: undefined,
       watchId: undefined
@@ -19,16 +19,16 @@ export default {
   },
   methods: {
     showPosition (position) {
-      this.iconName = 'location_on'
+      this.iconName = 'gps_fixed'
       this.location = position
     },
     showPositionFirstTime (position) {
-      this.iconName = 'location_on'
+      this.iconName = 'gps_fixed'
       this.location = position
       this.$root.$emit('location-update', this.location)
     },
     errorLocation (error) {
-      this.iconName = 'location_off'
+      this.iconName = 'gps_off'
       console.log(error)
     },
     sendLocation () {

@@ -24,11 +24,11 @@
     >
       <q-list>
         <q-btn v-if='user==null'
-          to='/auth'
+          @click='login'
           icon='account_circle'
           flat
           class='q-my-md'
-          label='Registrate'/>
+          label='Registrate con Google'/>
         <q-btn v-else
           icon='account_circle'
           flat
@@ -80,12 +80,12 @@
                     @click="showFavorite(index)"
                     color='grey'
                     />
-                <q-icon class='q-pa-sm' name="directions_run" size='1.5em'
+                <!-- <q-icon class='q-pa-sm' name="directions_run" size='1.5em'
                           color='grey'
                           />
                 <q-icon class='q-pa-sm' name="directions_car" size='1.5em'
                           color='grey'
-                          />
+                          /> -->
                 <q-icon class='q-pa-sm' name="delete" size='1.5em'
                           color='grey'
                           @click='removeFavorite(index)'
@@ -100,7 +100,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-drawer
+    <!-- <q-drawer
         side="right"
         v-model='rightDrawerOpen'
         bordered
@@ -108,7 +108,7 @@
         :breakpoint="400"
         content-class="bg-grey-3"
       >
-      </q-drawer>
+      </q-drawer> -->
     <q-footer >
     </q-footer>
     <transition appear enter-active-class="animated backInUp" leave-active-class="animated backOutDown">
@@ -195,6 +195,14 @@ export default {
     showPersonalPoiMenu (lngLat) {
       this.personalmarker = true
       this.temporaryLocation = lngLat
+    },
+    login () {
+      const _this = this
+      store.actions.signinGoogle(function (msg) {
+        Notify.create(msg)
+        _this.leftDrawerOpen = false
+        _this.user = store.actions.getCurrentUser()
+      })
     },
     logoutUser () {
       // loging out

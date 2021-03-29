@@ -17,7 +17,7 @@
 </div>
 </template>
 <script>
-import { LocalStorage, Notify } from 'quasar'
+import { LocalStorage } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
 import Events from 'components/Events.vue'
 import PoiManager from 'components/PoiManager.vue'
@@ -179,9 +179,9 @@ export default {
     root.$on('location-update', function (location) {
       // console.log(location)
       const coords = { lng: location.coords.longitude, lat: location.coords.latitude }
-      // map.setCenter(coords)
+      // moveMap(coords)
       myLocationMarker.setLngLat(coords).addTo(map)
-      Notify.create('Tu posicion ha sido actualizada')
+      // Notify.create('Tu posicion ha sido actualizada')
     })
 
     function addPersonalPOI (lngLat) {

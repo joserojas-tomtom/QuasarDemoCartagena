@@ -1,8 +1,13 @@
 <template>
 <div>
   <q-page-sticky position="top-right" :offset="[9, 9]">
-  <q-fab ref='fab' padding='sm' color="primary" icon="layers" direction="down">
-    <q-fab-action external-label
+  <q-fab ref='fab'
+  padding='sm'
+  color="primary"
+  vertical-actions-align="right"
+  icon="layers"
+  direction="down">
+    <q-fab-action
                   label-position='left'
                   label='Servicios'
                   ref='fab_service'
@@ -10,19 +15,18 @@
                   @click="onClick('service')"
                   icon="home_repair_service"/>
     <q-fab-action ref='fab_announcement'
-                  external-label
+
                   label-position='left'
                   label='Anuncio'
                   :color="state.announcement"
                   @click="onClick('announcement')"
                   icon="campaign" />
     <q-fab-action ref='fab_lostfound'
-                  external-label
+
                   label-position='left'
                   label='Perdido/encontrado'
                   :color="state.lostfound" @click="onClick('lostfound')" icon="saved_search" />
     <q-fab-action ref='fab_sell'
-                  external-label
                   label-position='left'
                   label='Se Vende'
                   :color="state.sell" @click="onClick('sell')" icon="shopping_bag" />

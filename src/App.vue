@@ -4,13 +4,12 @@
   </div>
 </template>
 <script>
-import { LocalStorage, Notify } from 'quasar'
+import { LocalStorage } from 'quasar'
 import store from './router/store.js'
 
 export default {
   name: 'App',
   mounted () {
-    const _this = this
     // function fetchLocalResource (url) {
     //   const req = new XMLHttpRequest()
     //   req.onload = function () {
@@ -50,17 +49,17 @@ export default {
     }
     getDefaultCity()
     store.actions.handleAuthChanged()
-    store.actions.checkForEmailLink(window.location.href,
-      function (user) {
-        Notify.create('Signed as ' + user.name)
-        store.actions.handleAuthChanged(function () {
-          console.log('back from signin email')
-          _this.$root.$emit('signin')
-        })
-      },
-      function (error) {
-        Notify.create(error.message)
-      })
+    // store.actions.checkForEmailLink(window.location.href,
+    //   function (user) {
+    //     Notify.create('Signed as ' + user.name)
+    //     store.actions.handleAuthChanged(function () {
+    //       console.log('back from signin email')
+    //       _this.$root.$emit('signin')
+    //     })
+    //   },
+    //   function (error) {
+    //     Notify.create(error.message)
+    //   })
   }
 }
 </script>

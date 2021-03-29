@@ -14,29 +14,44 @@ const mutations = {
 const actions = {
   signinGoogle (callbackSuccess) {
     const provider = getGoogleProvider()
-    console.log(provider)
+    // console.log(provider)
     firebaseAuth
       .signInWithRedirect(provider)
-
-      .then(() => {
-        return firebaseAuth().getRedirectResult()
-      }).then((result) => {
-      /** @type {firebaseAuth.OAuthCredential} */
-      // var credential = result.credential
-
-        // This gives you a Google Access Token.
-        // You can use it to access the Google API.
-        // var token = credential.accessToken
-        // The signed-in user info.
-        state.user = result.user
-        callbackSuccess('Signed in!')
-        console.log(state.user)
-      // ...
-      }).catch((error) => {
-      // Handle Errors here.
-        console.log(error.message)
-        callbackSuccess(error.message)
+      .then(function () {
+        firebaseAuth.onAuthStateChanged(user => {
+          if (user) {
+            const userId = firebaseAuth.currentUser.uid
+            firebaseDB.ref('users/' + userId).once('value', snapshot => {
+              const details = snapshot.val()
+              state.user = { ...details }
+              if (callbackSuccess) {
+                callbackSuccess('Gracias por registrarte!')
+              }
+              // console.log(details)
+            })
+          } else {
+            state.user = null
+          }
+        })
       })
+
+    // .then(() => {
+    //   console.log('back from signinWithRedirect')
+    //   firebaseAuth().getRedirectResult().then(result => {
+    //     console.log('back from GETRedirect')
+    //     // If user just signed in or already signed in, hide spinner.
+    //     if (result.user || firebaseAuth().currentUser) {
+    //       state.user = result.user || firebaseAuth().currentUser
+    //       console.log('We have a user')
+    //       callbackSuccess('Gracias por registrarte!')
+    //     }
+    //   })
+    //     .catch((error) => {
+    //       // Handle Errors here.
+    //       console.log(error.message)
+    //       callbackSuccess(error.message)
+    //     })
+    // })
   },
   checkForEmailLink (ref, successCB, errorCB) {
     if (this.cordova) {
