@@ -58,6 +58,7 @@ export default {
     },
     routeCreated (layer) {
       console.log('routeCreated')
+      cancelAnimationFrame(mapAnimation)
       this.routeCancelled()
       this.routeLayer = layer
       map.addLayer(layer.outlinelayer)
@@ -66,6 +67,8 @@ export default {
         element.addTo(map)
       })
       this.displayRoute = true
+      console.log('moving to origin', layer.origin)
+      map.fitBounds(layer.bounds, { duration: 0, padding: 50 })
     },
     routeCancelled () {
       if (this.routeLayer) {
@@ -202,7 +205,7 @@ export default {
     function changeCity (city) {
       // console.log('changing to ' + city.name)
       // console.log(city)
-      this.routeCancelled()
+      _this.routeCancelled()
       map.setMaxBounds(null)
       map.jumpTo({
         center: city.location,

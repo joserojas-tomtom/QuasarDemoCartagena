@@ -1,19 +1,25 @@
 <template>
 <div>
   <q-page-sticky position="top-right" :offset="[60, 9]">
-  <q-fab ref='fab' padding='sm' color="secondary" icon="alt_route" direction="down">
-    <q-fab-action external-label
-                  label-position='left'
-                  ref='fab_eliminar'
-                  color="secondary"
-                  @click="cancelRoute"
-                  icon="delete_forever"/>
+  <q-fab ref='fab'
+    padding='sm'
+    label-position="left"
+    :label='routeSummary'
+    color="secondary"
+    icon="alt_route"
+    direction="down">
     <q-fab-action ref='fab_recalculate'
                   external-label
                   label-position='left'
                   color="secondary"
                   @click="recalculateRoute"
                   icon="refresh" />
+    <q-fab-action external-label
+                  label-position='left'
+                  ref='fab_eliminar'
+                  color="secondary"
+                  @click="cancelRoute"
+                  icon="delete_forever"/>
   </q-fab>
   </q-page-sticky>
 </div>
@@ -28,7 +34,11 @@ export default {
   props: [],
   data () {
     return {
-      origin: undefined
+      origin: undefined,
+      destination: undefined,
+      type: undefined,
+      language: undefined,
+      routeSummary: ' no route '
     }
   },
   mounted () {
@@ -39,6 +49,30 @@ export default {
     this.$root.$off('location-update')
   },
   methods: {
+    getBounds (json) {
+      var bounds = new window.tt.LngLatBounds()
+      json.features[0].geometry.coordinates.forEach(function (point) {
+        bounds.extend(window.tt.LngLat.convert(point))
+      })
+      return bounds
+    },
+    getFormattedSummary (summary) {
+      // const meters = summary.lengthInMeters
+      const time = summary.travelTimeInSeconds
+      let toReturn = ''
+      if (time < 60) toReturn = '⏰ ' + time + ' segundos'
+      else if (time < 3600) {
+        toReturn = '⏰ ' + (time / 60).toFixed(1) + ' minutos'
+      } else {
+        toReturn = '⏰ ' + (time / 3600).toFixed(1) + ' hrs'
+      }
+      const distance = summary.lengthInMeters
+      if (distance < 1000) toReturn += '\n⌀ ' + distance + ' mts'
+      else {
+        toReturn += '\n⌀ ' + (distance / 1000).toFixed(1) + ' kmts'
+      }
+      return toReturn
+    },
     createRoute (destination, type, language) {
       const _this = this
       console.log('ROUTE REQUESTED')
@@ -47,6 +81,9 @@ export default {
       if (!this.origin) {
         Notify.create('Haz click en el icono GPS para obtener tu posicion')
       } else {
+        this.destination = destination
+        this.type = type
+        this.language = language
         window.tt.services.calculateRoute({
           key: apikey,
           locations: [this.origin, destination],
@@ -104,7 +141,12 @@ export default {
             popups.push(pop)
           })
           routeGroup.popups = popups
+          routeGroup.origin = _this.origin
+
+          routeGroup.bounds = _this.getBounds(json)
+
           _this.$emit('routeCreated', routeGroup)
+          _this.routeSummary = _this.getFormattedSummary(response.routes[0].summary)
         })
       }
     },
@@ -114,7 +156,9 @@ export default {
     cancelRoute () {
       this.$emit('routeCancelled')
     },
-    recalculateRoute () {},
+    recalculateRoute () {
+      this.createRoute(this.destination, this.type, this.language)
+    },
     createMarker (event) {
       console.log('creating marker ', event)
       const iconElement = document.createElement('i')
@@ -183,6 +227,8 @@ export default {
 }
 .route-popup .mapboxgl-popup-content {
   background: white;
+  font-size: 10px;
+  font-weight: normal;
 }
 
 .mapboxgl-popup-content {
