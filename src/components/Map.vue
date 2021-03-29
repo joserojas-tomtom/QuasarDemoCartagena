@@ -67,8 +67,7 @@ export default {
         element.addTo(map)
       })
       this.displayRoute = true
-      console.log('moving to origin', layer.origin)
-      map.fitBounds(layer.bounds, { duration: 0, padding: 50 })
+      map.fitBounds(layer.bounds, { duration: 0, padding: 100 })
     },
     routeCancelled () {
       if (this.routeLayer) {
@@ -377,7 +376,7 @@ export default {
     })
     map.on('zoomend', function () {
       const zoom = map.getZoom()
-      _this.displayInstructions(zoom > 17)
+      _this.displayInstructions(zoom > 16)
     })
     map.on('dragend', saveCookie)
     map.on('dragStart', function () {
