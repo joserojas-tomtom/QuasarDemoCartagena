@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import { LocalStorage } from 'quasar'
+// import { LocalStorage } from 'quasar'
 import store from './router/store.js'
 
 export default {
@@ -19,35 +19,35 @@ export default {
     //   req.open('GET', url)
     //   req.send()
     // }
-    function fetchLocal (url) {
-      return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest()
-        xhr.onload = function () {
-          resolve(new Response(xhr.responseText, { status: xhr.status }))
-        }
-        xhr.onerror = function () {
-          reject(new TypeError('Local request failed'))
-        }
-        xhr.open('GET', url)
-        xhr.send(null)
-      })
-    }
-    const getDefaultCity = async () => {
-      try {
-        const response = await fetchLocal('db-structure.json')
-        const data = await response.json()
-        console.log('FROM reading locally', data)
-        const citiesDB = data.cities
-        LocalStorage.set('citiesDB', citiesDB)
-        const currentCity = LocalStorage.getItem('currentCity')
-        if (!currentCity) {
-          LocalStorage.set('currentCity', citiesDB.cartagena)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    getDefaultCity()
+    // function fetchLocal (url) {
+    //   return new Promise(function (resolve, reject) {
+    //     var xhr = new XMLHttpRequest()
+    //     xhr.onload = function () {
+    //       resolve(new Response(xhr.responseText, { status: xhr.status }))
+    //     }
+    //     xhr.onerror = function () {
+    //       reject(new TypeError('Local request failed'))
+    //     }
+    //     xhr.open('GET', url)
+    //     xhr.send(null)
+    //   })
+    // }
+    // const getDefaultCity = async () => {
+    //   try {
+    //     const response = await fetchLocal('db-structure.json')
+    //     const data = await response.json()
+    //     console.log('FROM reading locally', data)
+    //     const citiesDB = data.cities
+    //     LocalStorage.set('citiesDB', citiesDB)
+    //     const currentCity = LocalStorage.getItem('currentCity')
+    //     if (!currentCity) {
+    //       LocalStorage.set('currentCity', citiesDB.cartagena)
+    //     }
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
+    // }
+    // getDefaultCity()
     store.actions.handleAuthChanged()
     // store.actions.checkForEmailLink(window.location.href,
     //   function (user) {
