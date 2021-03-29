@@ -79,7 +79,7 @@ export default {
       console.log(this.origin)
       console.log(destination)
       if (!this.origin) {
-        Notify.create('Haz click en el icono GPS para obtener tu posicion')
+        Notify.create({ message: 'Haz click en el icono GPS para obtener tu posicion', type: 'warning' })
       } else {
         this.destination = destination
         this.type = type
@@ -90,64 +90,68 @@ export default {
           travelMode: type,
           instructionsType: 'text',
           language: language
-        }).then(function (response) {
-          console.log(' ROUTE ')
-          console.log(response)
-          const json = response.toGeoJson()
-          const routeGroup = {}
-          routeGroup.outlinelayer = {
-            id: 'routeOutline',
-            type: 'line',
-            source: {
-              type: 'geojson',
-              data: json
-            },
-            paint: {
-              'line-color': 'black',
-              'line-width': 12
-            }
-          }
-          routeGroup.linelayer = {
-            id: 'routeline',
-            type: 'line',
-            source: {
-              type: 'geojson',
-              data: json
-            },
-            paint: {
-              'line-color': 'yellow',
-              'line-width': 8
-            }
-          }
-          if (type === 'pedestrian') {
-            // 'line-dasharray': [2, 1],
-            routeGroup.linelayer.paint['line-dasharray'] = [2, 1]
-          }
-          const instructions = response.routes[0].guidance.instructions
-          const mappedInstructions = instructions.map(element => {
-            return {
-              location: { lng: element.point.longitude, lat: element.point.latitude },
-              message: element.message
-            }
-          })
-          const popups = []
-          mappedInstructions.forEach(function (inst) {
-            const pop = new window.tt.Popup({
-              closeButton: false,
-              closeOnClick: false,
-              className: 'route-popup'
-            })
-            pop.setLngLat(inst.location).setText(inst.message)
-            popups.push(pop)
-          })
-          routeGroup.popups = popups
-          routeGroup.origin = _this.origin
-
-          routeGroup.bounds = _this.getBounds(json)
-
-          _this.$emit('routeCreated', routeGroup)
-          _this.routeSummary = _this.getFormattedSummary(response.routes[0].summary)
         })
+          .catch(error => {
+            Notify.create({ message: error.message, type: 'negative' })
+          })
+          .then(function (response) {
+            console.log(' ROUTE ')
+            console.log(response)
+            const json = response.toGeoJson()
+            const routeGroup = {}
+            routeGroup.outlinelayer = {
+              id: 'routeOutline',
+              type: 'line',
+              source: {
+                type: 'geojson',
+                data: json
+              },
+              paint: {
+                'line-color': 'black',
+                'line-width': 12
+              }
+            }
+            routeGroup.linelayer = {
+              id: 'routeline',
+              type: 'line',
+              source: {
+                type: 'geojson',
+                data: json
+              },
+              paint: {
+                'line-color': 'yellow',
+                'line-width': 8
+              }
+            }
+            if (type === 'pedestrian') {
+            // 'line-dasharray': [2, 1],
+              routeGroup.linelayer.paint['line-dasharray'] = [2, 1]
+            }
+            const instructions = response.routes[0].guidance.instructions
+            const mappedInstructions = instructions.map(element => {
+              return {
+                location: { lng: element.point.longitude, lat: element.point.latitude },
+                message: element.message
+              }
+            })
+            const popups = []
+            mappedInstructions.forEach(function (inst) {
+              const pop = new window.tt.Popup({
+                closeButton: false,
+                closeOnClick: false,
+                className: 'route-popup'
+              })
+              pop.setLngLat(inst.location).setText(inst.message)
+              popups.push(pop)
+            })
+            routeGroup.popups = popups
+            routeGroup.origin = _this.origin
+
+            routeGroup.bounds = _this.getBounds(json)
+
+            _this.$emit('routeCreated', routeGroup)
+            _this.routeSummary = _this.getFormattedSummary(response.routes[0].summary)
+          })
       }
     },
     updateOrigin (location) {

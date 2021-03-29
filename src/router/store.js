@@ -1,7 +1,7 @@
 // import { firebaseAuth, firebaseDB } from 'boot/firebase'
 
 import { firebaseAuth, firebaseDB, getGoogleProvider } from 'src/boot/firebase'
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 
 const state = {
   user: null
@@ -207,6 +207,10 @@ const actions = {
           if (callback) {
             callback()
           }
+          Notify.create({
+            type: 'positive',
+            message: 'Estas registrado con Google, gracias!'
+          })
           // console.log(details)
         })
       } else {

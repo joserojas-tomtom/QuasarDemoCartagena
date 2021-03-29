@@ -48,7 +48,7 @@ export default {
       navigator.geolocation.getCurrentPosition(this.showPositionFirstTime, this.errorLocation, options)
       this.watchId = navigator.geolocation.watchPosition(this.showPosition, this.errorLocation, options)
     } else {
-      Notify.create('Geolocation is not supported by this browser.')
+      Notify.create({ message: 'Geolocation is not supported by this browser.', type: 'warning' })
     }
   },
   beforeDestroy () {

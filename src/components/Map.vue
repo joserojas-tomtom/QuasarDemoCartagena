@@ -17,7 +17,7 @@
 </div>
 </template>
 <script>
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 import getDefaultStyle from 'assets/cartagenastyle.js'
 import Events from 'components/Events.vue'
 import PoiManager from 'components/PoiManager.vue'
@@ -33,6 +33,15 @@ export default {
   name: 'Map',
   components: { Events, PoiManager, Routes },
   methods: {
+    increaseClickCOunt () {
+      this.clickcount += 1
+      LocalStorage.set('click-count', this.clickcount)
+      console.log('click ' + this.clickcount)
+      if ((this.clickcount % this.adInterval) === 0) {
+        // display ad
+        Notify.create('Ad')
+      }
+    },
     displayInstructions (display) {
       if (this.routeLayer) {
         if (display) {
@@ -55,6 +64,7 @@ export default {
       this.routeDestination = destination
       this.routeType = type
       this.$refs.routeRef.createRoute(destination, type, this.currentCity.language)
+      this.increaseClickCOunt()
     },
     routeCreated (layer) {
       console.log('routeCreated')
@@ -84,6 +94,7 @@ export default {
         })
       }
       this.displayRoute = false
+      this.routeLayer = null
     },
     rotateCamera (timestamp) {
       const rotationDegree = timestamp / 100 % 360
@@ -91,13 +102,13 @@ export default {
       mapAnimation = requestAnimationFrame(this.rotateCamera)
     },
     addMarkers (array) {
-      console.log('adding markers ', array)
+      // console.log('adding markers ', array)
       array.forEach(function (marker) {
         marker.addTo(map)
       })
     },
     removeMarkers (array) {
-      console.log('removing markers ', array)
+      // console.log('removing markers ', array)
       array.forEach(function (marker) {
         marker.remove()
       })
@@ -419,7 +430,8 @@ export default {
       if (feature && feature.layer.id === 'POI' && feature.properties.id) {
         _this.$refs.eventsMenu.close()
         displayPOIInfo(feature.properties.id)
-        this.poiPanel = true
+        _this.poiPanel = true
+        _this.increaseClickCOunt()
         // event.stopImmediatePropagation()
       }
     })
@@ -433,7 +445,9 @@ export default {
       currentCity: undefined,
       poiPanel: false,
       displayRoute: false,
-      routeLayer: undefined
+      routeLayer: undefined,
+      clickcount: 0,
+      adInterval: 15 // ad every 15 clicks
     }
   }
 }

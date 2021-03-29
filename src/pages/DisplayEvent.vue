@@ -57,7 +57,7 @@ export default {
       if (confirm('Seguro de eliminar el evento?')) {
         store.actions.deleteEvent(event, function (error) {
           if (error) {
-            Notify.create(error.message)
+            Notify.create({ message: error.message, type: 'negative' })
           } else {
             // go back
             _this.$router.back()

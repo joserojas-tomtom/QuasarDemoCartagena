@@ -76,7 +76,7 @@ export default {
   methods: {
     handleCreateEvent (error) {
       if (error) {
-        Notify.create(error.message)
+        Notify.create({ message: error.message, type: 'negative' })
       } else {
         console.log('no error creating event')
         // go back

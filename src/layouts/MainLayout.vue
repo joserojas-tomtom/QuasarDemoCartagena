@@ -157,6 +157,9 @@ export default {
     this.currentCity = LocalStorage.getItem('currentCity')
     this.cities = LocalStorage.getItem('citiesDB')
     this.installBackButtonHandler()
+    store.actions.handleAuthChanged(function () {
+      _this.user = store.actions.getCurrentUser()
+    })
     this.user = store.actions.getCurrentUser()
     // console.log('got user ', this.user)
   },
@@ -184,7 +187,7 @@ export default {
       if (this.user) {
         this.$router.push(options)
       } else {
-        Notify.create("Tienes que registrarte 'mano!")
+        Notify.create({ message: "Tienes que registrarte 'mano!", type: 'negative' })
       }
     },
     createPersonalMarker () {
@@ -199,7 +202,7 @@ export default {
     login () {
       const _this = this
       store.actions.signinGoogle(function (msg) {
-        Notify.create(msg)
+        Notify.create({ message: msg, type: 'positive' })
         _this.leftDrawerOpen = false
         _this.user = store.actions.getCurrentUser()
       })
