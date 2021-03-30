@@ -18,7 +18,15 @@ const getDefaultCity = async () => {
     const response = await fetchLocal('db-structure.json')
     const data = await response.json()
     console.log('FROM reading locally', data)
-    const citiesDB = data.cities
+    const citiesDB = {} // data.citiesDB
+    citiesDB.cartagena = data.cities.cartagena
+    citiesDB.barranquilla = data.cities.barranquilla
+    citiesDB.santamarta = data.cities.santamarta
+    citiesDB.valledupar = data.cities.valledupar
+    citiesDB.monteria = data.cities.monteria
+    citiesDB.medellin = data.cities.medellin
+    citiesDB.cali = data.cities.cali
+    citiesDB.bogota = data.cities.bogota
     LocalStorage.set('citiesDB', citiesDB)
     const currentCity = LocalStorage.getItem('currentCity')
     if (!currentCity) {

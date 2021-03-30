@@ -3,12 +3,90 @@
     "cartagena" : {
       "id": "cartagena",
       "name": "Cartagena de Indias", 
-      "location": { "lat": 10.425459062333639, "lng":  -75.5489775446744, "zoom": 17 },
+      "location": { "lat": 10.425459062333639, "lng":  -75.5489775446744, "zoom": 15 },
       "country": "CO",
       "language": "es-419",
       "placeHolder": "Puya el burro ...",
       "bounds": {
         "bounds": [[-75.56566019581811, 10.329585886937679], [-75.4488171623405, 10.456136165887884]],
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "maxZoom": 17
+      }
+    },
+    "barranquilla" : {
+      "id": "barranquilla",
+      "name": "Barranquilla", 
+      "location": {"lng":-74.78045005763036,"lat":10.9809378637147, "zoom": 15},
+      "country": "CO",
+      "language": "es-419",
+      "placeHolder": "Puya el burro ...",
+      "bounds": {
+        "bounds": [{"lng":-74.92997121840449,"lat":10.82110053852628},{"lng":-74.66081880176125,"lat":11.107491294466996}],
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "maxZoom": 17
+      }
+    },
+     "medellin" : {
+      "id": "medellin",
+      "name": "Medellin", 
+      "location":{"lng":-75.58001090459581,"lat":6.247858036163933, "zoom": 15},
+      "country": "CO",
+      "language": "es-419",
+      "placeHolder": "'ve pues.. entra alguito!",
+      "bounds": {
+        "bounds": [{"lng":-75.7372148860017,"lat":6.012366767916689},{"lng":-75.33553589791323,"lat":6.444550827620915}],
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "maxZoom": 17
+      }
+    },
+     "bogota" : {
+      "id": "bogota",
+      "name": "Santa Fe de Bogota", 
+      "location": {"lng":-74.0747518410175,"lat":4.599126248205579, "zoom": 15},
+      "country": "CO",
+      "language": "es-419",
+      "placeHolder": "Busca algo ...",
+      "bounds": {
+        "bounds": [{"lng":-74.31273229950123,"lat":4.439298862165074},{"lng":-73.8944168569209,"lat":4.929315598079199}],
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "maxZoom": 17
+      }
+    },      
+     "cali" : {
+      "id": "cali",
+      "name": "Cali", 
+      "location":{"lng":-76.52051357702021,"lat":3.428891618174262, "zoom": 15},
+      "country": "CO",
+      "language": "es-419",
+      "placeHolder": "Buscate algo ...",
+      "bounds": {
+        "bounds": [{"lng":-76.72431320074328,"lat":3.208613774232205},{"lng":-76.32097288846646,"lat":3.681635680037317}],
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "maxZoom": 17
+      }
+    },    
+     "monteria" : {
+      "id": "monteria",
+      "name": "Monteria", 
+      "location":{"lng":-75.88113090231937,"lat":8.758538036554711, "zoom": 15},
+      "country": "CO",
+      "language": "es-419",
+      "placeHolder": "Puya el burro ...",
+      "bounds": {
+        "bounds": [{"lng":-75.94117306752335,"lat":8.702126532170112},{"lng":-75.80336600270678,"lat":8.848827892156422}],
+        "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
+        "maxZoom": 17
+      }
+    },
+    "santamarta" : {
+      "id": "santamarta",
+      "name": "Santa Marta", 
+      "location":{"lng":-74.22683572613808,"lat":11.202546054944847, "zoom": 15},
+      "country": "CO",
+      "language": "es-419",
+      "placeHolder": "Puya el burro ...",
+      "bounds": {
+        "bounds": [{"lng":-74.33941979369251,"lat":11.038217866742428},{"lng":-74.05972579202997,"lat":11.33319749171379}],
         "padding": { "top": 10, "bottom": 25, "left": 15, "right": 5 },
         "maxZoom": 17
       }
