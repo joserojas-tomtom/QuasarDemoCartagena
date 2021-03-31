@@ -61,8 +61,15 @@
           header
           class= 'text-grey-8 text-weight-medium bg-green-2'>FAVORITOS
         </q-item-label>
-        <div v-for='(favorite, index) in favorites' :key='favorite.id'>
-        <q-item-label v-show='favorite.city === currentCity.id' class='q-pa-md shadow-2' clickable >
+
+        <q-item-label
+          v-if="favorites.length == 0"
+          header
+          class="text-grey-8 text-weight-medium bg-white-2">
+          Aun no tienes favoritos! pulsa en el corazoncito de un lugar para adicionarlos aqui.
+        </q-item-label>
+          <div v-for='(favorite, index) in favorites' :key='favorite.id'>
+            <q-item-label v-show='favorite.city === currentCity.id' class='q-pa-md shadow-2' clickable >
           <!-- <q-item-section header
             @click="showFavorite(index)"
             class="q-pa-lg text-dark text-weight-normal">{{favorite.name}}
@@ -92,8 +99,12 @@
                           />
               </q-item-label>
             </q-item-section>
-        </q-item-label>
-        </div>
+            </q-item-label>
+          </div>
+        <q-btn class='q-ma-md' label="Politica de Privacidad"
+        type="a" href='https://loodico.com/privacy-tumapa-colombia.html'
+        target="__blank"
+        />
       </q-list>
     </q-drawer>
 

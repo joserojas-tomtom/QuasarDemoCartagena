@@ -215,11 +215,11 @@ export default {
       console.log('Sharing ', poi)
 
       const options = {
-        text: poi.name + '@' + poi.address, // not supported on some apps (Facebook, Instagram)
-        title: '[From TusMapas]' + poi.name, // fi. for email
-        url: 'geo:0,0?q=' + poi.position.lat + ',' + poi.position.lng
+        text: poi.name + ' @ ' + poi.address, // not supported on some apps (Facebook, Instagram)
+        title: '[De TuMapa]' + poi.name // fi. for email
+        // url: 'geo:0,0?q=' + poi.position.lat + ',' + poi.position.lng
         // chooserTitle: 'Pick an app', // Android only, you can override the default share sheet title
-        // appPackageName: 'com.apple.social.facebook', // Android only, you can provide id of the App you want to share with
+        // appPackageName: 'com.loodico.tumapa' // Android only, you can provide id of the App you want to share with
         // iPadCoordinates: '0,0,0,0' // IOS only iPadCoordinates for where the popover should be point.  Format with x,y,width,height
       }
 
